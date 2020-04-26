@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class DB : DBEntry {
     public string[] paths;
@@ -33,7 +33,7 @@ public class DB : DBEntry {
 
     public static T Get<T>(string name) where T: DBEntry {
         CheckItems();
-        return GetAll<T>().SelectNotNull().Where(item => item != null && item.name == name).First();
+        return GetAll<T>().SelectNotNull().FirstOrDefault(item => item != null && item.name == name);
     }
 
     public static T Get<T>() where T : DBEntry {
@@ -41,14 +41,14 @@ public class DB : DBEntry {
         return GetAll<T>().SelectNotNull().First();
     }
 
-    public static IEnumerable<T> GetAll<T>() where T : DBEntry {
+    public static List<T> GetAll<T>() where T : DBEntry {
         CheckItems();
         var items = new List<T>();
         if (_instance == null) {
             Debug.LogError("No DB instance");
             return items;
         }
-        return _instance._items.Keys.SelectNotNull(i => i as T);
+        return _instance._items.Keys.OfType<T>().ToList();
     }
 
     public static string GetPath(DBEntry item) {

@@ -7,7 +7,7 @@ using UnityEngine;
 [CustomPropertyDrawer(typeof(TypeAttribute))]
 public class TypeAttributeInspector : ExtendedPropertyDrawer {
 
-    private Type[] _selectedTypes;
+    private List<Type> _selectedTypes = new List<Type>();
 
     private TypeAttribute typeAttribute {
         get { return attribute as TypeAttribute; }
@@ -24,7 +24,7 @@ public class TypeAttributeInspector : ExtendedPropertyDrawer {
             return;
         }
 
-        if (_selectedTypes == null || _selectedTypes.Length == 0) {
+        if (_selectedTypes == null || _selectedTypes.Count == 0) {
             _selectedTypes = ReflectionUtils.GetSubclassesOf(typeAttribute.baseType);
         }
 

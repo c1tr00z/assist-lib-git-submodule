@@ -34,6 +34,8 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
             var path = GetSelectedPath();
 
             var item = AssetDBUtils.CreateScriptableObject<T>(path, name);
+            
+            AssetDatabase.Refresh();
 
             CollectItems();
 

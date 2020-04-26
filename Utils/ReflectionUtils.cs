@@ -1,32 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 public static class ReflectionUtils {
 
-    private static Type[] _types;
+    private static List<Type> _types = new List<Type>();
 
-    public static Type[] GetTypes() {
-        if (_types == null || _types.Length == 0) {
-            var typesList = new List<Type>();
+    public static List<Type> GetTypes() {
+        if (_types == null || _types.Count == 0) {
             var assemblies = System.AppDomain.CurrentDomain.GetAssemblies();
             assemblies.ForEach(assembly => {
-                typesList.AddRange(assembly.GetTypes());
+                _types.AddRange(assembly.GetTypes());
             });
-            _types = typesList.ToArray();
         }
         return _types;
     }
 
 	public static Type GetTypeByName(string name) {
-		return GetTypes().Where(t => t.FullName == name).First();	
+		return GetTypes().FirstOrDefault(t => t.FullName == name);	
 	}
 
-    public static Type[] GetSubclassesOf(Type baseClass) {
+    public static List<Type> GetSubclassesOf(Type baseClass) {
         if (baseClass == null) {
             return GetTypes();
         }
-        return GetTypes().Where(t => t.IsSubclassOf(baseClass)).ToArray();
+        return GetTypes().Where(t => t.IsSubclassOf(baseClass)).ToList();
     }
 
     public static IEnumerable<PropertyInfo> GetPublicProperties(this Type type) {
@@ -38,6 +37,6 @@ public static class ReflectionUtils {
 	}
 
 	public static string GetPropertyNameByType(this PropertyInfo propertyInfo) {
-		return string.Format("{0}/{1}", propertyInfo.PropertyType.Name, propertyInfo.Name);
+		return $"{propertyInfo.PropertyType.Name}/{propertyInfo.Name}";
 	}
 }
