@@ -47,8 +47,6 @@ namespace c1tr00z.AssistLib.Core {
             Init();
         }
 
-        private void OnDisable() { }
-
         private void OnGUI() {
             _filterLine = EditorGUILayout.TextField("Search", _filterLine);
             if (!_filterLine.Equals(_prevFilterLine)) {
@@ -58,22 +56,32 @@ namespace c1tr00z.AssistLib.Core {
             var noTypes = _filteredTypes.Count == 0;
             if (noTypes) {
                 GUI.enabled = false;
-                EditorGUILayout.Popup("Type", 0, _typesNames.ToArray());
+                // EditorGUILayout.Popup("Type", 0, _typesNames.ToArray());
             } else {
                 GUI.enabled = true;
-                _selectedTypeIndex = EditorGUILayout.Popup("Type", _selectedTypeIndex, _typesNames.ToArray());
-                _selectedTypeIndex =  _selectedTypeIndex < _filteredTypes.Count ? _selectedTypeIndex : 0;
-                _selectedType = _filteredTypes[_selectedTypeIndex];
-                CheckName();
-                _newSOName = EditorGUILayout.TextField("New asset name", _newSOName);
-                
-                GUILayout.Label($"Current path: {Path.Combine(ItemsEditor.GetSelectedPath(), _newSOName)}.asset");
+            }
 
-                if (GUILayout.Button("Create")) {
-                    ItemsEditor.CreateItem<DB>(_newSOName);
-                }
+            _selectedTypeIndex = EditorGUILayout.Popup("Type", _selectedTypeIndex, _typesNames.ToArray());
+            _selectedTypeIndex =  _selectedTypeIndex < _filteredTypes.Count ? _selectedTypeIndex : 0;
+            _selectedType = _filteredTypes[_selectedTypeIndex];
+            CheckName();
+            _newSOName = EditorGUILayout.TextField("New asset name", _newSOName);
+            
+            GUILayout.Label($"Current path: {Path.Combine(ItemsEditor.GetSelectedPath(), _newSOName)}.asset");
+
+            EditorGUILayout.BeginHorizontal(); 
+            
+            if (GUILayout.Button("Create")) {
+                ItemsEditor.CreateItem<DB>(_newSOName);
+                Close();
             }
             
+            if (GUILayout.Button("Cancel")) {
+                Close();
+            }
+            
+            EditorGUILayout.EndHorizontal();
+
             GUI.enabled = true;
         }
 
