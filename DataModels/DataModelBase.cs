@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace c1tr00z.AssistLib.DataModels {
     public class DataModelBase : MonoBehaviour, IDataModelBase {
+        protected virtual void Start() {
+            OnDataChanged();
+        }
 
         public virtual bool isDataModelEnabled {
             get { return true; }
