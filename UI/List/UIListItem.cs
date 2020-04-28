@@ -17,7 +17,7 @@ namespace c1tr00z.AssistLib.UI {
         public virtual void UpdateItem(object item) {
             if (this.item != item) {
                 this.item = item;
-                GetComponents<IUIListItemView>().ForEach(listItem => listItem.UpdateItem(item));
+                GetComponents<IUIView>().ForEach(listItem => listItem.Show(item));
             }
         }
 
@@ -30,7 +30,7 @@ namespace c1tr00z.AssistLib.UI {
                 return;
             }
             isSelected = selected;
-            GetComponents<IUIListItemView>().ForEach(listItem => listItem.UpdateView());
+            GetComponents<IUIView>().ForEach(listItem => listItem.Show(item));
         }
     }
 }
