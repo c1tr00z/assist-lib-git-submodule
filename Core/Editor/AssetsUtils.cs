@@ -1,7 +1,8 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
-public static class AssetDBUtils {
+public static class AssetsUtils {
 
     public static T CreateScriptableObject<T>(string path) where T : ScriptableObject {
         return CreateScriptableObject<T>(path, typeof(T).ToString(), false);
@@ -12,9 +13,17 @@ public static class AssetDBUtils {
     }
 
     public static T CreateScriptableObject<T>(string path, string name, bool select) where T : ScriptableObject {
-        T item = ScriptableObject.CreateInstance<T>();
+        return (T)CreateScriptableObject(typeof(T), path, name, select);
+    }
 
-        string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath(string.Format("{0}/{1}.asset", path, name));
+    public static ScriptableObject CreateScriptableObject(Type type, string path, string name) {
+        return CreateScriptableObject(type, path, name, false);
+    }
+
+    public static ScriptableObject CreateScriptableObject(Type type, string path, string name, bool select) {
+        ScriptableObject item = ScriptableObject.CreateInstance(type);
+
+        string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath($"{path}/{name}.asset");
 
         AssetDatabase.CreateAsset(item, assetPathAndName);
 
