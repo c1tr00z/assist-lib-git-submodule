@@ -52,7 +52,7 @@ namespace c1tr00z.AssistLib.UI {
 
         protected UIFrame ShowFrame(UIFrameDBEntry frameItem, params object[] args) {
             var frame = frameItem.LoadFrame().Clone(rectTransform);
-            frame.Show(this, args);
+            frame.Show(args);
             frame.rectTransform.Stretch();
 
             return frame;

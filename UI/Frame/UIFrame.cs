@@ -2,28 +2,21 @@
 
 namespace c1tr00z.AssistLib.UI {
     [RequireComponent(typeof(RectTransform))]
-    public class UIFrame : MonoBehaviour {
+    public class UIFrame : MonoBehaviour, IUIView {
+
+        private UILayerBase _layer;
 
         private RectTransform _rectTransform;
 
-        public UILayerBase layer { get; private set; }
+        public UILayerBase layer => this.GetCachedComponentInParent(ref _layer);
 
-        public RectTransform rectTransform {
-            get {
-                if (_rectTransform == null) {
-                    _rectTransform = GetComponent<RectTransform>();
-                }
-                return _rectTransform;
-            }
-        }
+        public RectTransform rectTransform => this.GetCachedComponent(ref _rectTransform);
 
-        public bool isTopFrame {
-            get { return UI.instance.IsTopFrameInStack(this); }
-        }
+        public bool isTopFrame => UI.instance.IsTopFrameInStack(this);
 
-        public void Show(UILayerBase layer, params object[] args) {
-            this.layer = layer;
-            GetComponentsInChildren<IUIFrameView>().ForEach(view => view.OnShow(args));
+        public void Show(params object[] args) {
+            GetComponentsInChildren<IUIView>().Where(uiView => !uiView.Equals(this))
+                .ForEach(view => view.Show(args));
         }
 
         public void Close() {

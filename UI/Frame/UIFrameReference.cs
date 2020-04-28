@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using c1tr00z.AssistLib.PropertyReferences;
-using DefaultNamespace;
+﻿using c1tr00z.AssistLib.PropertyReferences;
 using UnityEditor;
 using UnityEngine;
 
