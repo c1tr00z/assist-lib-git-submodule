@@ -14,6 +14,8 @@ namespace c1tr00z.AssistLib.Core {
         private List<Type> _allTypes = new List<Type>();
         private List<Type> _filteredTypes = new List<Type>();
         private string[] _typesNames = new string[0];
+        
+        private Type _defaultType = typeof(DefaultScriptableObject);
 
         private Type _selectedType = typeof(DefaultScriptableObject);
         
@@ -63,7 +65,7 @@ namespace c1tr00z.AssistLib.Core {
 
             _selectedTypeIndex = EditorGUILayout.Popup("Type", _selectedTypeIndex, _typesNames.ToArray());
             _selectedTypeIndex =  _selectedTypeIndex < _filteredTypes.Count ? _selectedTypeIndex : 0;
-            _selectedType = _filteredTypes[_selectedTypeIndex];
+            _selectedType = _selectedTypeIndex > -1 && _selectedTypeIndex < _filteredTypes.Count ? _filteredTypes[_selectedTypeIndex] : _defaultType;
             CheckName();
             _newSOName = EditorGUILayout.TextField("New asset name", _newSOName);
             
@@ -72,7 +74,7 @@ namespace c1tr00z.AssistLib.Core {
             EditorGUILayout.BeginHorizontal(); 
             
             if (GUILayout.Button("Create")) {
-                ItemsEditor.CreateItem<DB>(_newSOName);
+                ItemsEditor.CreateItem(_selectedType, _newSOName);
                 Close();
             }
             
@@ -119,6 +121,10 @@ namespace c1tr00z.AssistLib.Core {
         }
 
         private void CheckName() {
+            if (_selectedType == null) {
+                _newSOName = null;
+                return;
+            }
             if (string.IsNullOrEmpty(_newSOName) || _prevType != _selectedType) {
                 _prevType = _selectedType;
                 _newSOName = $"New {_selectedType.Name}";

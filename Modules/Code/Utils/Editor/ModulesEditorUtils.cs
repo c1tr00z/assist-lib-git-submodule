@@ -6,8 +6,8 @@ namespace c1tr00z.AssistLib.Modules.Editor {
 
         public static void CreateModule<T>(string moduleName, System.Action<T> onCreate) where T : Component {
             PathUtils.CreatePath("AssistLib", "Resources", "Modules");
-            var moduleDBEntry = AssetDBUtils.CreateScriptableObject<ModuleDBEntry>(PathUtils.Combine("Assets", "AssistLib", "Resources", "Modules"), moduleName);
-            AssetDBUtils.CreatePrefab(moduleDBEntry, onCreate);
+            var moduleDBEntry = AssetsUtils.CreateScriptableObject<ModuleDBEntry>(PathUtils.Combine("Assets", "AssistLib", "Resources", "Modules"), moduleName);
+            AssetsUtils.CreatePrefab(moduleDBEntry, onCreate);
             ItemsEditor.CollectItems();
         }
     }
