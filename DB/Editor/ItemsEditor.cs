@@ -33,7 +33,23 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
         public static void CreateItem<T>(string name) where T : ScriptableObject {
             var path = GetSelectedPath();
 
-            var item = AssetDBUtils.CreateScriptableObject<T>(path, name);
+            var item = AssetsUtils.CreateScriptableObject<T>(path, name);
+            
+            AssetDatabase.Refresh();
+
+            CollectItems();
+
+            Selection.activeObject = item;
+        }
+
+        public static void CreateItem(Type type, string name) {
+            if (!type.IsSubclassOf(typeof(ScriptableObject))) {
+                return;
+            }
+            
+            var path = GetSelectedPath();
+
+            var item = AssetsUtils.CreateScriptableObject(type, path, name);
             
             AssetDatabase.Refresh();
 
@@ -49,7 +65,7 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
             }
 
             PathUtils.CreatePath("Resources");
-            AssetDBUtils.CreateScriptableObject<DB>(PathUtils.Combine("Assets", "Resources"), "DB");
+            AssetsUtils.CreateScriptableObject<DB>(PathUtils.Combine("Assets", "Resources"), "DB");
             CollectItems();
         }
 
@@ -64,7 +80,7 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
             }
 
             PathUtils.CreatePath("AssistLib", "Resources");
-            AssetDBUtils.CreateScriptableObject<AppSettings>(PathUtils.Combine("Assets", "AssistLib", "Resources"),
+            AssetsUtils.CreateScriptableObject<AppSettings>(PathUtils.Combine("Assets", "AssistLib", "Resources"),
                 "AppSettings");
             CollectItems();
         }
@@ -108,7 +124,6 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
 
                     if (save) {
                         try {
-                            Debug.LogError($"Saving: {path}");
                             PrefabUtility.SaveAsPrefabAsset(prefabGO, path);
                             EditorUtility.SetDirty(itemPrefab);
                         }
