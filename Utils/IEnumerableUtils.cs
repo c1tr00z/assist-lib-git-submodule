@@ -255,4 +255,13 @@ public static class IEnumerableUtils {
         }
         return list;
     }
+
+    public static Queue<T> ToQueue<T>(this IEnumerable<T> enumerable) {
+        var queue = new Queue<T>();
+        foreach (T item in enumerable) {
+            queue.Enqueue(item);
+        }
+
+        return queue;
+    }
 }
