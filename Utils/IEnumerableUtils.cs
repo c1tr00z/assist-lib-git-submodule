@@ -45,16 +45,7 @@ public static class IEnumerableUtils {
             dic.AddOrSet(kvp.Key, kvp.Value);
         });
     }
-
-    public static bool ContainsItem<T>(this IEnumerable<T> enumerable, T item) {
-        foreach (T i in enumerable) {
-            if (i.Equals(item)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    
     public static void ForEach<T>(this IEnumerable<T> enumerable, System.Action<T> action) {
         enumerable.ToList().ForEach(action);
     }
@@ -104,7 +95,7 @@ public static class IEnumerableUtils {
     public static List<T> ToUniqueList<T>(this IEnumerable<T> enumerable) {
         var uniqueList = new List<T>();
         enumerable.ForEach(item => {
-            if (!uniqueList.ContainsItem(item)) {
+            if (!Enumerable.Contains(uniqueList, item)) {
                 uniqueList.Add(item);
             }
         });
@@ -263,5 +254,25 @@ public static class IEnumerableUtils {
         }
 
         return queue;
+    }
+
+    public static int[] MakeIndexesFromTo(int from, int to) {
+        var indexes = new List<int>();
+
+        for (var i = from; i < to; i++) {
+            indexes.Add(i);
+        }
+        
+        return indexes.ToArray();
+    }
+    
+    public static int[] MakeIndexesTo(int to) {
+        return MakeIndexesFromTo(0, to);
+    }
+
+    public static void ForIndexesList(int[] indexes, Action<int> indexProcessor) {
+        for (var i = 0; i < indexes.Length; i++) {
+            indexProcessor?.Invoke(indexes[i]);
+        }
     }
 }
