@@ -270,7 +270,7 @@ public static class IEnumerableUtils {
         return MakeIndexesFromTo(0, to);
     }
 
-    public static void ForIndexesList(int[] indexes, Action<int> indexProcessor) {
+    public static void ForIndexesList(this int[] indexes, Action<int> indexProcessor) {
         for (var i = 0; i < indexes.Length; i++) {
             indexProcessor?.Invoke(indexes[i]);
         }
