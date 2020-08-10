@@ -4,7 +4,7 @@ using c1tr00z.AssistLib.DataModels;
 using c1tr00z.AssistLib.PropertyReferences;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
 
     public class UIComboboxValueReceiver : ValueReceiverBase {
 

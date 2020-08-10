@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
     public class UILayerSimple : UILayerBase {
 
         private List<UIFrame> _currentFrames = new List<UIFrame>();

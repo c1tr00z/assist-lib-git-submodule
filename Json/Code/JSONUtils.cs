@@ -47,11 +47,19 @@ public static class JSONUtuls {
             return new List<T>();
         }
 
-        return value is T[]
-            ? (T[])value
-            : value is List<object>
-                ? ((List<object>)value).SelectNotNull(TryGet<T>)
-                : new List<T>();
+        var array = value is T[]
+            ? (T[]) value
+            : null;
+        
+        var list = value is List<object>
+            ? ((List<object>)value).SelectNotNull(TryGet<T>)
+            : new List<T>();
+
+        if (array != null) {
+            return array;
+        }
+
+        return list;
     }
 
     private static T TryGet<T>(object o) {

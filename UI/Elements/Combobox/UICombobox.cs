@@ -5,7 +5,7 @@ using c1tr00z.AssistLib.PropertyReferences;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
     public class UICombobox : MonoBehaviour {
 
         #region Private Fields

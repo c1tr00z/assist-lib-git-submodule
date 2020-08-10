@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
     [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(CanvasScaler))]
     [RequireComponent(typeof(RectTransform))]

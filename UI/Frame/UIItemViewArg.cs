@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using c1tr00z.AssistLib.DataModels;
 using c1tr00z.AssistLib.PropertyReferences;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
     public class UIItemViewArg : ValueReceiverBase {
 
         [ReferenceType(typeof(object))] 

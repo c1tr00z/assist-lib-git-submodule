@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
     [ExecuteInEditMode]
     public class UIRadialLayoutGroup : LayoutGroup {
 

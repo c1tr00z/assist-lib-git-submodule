@@ -1,6 +1,7 @@
 ﻿using c1tr00z.AssistLib.GoogleSpreadsheetImporter;
 using System.Collections.Generic;
 using System.IO;
+using c1tr00z.AssistLib.Common;
 using UnityEditor;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ namespace c1tr00z.AssistLib.Localization {
             foreach (KeyValuePair<string, Dictionary<string, string>> kvp in localization) {
                 var lang = DB.Get<LanguageItem>(kvp.Key);
                 if (lang == null) {
-                    lang = AssetsUtils.CreateScriptableObject<LanguageItem>(PathUtils.Combine("Assets", "Localization", "Resources", "Languages"), kvp.Key);
+                    lang = ScriptableObjectsEditorUtils.CreateObject<LanguageItem>(PathUtils.Combine("Assets", "Localization", "Resources", "Languages"), kvp.Key);
                 }
                 var json = JSONUtuls.Serialize(kvp.Value).DecodeEncodedNonAscii();
                 FileUtils.SaveTextToFile(PathUtils.Combine(Application.dataPath, "Localization", "Resources", "Languages", kvp.Key + "@text.txt"), json);

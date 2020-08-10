@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
     public static class RectTransformUtils {
         
         public static void Stretch(this RectTransform rectTransform) {

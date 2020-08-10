@@ -42,7 +42,7 @@ namespace c1tr00z.AssistLib.Saves.Editor {
         private void Check(bool create) {
             _savesModule = DB.Get<ModuleDBEntry>(_moduleName);
             if (create) {
-                Modules.Editor.ModulesEditorUtils.CreateModule<Saves>(_moduleName, saves => saves.defaultMethod = DB.Get<ToTXTFile>());
+                AppModules.Editor.ModulesEditorUtils.CreateModule<Saves>(_moduleName, saves => saves.defaultMethod = DB.Get<ToTXTFile>());
             }
         }
     }

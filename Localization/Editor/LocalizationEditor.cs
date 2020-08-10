@@ -6,12 +6,12 @@ namespace c1tr00z.AssistLib.Localization.Editor {
     public static class LocalizationEditor {
         [MenuItem("Assets/AssistLib/Create Google Spreadsheet Document")]
         public static void CreateSpreadsheetDocument() {
-            ItemsEditor.CreateItem<GoogleSpreadsheetDocumentDBEntry>();
+            DBEntryEditorUtils.CreateItem<GoogleSpreadsheetDocumentDBEntry>();
         }
 
         [MenuItem("Assets/AssistLib/Create Google Spreadsheet Document Page")]
         public static void CreateSpreadsheetDocumentPage() {
-            ItemsEditor.CreateItem<GoogleSpreadsheetDocumentPageDBEntry>();
+            DBEntryEditorUtils.CreateItem<GoogleSpreadsheetDocumentPageDBEntry>();
         }
     }
 }

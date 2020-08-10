@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
     public class UIFrameDBEntry : DBEntry {
 
         [SerializeField]
@@ -16,7 +16,7 @@ namespace c1tr00z.AssistLib.UI {
         }
 
         public void Show(params object[] args) {
-            UI.instance.Show(this, args);
+            AppModules.Modules.Get<UI>().Show(this, args);
         }
     }
 }

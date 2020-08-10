@@ -12,8 +12,8 @@ public static class DBEntryUtils {
         return (T)Resources.Load(GetPath(item) + "@" + key, typeof(T));
     }
 
-    public static T LoadPrefab<T>(this DBEntry item) where T : Object {
-        return (T)Resources.Load(GetPath(item) + "@Prefab", typeof(T));
+    public static T LoadPrefab<T>(this DBEntry item) {
+        return (T)(object)Resources.Load(GetPath(item) + "@Prefab", typeof(T));
     }
 
     public static string LoadText(this DBEntry item) {

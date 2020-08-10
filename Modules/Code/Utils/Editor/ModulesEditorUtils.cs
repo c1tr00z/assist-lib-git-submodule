@@ -1,14 +1,15 @@
-﻿using c1tr00z.AssistLib.DataBase.Editor;
+﻿using c1tr00z.AssistLib.Common;
+using c1tr00z.AssistLib.DataBase.Editor;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.Modules.Editor {
+namespace c1tr00z.AssistLib.AppModules.Editor {
     public static class ModulesEditorUtils {
 
         public static void CreateModule<T>(string moduleName, System.Action<T> onCreate) where T : Component {
             PathUtils.CreatePath("AssistLib", "Resources", "Modules");
-            var moduleDBEntry = AssetsUtils.CreateScriptableObject<ModuleDBEntry>(PathUtils.Combine("Assets", "AssistLib", "Resources", "Modules"), moduleName);
-            AssetsUtils.CreatePrefab(moduleDBEntry, onCreate);
-            ItemsEditor.CollectItems();
+            var moduleDBEntry = ScriptableObjectsEditorUtils.CreateObject<ModuleDBEntry>(PathUtils.Combine("Assets", "AssistLib", "Resources", "Modules"), moduleName);
+            PrefabEditorUtils.CreatePrefab(moduleDBEntry, onCreate);
+            DBEntryEditorUtils.CollectItems();
         }
     }
 }

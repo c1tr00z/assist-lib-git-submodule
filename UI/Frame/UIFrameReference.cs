@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
     [RequireComponent(typeof(RectTransform))]
     [ExecuteInEditMode]
     public class UIFrameReference : MonoBehaviour {
@@ -13,7 +13,7 @@ namespace c1tr00z.AssistLib.UI {
 
         private UIFrame _currentFrame;
 
-        [ReferenceTypeAttribute(typeof(object))] [SerializeField]
+        [ReferenceType(typeof(object))] [SerializeField]
         private PropertyReference[] _argsSrc;
 
         private void Start() {
@@ -22,6 +22,12 @@ namespace c1tr00z.AssistLib.UI {
 
         private void RespawnFrame() {
             transform.DestroyAllChildren();
+            var prefab = frameDBEntry.LoadPrefab<UIFrame>();
+            if (prefab == null)
+            {
+                Debug.LogError($"Prefab for UIFrameDBEntry {frameDBEntry} is null. This is {name}.", this);
+                return;
+            }
             _currentFrame = frameDBEntry.LoadPrefab<UIFrame>().Clone(transform);
 #if UNITY_EDITOR
             if (EditorApplication.isPlaying) {

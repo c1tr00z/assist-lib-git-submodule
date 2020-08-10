@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
     [RequireComponent(typeof(RectTransform))]
     public class UIFrame : MonoBehaviour, IUIView {
 
@@ -12,7 +12,7 @@ namespace c1tr00z.AssistLib.UI {
 
         public RectTransform rectTransform => this.GetCachedComponent(ref _rectTransform);
 
-        public bool isTopFrame => UI.instance.IsTopFrameInStack(this);
+        public bool isTopFrame => AppModules.Modules.Get<UI>().IsTopFrameInStack(this);
 
         public void Show(params object[] args) {
             GetComponentsInChildren<IUIView>().Where(uiView => !uiView.Equals(this))

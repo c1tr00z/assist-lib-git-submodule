@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
     public class UIDefaultsDBEntry : DBEntry {
 
         [SerializeField]

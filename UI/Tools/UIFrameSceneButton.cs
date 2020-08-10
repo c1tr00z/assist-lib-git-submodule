@@ -1,4 +1,6 @@
-﻿using c1tr00z.AssistLib.UI;
+﻿using c1tr00z.AssistLib.AppModules;
+using c1tr00z.AssistLib.GameUI;
+using c1tr00z.AssistLib.SceneManagement;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib {
@@ -9,10 +11,10 @@ namespace c1tr00z.AssistLib {
 
         public void Load() {
             if (_scene != null) {
-                Scenes.instance.LoadScene(_scene);
+                Modules.Get<Scenes>().LoadScene(_scene);
             }
             if (_frame != null) {
-                UI.UI.instance.Show(_frame);
+                Modules.Get<UI>().Show(_frame);
             }
         }
     }

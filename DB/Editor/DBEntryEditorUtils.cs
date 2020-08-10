@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using c1tr00z.AssistLib.Common;
 using UnityEditor;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.DataBase.Editor {
 
-    public static class ItemsEditor {
+    public static class DBEntryEditorUtils {
 
         public static string GetSelectedPath() {
+            
             string path = AssetDatabase.GetAssetPath(Selection.activeObject);
 
             if (path == "") {
@@ -33,7 +35,7 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
         public static void CreateItem<T>(string name) where T : ScriptableObject {
             var path = GetSelectedPath();
 
-            var item = AssetsUtils.CreateScriptableObject<T>(path, name);
+            var item = ScriptableObjectsEditorUtils.CreateObject<T>(path, name);
             
             AssetDatabase.Refresh();
 
@@ -49,7 +51,7 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
             
             var path = GetSelectedPath();
 
-            var item = AssetsUtils.CreateScriptableObject(type, path, name);
+            var item = ScriptableObjectsEditorUtils.CreateObject(type, path, name);
             
             AssetDatabase.Refresh();
 
@@ -65,7 +67,7 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
             }
 
             PathUtils.CreatePath("Resources");
-            AssetsUtils.CreateScriptableObject<DB>(PathUtils.Combine("Assets", "Resources"), "DB");
+            ScriptableObjectsEditorUtils.CreateObject<DB>(PathUtils.Combine("Assets", "Resources"), "DB");
             CollectItems();
         }
 
@@ -80,7 +82,7 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
             }
 
             PathUtils.CreatePath("AssistLib", "Resources");
-            AssetsUtils.CreateScriptableObject<AppSettings>(PathUtils.Combine("Assets", "AssistLib", "Resources"),
+            ScriptableObjectsEditorUtils.CreateObject<AppSettings>(PathUtils.Combine("Assets", "AssistLib", "Resources"),
                 "AppSettings");
             CollectItems();
         }

@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
 [RequireComponent(typeof(LayoutGroup))]
     public class UIList : MonoBehaviour {
 

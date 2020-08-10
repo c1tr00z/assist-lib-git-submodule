@@ -1,4 +1,4 @@
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
     public abstract class UIItemViewCustom<T> : UIItemView<T> {
         public override T item {
             get => GetItem();

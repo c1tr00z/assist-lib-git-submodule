@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
     public abstract class UIItemView<T> : UIView {
 
         public override bool isDataModelEnabled => item != null;

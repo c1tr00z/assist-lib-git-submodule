@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.DataBase.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.Core {
+namespace c1tr00z.AssistLib.Common {
     public class CreateScriptableObjectWindow : EditorWindow {
 
         #region Private Fields
@@ -69,12 +70,12 @@ namespace c1tr00z.AssistLib.Core {
             CheckName();
             _newSOName = EditorGUILayout.TextField("New asset name", _newSOName);
             
-            GUILayout.Label($"Current path: {Path.Combine(ItemsEditor.GetSelectedPath(), _newSOName)}.asset");
+            GUILayout.Label($"Current path: {Path.Combine(DBEntryEditorUtils.GetSelectedPath(), _newSOName)}.asset");
 
             EditorGUILayout.BeginHorizontal(); 
             
             if (GUILayout.Button("Create")) {
-                ItemsEditor.CreateItem(_selectedType, _newSOName);
+                DBEntryEditorUtils.CreateItem(_selectedType, _newSOName);
                 Close();
             }
             

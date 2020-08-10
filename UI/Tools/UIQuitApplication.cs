@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
     public class UIQuitApplication : MonoBehaviour {
         public void Quit() {
 #if UNITY_EDITOR

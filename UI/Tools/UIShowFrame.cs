@@ -2,7 +2,7 @@
 using c1tr00z.AssistLib.PropertyReferences;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
     public class UIShowFrame : MonoBehaviour {
 
         public UIFrameDBEntry frameDBEntry;
@@ -15,7 +15,7 @@ namespace c1tr00z.AssistLib.UI {
 
         private IEnumerator Start() {
 
-            while (UI.instance == null) {
+            while (AppModules.Modules.Get<UI>() == null) {
                 yield return null;
             }
 

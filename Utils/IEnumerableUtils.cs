@@ -69,8 +69,8 @@ public static class IEnumerableUtils {
         return Enumerable.Select(enumerable, processor);
     }
 
-    public static IEnumerable<T2> SelectNotNull<T1, T2>(this IEnumerable<T1> enumerable, System.Func<T1, T2> processor) {
-        return Select(enumerable, processor).Where(item => item != null);
+    public static List<T2> SelectNotNull<T1, T2>(this IEnumerable<T1> enumerable, System.Func<T1, T2> processor) {
+        return Select(enumerable, processor).Where(item => item != null).ToList();
     }
 
     public static IEnumerable<T> SelectNotNull<T>(this IEnumerable<T> enumerable) {

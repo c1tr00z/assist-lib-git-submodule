@@ -5,11 +5,11 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
     public class DBEntriesEditorEvents {
         public DBEntriesEditorEvents() {
             EditorApplication.projectChanged += EditorApplicationOnProjectChanged;
-            ItemsEditor.CollectItems();
+            DBEntryEditorUtils.CollectItems();
         }
 
         private void EditorApplicationOnProjectChanged() {
-            ItemsEditor.AutoCollect();
+            DBEntryEditorUtils.AutoCollect();
         }
     }
 }

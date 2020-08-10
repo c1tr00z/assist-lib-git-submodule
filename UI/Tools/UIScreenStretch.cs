@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace c1tr00z.AssistLib.UI {
+namespace c1tr00z.AssistLib.GameUI {
     [RequireComponent(typeof(RectTransform))]
     [ExecuteInEditMode]
     public class UIScreenStretch : MonoBehaviour {

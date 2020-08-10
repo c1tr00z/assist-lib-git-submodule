@@ -1,4 +1,4 @@
-﻿using c1tr00z.AssistLib.UI;
+﻿using c1tr00z.AssistLib.GameUI;
 using UnityEngine;
 
 public class AppSettings : DBEntry {

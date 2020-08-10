@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using c1tr00z.AssistLib.AppModules;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace c1tr00z.AssistLib.UI {
-    public class UI : BehaviourSingleton<UI> {
+namespace c1tr00z.AssistLib.GameUI {
+    public class UI : Module {
 
         private Dictionary<UILayerDBEntry, UILayerBase> _layers = new Dictionary<UILayerDBEntry, UILayerBase>();
 

@@ -14,7 +14,7 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
                 ContainsAsset(importedAssets) || ContainsAsset(deletedAssets) || ContainsAsset(movedAssets);
 
             if (reCollectDB) {
-                ItemsEditor.AutoCollect();
+                DBEntryEditorUtils.AutoCollect();
             }
         }
 
