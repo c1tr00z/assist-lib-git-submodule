@@ -19,13 +19,13 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
 
         public static bool autoCollect => LoadData().autoCollect;
 
-        public override void Init(Dictionary<string, object> settings) {
-            base.Init(settings);
+        public override void Init(Dictionary<string, object> settingsJson) {
+            base.Init(settingsJson);
             Load();
         }
 
-        public override void Save(Dictionary<string, object> settings) {
-            base.Save(settings);
+        public override void Save(Dictionary<string, object> settingsJson) {
+            base.Save(settingsJson);
             Save();
         }
 

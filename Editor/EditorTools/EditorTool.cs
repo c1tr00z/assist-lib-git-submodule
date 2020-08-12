@@ -16,11 +16,11 @@ namespace c1tr00z.AssistLib.EditorTools {
             }
         }
 
-        public virtual void Init(Dictionary<string, object> settings) {
+        public virtual void Init(Dictionary<string, object> settingsJson) {
             
         }
 
-        public virtual void Save(Dictionary<string, object> settings) {
+        public virtual void Save(Dictionary<string, object> settingsJson) {
 
         }
 

@@ -1,9 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using c1tr00z.AssistLib.Json;
 
 namespace c1tr00z.AssistLib.Localization {
     public static class Localization {
+
+        private class Settings : IJsonSerializable, IJsonDeserializable {
+
+            [JsonSerializableField] public string savedLanguage;
+        }
 
         private const SystemLanguage _defaultSystemLanguage = SystemLanguage.English;
         private static SystemLanguage _currentSystemLanguage = Application.systemLanguage;
@@ -13,7 +19,9 @@ namespace c1tr00z.AssistLib.Localization {
         private static string LOCALIZATION_SETTINGS_KEY = "Localization";
         private static string LOCALIZATION_SAVED_LANGUAGE_KEY = "Localization";
 
-        private static LocalizationSettingsDBEntry _settings;
+        private static LocalizationSettingsDBEntry _settingsDBEntry;
+
+        private static Settings _settings;
 
         private static bool _inited = false;
 
@@ -22,29 +30,32 @@ namespace c1tr00z.AssistLib.Localization {
         public static bool isMultipleTranslationsSupported {
             get {
                 Init();
-                return _settings != null && _settings.supportMultipleTranslations;
+                return _settingsDBEntry != null && _settingsDBEntry.supportMultipleTranslations;
             }
         }
 
         private static void Init() {
             if (!_inited) {
-                _settings = DB.Get<LocalizationSettingsDBEntry>();
+                _settingsDBEntry = DB.Get<LocalizationSettingsDBEntry>();
                 
                 _defaultLanguage = DB.Get<LanguageItem>(_defaultSystemLanguage.ToString());
 
                 var localizationSettingsData = PlayerPrefsLocalData.GetDataNode(LOCALIZATION_SETTINGS_KEY);
-                var savedLanguageString = localizationSettingsData.ContainsKey(LOCALIZATION_SAVED_LANGUAGE_KEY)
-                    ? localizationSettingsData.GetString(LOCALIZATION_SAVED_LANGUAGE_KEY)
-                    : null;
 
-                if (string.IsNullOrEmpty(savedLanguageString)) {
+                _settings = JSONUtuls.Deserialize<Settings>(localizationSettingsData);
+
+                if (_settings == null) {
+                    _settings = new Settings();
+                }
+
+                if (string.IsNullOrEmpty(_settings.savedLanguage)) {
                     ChangeLanguage(_currentSystemLanguage.ToString());
                 } else {
-                    var savedLanguage = DB.Get<LanguageItem>(savedLanguageString);
+                    var savedLanguage = DB.Get<LanguageItem>(_settings.savedLanguage);
                     if (savedLanguage != null) {
                         ChangeLanguage(savedLanguage);
                     } else {
-                        Debug.LogWarning(string.Format("Language not found: {0}", savedLanguageString));
+                        Debug.LogWarning(string.Format("Language not found: {0}", _settings.savedLanguage));
                     }
                 }
 
@@ -107,8 +118,15 @@ namespace c1tr00z.AssistLib.Localization {
             if (currentLanguage == newLanguage) {
                 return;
             }
-            var localizationSettingsData = PlayerPrefsLocalData.GetDataNode(LOCALIZATION_SETTINGS_KEY);
-            localizationSettingsData.AddOrSet(LOCALIZATION_SAVED_LANGUAGE_KEY, newLanguage.name);
+
+            if (_settings == null) {
+                _settings = new Settings();
+            }
+
+            _settings.savedLanguage = newLanguage.name;
+
+            var localizationSettingsData = _settings.ToJson();
+            
             PlayerPrefsLocalData.SetDataNode(LOCALIZATION_SETTINGS_KEY, localizationSettingsData);
             currentLanguage = newLanguage;
 

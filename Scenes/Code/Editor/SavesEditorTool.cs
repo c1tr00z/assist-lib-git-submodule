@@ -14,8 +14,8 @@ namespace c1tr00z.AssistLib.Saves.Editor {
 
         private bool _checked = false;
 
-        public override void Init(Dictionary<string, object> settings) {
-            base.Init(settings);
+        public override void Init(Dictionary<string, object> settingsJson) {
+            base.Init(settingsJson);
             _checked = false;
         }
 

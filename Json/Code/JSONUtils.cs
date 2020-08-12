@@ -1,24 +1,154 @@
 ﻿using MiniJSON;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using c1tr00z.AssistLib.Json;
+using UnityEditorInternal.VersionControl;
 using UnityEngine;
 
 public static class JSONUtuls {
 
-    public static string Serialize(object objectToSerialize) {
-        return Json.Serialize(objectToSerialize);
+    public static void Serialize(this IJsonSerializable serializable, Dictionary<string, object> json) {
+        serializable.GetType().GetJsonSerializedFields().ForEach(f => {
+            json.Add(f.Name, SerializeValue(f.GetValue(serializable)));
+        });
+        
+        if (serializable is IJsonSerializableCustom) {
+            ((IJsonSerializableCustom)serializable).SerializeCustom(json);
+        }
     }
 
-    private static object SerializeSerializable(IJsonSerializable serializable) {
+    public static void Deserialize(this IJsonDeserializable deserializable, Dictionary<string, object> json) {
+        var fields = deserializable.GetType().GetJsonSerializedFields();
+        
+        json.Keys.ForEach(fieldName => {
+            var field = fields.FirstOrDefault(f => f.Name == fieldName);
+
+            if (field == null) {
+                return;
+            }
+
+            var value = json[fieldName];
+
+            field.SetValue(deserializable, DeserializeValue(value, field.FieldType));
+        });
+        
+        if (deserializable is IJsonDeserializableCustom) {
+            ((IJsonDeserializableCustom)deserializable).DeserializeCustom(json);
+        }
+    }
+
+    private static object SerializeValue(object value) {
+
+        if (value == null) {
+            return null;
+        }
+
+        var valueType = value.GetType();
+
+        object returnValue = value;
+
+        if (valueType.GetInterfaces().Contains(typeof(IList<>))) {
+            var listValue = new List<object>();
+
+            var list = (IList)value;
+            var enumerator = list.GetEnumerator();
+
+            while (enumerator.MoveNext()) {
+                listValue.Add(SerializeValue(enumerator.Current));
+            }
+
+            returnValue = listValue;
+
+        } else if (value is IJsonSerializable serializable) {
+            var valueJson = new Dictionary<string, object>();
+            serializable.Serialize(valueJson);
+            returnValue = valueJson;
+        } else if (value is DBEntry dbEntry) {
+            returnValue = dbEntry.name;
+        }
+        
+        return returnValue;
+    }
+
+    private static object DeserializeValue(object value, Type targetType) {
+        object returnValue = value;
+
+        var isDeserializeToList = targetType.IsGenericType &&
+                               targetType.GetGenericTypeDefinition().GetInterfaces().Contains(typeof(IList<>));
+
+        if (value == null && isDeserializeToList) {
+            return Activator.CreateInstance(targetType);
+        }
+
+        if (value == null) {
+            return null;
+        }
+        
+        if (targetType.IsGenericType &&
+            targetType.GetGenericTypeDefinition().GetInterfaces().Contains(typeof(IList))) {
+            
+            Debug.LogError("This is list");
+
+            var listItemType = targetType.GetGenericArguments().FirstOrDefault();
+
+            var list = (IList) value;
+
+            var enumerator = list.GetEnumerator();
+
+            var valueList = (IList)Activator.CreateInstance(targetType);
+
+            while (enumerator.MoveNext()) {
+                var listItemValue = enumerator.Current;
+                var isDeserializable = listItemType.GetInterfaces().Contains(typeof(IJsonDeserializable));
+                if (isDeserializable && listItemValue is Dictionary<string, object>) {
+                    valueList.Add(DeserializeValue(listItemValue, listItemType));
+                } else if (!isDeserializable) {
+                    valueList.Add(listItemValue);
+                }
+            }
+
+            returnValue = valueList;
+        } else if (targetType.GetInterfaces().Contains(typeof(IJsonDeserializable))) {
+            if (value is Dictionary<string, object> json) {
+                var deserializable = Activator.CreateInstance(targetType);
+                ((IJsonDeserializable)deserializable).Deserialize(json);
+                returnValue = deserializable;
+            }
+        } else if (targetType == typeof(Int32) && value is Int64) {
+            returnValue = (int) (long) value;
+        } else if (targetType == typeof(Single) && value is Double) {
+            returnValue = Convert.ToSingle((Double) value);
+        } else if (value is string && targetType.IsSubclassOf(typeof(DBEntry))) {
+            returnValue = DB.Get<DBEntry>(value.ToString());
+        }
+
+        Debug.LogError("b: " + returnValue + " \\ type : " + returnValue.GetType() + " \\ target: " + targetType);
+
+        return returnValue;
+    }
+
+    public static string ToJsonString(this IJsonSerializable serializable) {
+        return Serialize(ToJson(serializable));
+    }
+
+    public static Dictionary<string, object> ToJson(this IJsonSerializable serializable) {
         var json = new Dictionary<string, object>();
         serializable.Serialize(json);
         return json;
     }
 
-    private static bool IsEnumerable(object obj) {
-        return obj is IEnumerable<object> ||
-               obj is List<object> || obj is Array;
+    public static T FromJsonString<T>(string jsonString) where T : IJsonDeserializable {
+        var json = Deserialize(jsonString);
+        var deserializable = Activator.CreateInstance<T>();
+        deserializable.Deserialize(json);
+        return deserializable;
+    }
+
+    public static string Serialize(object objectToSerialize) {
+        return Json.Serialize(objectToSerialize);
     }
 
     public static Dictionary<string, object> Deserialize(string jsonString) {
@@ -33,123 +163,13 @@ public static class JSONUtuls {
         return (Dictionary<string, object>)deserialized;
     }
 
-    public static T Get<T>(this Dictionary<string, object> json, string key) {
-        return json.ContainsKey(key) 
-            ? typeof(IJsonDeserializable).IsAssignableFrom(typeof(T)) 
-                ? TryGetDeserializeable<T>(json)
-                : (T)json[key] 
-            : default(T);
-    }
-
-    public static IEnumerable<T> GetIEnumerable<T>(this Dictionary<string, object> json, string key) {
-        var value = json.ContainsKey(key) ? json.Get<object>(key) : null;
-        if (value == null) {
-            return new List<T>();
-        }
-
-        var array = value is T[]
-            ? (T[]) value
-            : null;
-        
-        var list = value is List<object>
-            ? ((List<object>)value).SelectNotNull(TryGet<T>)
-            : new List<T>();
-
-        if (array != null) {
-            return array;
-        }
-
-        return list;
-    }
-
-    private static T TryGet<T>(object o) {
-        if (o is T) {
-            return (T) o;
-        }
-        
-        var dic = o as Dictionary<string, object>;
-        if (dic != null) {
-            return TryGetDeserializeable<T>(dic);
-        }
-
-        return default(T);
+    public static T Deserialize<T>(Dictionary<string, object> json) where T : IJsonDeserializable {
+        var deserializable = Activator.CreateInstance<T>();
+        deserializable.Deserialize(json);
+        return deserializable;
     }
 
     public static Dictionary<string, object> GetChild(this Dictionary<string, object> json, string key) {
         return json.ContainsKey(key) ? (Dictionary<string, object>)json[key] : new Dictionary<string, object>();
-    }
-    
-    public static T TryGetDeserializeable<T>(this Dictionary<string, object> json) {
-        if (typeof(IJsonDeserializable).IsAssignableFrom(typeof(T))) {
-            var deserializeable = (T) Activator.CreateInstance(typeof(T));
-            ((IJsonDeserializable)deserializeable).Deserialize(json);
-            return deserializeable;
-        }
-
-        return default(T);
-    }
-
-    public static T GetDeserializeable<T>(this Dictionary<string, object> json) where T : IJsonDeserializable {
-        var deserializeable = (T) Activator.CreateInstance(typeof(T));
-        deserializeable.Deserialize(json);
-        return deserializeable;
-    }
-
-    public static string GetString(this Dictionary<string, object> json, string key) {
-        return json.ContainsKey(key) ? json[key].ToString() : null;
-    }
-
-    public static int GetInt(this Dictionary<string, object> json, string key) {
-        var stringValue = json.GetString(key);
-        int value = 0;
-        if (!string.IsNullOrEmpty(stringValue) && int.TryParse(stringValue, out value)) {
-            return value;
-        }
-        return 0;
-    }
-
-    public static long GetLong(this Dictionary<string, object> json, string key) {
-        var stringValue = json.GetString(key);
-        long value = 0;
-        if (!string.IsNullOrEmpty(stringValue) && long.TryParse(stringValue, out value)) {
-            return value;
-        }
-        return 0;
-    }
-
-    public static float GetFloat(this Dictionary<string, object> json, string key) {
-        var stringValue = json.GetString(key);
-        float value = 0;
-        if (!string.IsNullOrEmpty(stringValue) && float.TryParse(stringValue, out value)) {
-            return value;
-        }
-        return 0f;
-    }
-
-    public static bool GetBool(this Dictionary<string, object> json, string key, bool defaultValue = false) {
-        var stringValue = json.GetString(key);
-        bool value = false;
-        if (!string.IsNullOrEmpty(stringValue) && bool.TryParse(stringValue, out value)) {
-            return value;
-        }
-        return defaultValue;
-    }
-
-    public static Vector2 GetVector2(this Dictionary<string, object> json, string key) {
-        var stringValue = json.GetString(key);
-        Vector2 value;
-        if (VectorUtils.TryParse(stringValue, out value)) {
-            return value;
-        }
-        return Vector2.zero;
-    }
-
-    public static Vector3 GetVector3(this Dictionary<string, object> json, string key) {
-        var stringValue = json.GetString(key);
-        Vector3 value;
-        if (VectorUtils.TryParse(stringValue, out value)) {
-            return value;
-        }
-        return Vector3.zero;
     }
 }

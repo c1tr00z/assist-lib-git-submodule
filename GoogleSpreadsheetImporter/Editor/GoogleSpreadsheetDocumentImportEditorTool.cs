@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using c1tr00z.AssistLib.Json;
+using c1tr00z.Drill.Levels.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,16 +10,27 @@ namespace c1tr00z.AssistLib.GoogleSpreadsheetImporter {
 
         private static string PAGES_KEY = "pages";
 
-        protected List<GoogleSpreadsheetDocumentPageDBEntry> pages = new List<GoogleSpreadsheetDocumentPageDBEntry>();
+        public class Settings : IJsonSerializable, IJsonDeserializable {
 
-        public override void Init(Dictionary<string, object> settings) {
-            base.Init(settings);
-            pages = settings.GetIEnumerable<string>(PAGES_KEY).Select(pageName => DB.Get<GoogleSpreadsheetDocumentPageDBEntry>(pageName)).ToList();
+            [JsonSerializableField]
+            public List<GoogleSpreadsheetDocumentPageDBEntry> pages = new List<GoogleSpreadsheetDocumentPageDBEntry>();
+        }
+        
+        protected Settings settings { get; private set; }
+
+        protected List<GoogleSpreadsheetDocumentPageDBEntry> pages => settings.pages;
+
+        // protected List<GoogleSpreadsheetDocumentPageDBEntry> pages = new List<GoogleSpreadsheetDocumentPageDBEntry>();
+
+        public override void Init(Dictionary<string, object> settingsJson) {
+            settings = JSONUtuls.Deserialize<Settings>(settingsJson); 
+            // pages = settingsJson.GetIEnumerable<string>(PAGES_KEY).Select(pageName => DB.Get<GoogleSpreadsheetDocumentPageDBEntry>(pageName)).ToList();
         }
 
-        public override void Save(Dictionary<string, object> settings) {
-            base.Save(settings);
-            settings.AddOrSet(PAGES_KEY, pages.SelectNotNull().SelectNotNull(p => p.name).ToArray());
+        public override void Save(Dictionary<string, object> settingsJson) {
+            base.Save(settingsJson);
+            settings.Serialize(settingsJson);
+            // settingsJson.AddOrSet(PAGES_KEY, pages.SelectNotNull().SelectNotNull(p => p.name).ToArray());
         }
 
         protected override void DrawInterface() {
