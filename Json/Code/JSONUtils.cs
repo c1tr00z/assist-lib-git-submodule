@@ -12,7 +12,7 @@ public static class JSONUtuls {
 
     public static void Serialize(this IJsonSerializable serializable, Dictionary<string, object> json) {
         serializable.GetType().GetJsonSerializedFields().ForEach(f => {
-            json.Add(f.Name, SerializeValue(f.GetValue(serializable)));
+            json.AddOrSet(f.Name, SerializeValue(f.GetValue(serializable)));
         });
         
         if (serializable is IJsonSerializableCustom) {
@@ -89,8 +89,6 @@ public static class JSONUtuls {
         
         if (targetType.IsGenericType &&
             targetType.GetGenericTypeDefinition().GetInterfaces().Contains(typeof(IList))) {
-            
-            Debug.LogError("This is list");
 
             var listItemType = targetType.GetGenericArguments().FirstOrDefault();
 
@@ -121,11 +119,33 @@ public static class JSONUtuls {
             returnValue = (int) (long) value;
         } else if (targetType == typeof(Single) && value is Double) {
             returnValue = Convert.ToSingle((Double) value);
-        } else if (value is string && targetType.IsSubclassOf(typeof(DBEntry))) {
+        } else if (value is string && typeof(DBEntry).IsAssignableFrom(targetType)) {
+            
             returnValue = DB.Get<DBEntry>(value.ToString());
+            
+        } else if (value is string && typeof(Vector2).IsAssignableFrom(targetType)) {
+            
+            if (VectorUtils.TryParse(value.ToString(), out Vector2 vector)) {
+                returnValue = vector;
+            }
+            
+        } else if (value is string && typeof(Vector3).IsAssignableFrom(targetType)) {
+            
+            if (VectorUtils.TryParse(value.ToString(), out Vector3 vector)) {
+                returnValue = vector;
+            }
+            
+        } else if (value is string && typeof(Vector4).IsAssignableFrom(targetType)) {
+            
+            if (VectorUtils.TryParse(value.ToString(), out Vector4 vector)) {
+                returnValue = vector;
+            } 
         }
 
-        Debug.LogError("b: " + returnValue + " \\ type : " + returnValue.GetType() + " \\ target: " + targetType);
+        // if (!targetType.IsInstanceOfType(returnValue)) {
+        //     Debug.LogError("b: " + returnValue + " \\ type : " + returnValue.GetType() + " \\ target: " + targetType);
+        // }
+
 
         return returnValue;
     }

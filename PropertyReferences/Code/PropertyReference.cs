@@ -8,6 +8,8 @@ namespace c1tr00z.AssistLib.PropertyReferences {
         public Object target;
 
         public string fieldName;
-        public PropertyInfo field { get; set; }
+        // public PropertyInfo field { get; set; }
+
+        public PropertyValueGetter getter;
     }
 }

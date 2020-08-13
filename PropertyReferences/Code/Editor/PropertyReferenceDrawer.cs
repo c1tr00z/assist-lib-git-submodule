@@ -92,12 +92,12 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 						data.selectedTypeProperties.AddRange(list.Where(p => p.PropertyType != drawerAttribute.type));
 					}
 					else {
-						data.selectedTypeProperties.AddRange(list.Where(p => p.PropertyType.IsSubclassOf(drawerAttribute.type)));
+						data.selectedTypeProperties.AddRange(list.Where(p => drawerAttribute.type.IsAssignableFrom(p.PropertyType)));
 						data.selectedTypeProperties.AddRange(list.Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == drawerAttribute.type));
 					}
 				
-					if (drawerAttribute.type.IsSubclassOf(typeof(string))) {
-						data.selectedTypeProperties.AddRange(list.Where(p => !p.PropertyType.IsSubclassOf(drawerAttribute.type)));
+					if (typeof(string).IsAssignableFrom(drawerAttribute.type)) {
+						data.selectedTypeProperties.AddRange(list.Where(p => !drawerAttribute.type.IsAssignableFrom(p.PropertyType)));
 					}
 				}
 	            

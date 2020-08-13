@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 
 public static class ReflectionUtils {
 
@@ -28,6 +29,13 @@ public static class ReflectionUtils {
         return GetTypes().Where(t => t.IsSubclassOf(baseClass)).ToList();
     }
 
+    public static List<Type> GetTypesByInterface(Type interfaceType) {
+        if (interfaceType == null) {
+            return GetTypes();
+        }
+        return GetTypes().Where(t => t.GetInterfaces().Contains(interfaceType)).ToList();
+    }
+
     public static IEnumerable<PropertyInfo> GetPublicProperties(this Type type) {
         return type.GetProperties(BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public);
     }
@@ -39,4 +47,28 @@ public static class ReflectionUtils {
 	public static string GetPropertyNameByType(this PropertyInfo propertyInfo) {
 		return $"{propertyInfo.PropertyType.Name}/{propertyInfo.Name}";
 	}
+
+    public static string GetValidFullName(this Type type) {
+
+        if (type == null) {
+            return null;
+        }
+        
+        if (!type.IsGenericType) {
+            return type.FullName;
+        }
+        
+        var genericArgs = type.GetGenericArguments();
+        var genericArgsString = "";
+        for (var i = 0; i < genericArgs.Length; i++) {
+            if (i > 0) {
+                genericArgsString += ",";
+            }
+
+            genericArgsString += genericArgs[i].FullName;
+        }
+        
+
+        return $"{type.FullName.Split('`').First()}<{genericArgsString}>";
+    }
 }

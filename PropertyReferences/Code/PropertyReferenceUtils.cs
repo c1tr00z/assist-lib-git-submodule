@@ -9,17 +9,22 @@ namespace c1tr00z.AssistLib.PropertyReferences {
         private static Dictionary<string, PropertyInfo> _properties = new Dictionary<string, PropertyInfo>();
 
         public static T Get<T>(this PropertyReference propertyReference) {
-            if (propertyReference.field == null) {
+            if (propertyReference.getter == null) {
+
+                
                 var key = propertyReference.GetPropertyKey();
+                
                 if (!_properties.ContainsKey(key)) {
                     var type = propertyReference.target.GetType();
                     _properties.AddOrSet(key, type.GetPublicPropertyInfo(propertyReference.fieldName));
                 }
 
-                propertyReference.field = _properties[key];
+                var propertyInfo = _properties[key];
+
+                propertyReference.getter = PropertyValueGetterUtils.MakeGetter<T>(propertyReference.target, propertyInfo);
 
             }
-            if (propertyReference.field == null) {
+            if (propertyReference.getter == null) {
                 return default(T);
             }
 
@@ -28,7 +33,7 @@ namespace c1tr00z.AssistLib.PropertyReferences {
                 if (value == null) {
                     return default(T);
                 }
-                return (T)(object)propertyReference.GetValue().ToString();
+                return (T)(object)value.ToString();
             }
             if (value is T) {
                 return (T)value;
@@ -58,7 +63,11 @@ namespace c1tr00z.AssistLib.PropertyReferences {
         }
 
         public static object GetValue(this PropertyReference propertyReference) {
-            return propertyReference.field.GetValue(propertyReference.target, null);
+            return propertyReference.getter.GetValue();
+        }
+
+        public static bool IsValid(this PropertyReference propertyReference) {
+            return propertyReference.target != null && !string.IsNullOrEmpty(propertyReference.fieldName);
         }
     }
 }
