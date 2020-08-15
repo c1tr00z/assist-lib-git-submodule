@@ -11,6 +11,9 @@ using UnityEngine;
 public static class JSONUtuls {
 
     public static void Serialize(this IJsonSerializable serializable, Dictionary<string, object> json) {
+        if (serializable == null) {
+            return;
+        }
         serializable.GetType().GetJsonSerializedFields().ForEach(f => {
             json.AddOrSet(f.Name, SerializeValue(f.GetValue(serializable)));
         });
