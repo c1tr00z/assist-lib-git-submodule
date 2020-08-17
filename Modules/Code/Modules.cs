@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using c1tr00z.Drill.Game;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.AppModules {
@@ -23,6 +24,10 @@ namespace c1tr00z.AssistLib.AppModules {
 
         #region Class Implementation
 
+        protected List<Modules> GetModulesModules() {
+            return _modules.ToList();
+        }
+
         public abstract List<IModule> GetModules();
 
         public List<T> GetModules<T>() where T : IModule {
@@ -39,6 +44,12 @@ namespace c1tr00z.AssistLib.AppModules {
 
         public static T Get<T>() where T : IModule {
             return _modules.SelectNotNull(m => m.GetModule<T>()).FirstOrDefault();
+        }
+
+        private void OnDestroy() {
+            if (_modules.Contains(this)) {
+                _modules.Remove(this);
+            }
         }
 
         #endregion

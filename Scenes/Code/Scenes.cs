@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using c1tr00z.AssistLib.AppModules;
 using UnityEngine.SceneManagement;
@@ -7,43 +8,70 @@ namespace c1tr00z.AssistLib.SceneManagement {
     
     public class Scenes : Module {
 
-        private SceneItem _currentSceneItem;
+        #region Events
 
-        private void OnEnable() {
-            App.modulesLoaded += App_modulesLoaded;
+        public static event Action<float> loadingProgressUpdated;
+
+        #endregion
+
+        #region Private Fields
+
+        private AsyncOperation _sceneLoadOperation;
+
+        private Action _onLoadingCallback;
+
+        #endregion
+
+        #region Accessors
+        
+        public SceneItem currentSceneItem { get; private set; }
+
+        #endregion
+
+
+        #region Unity Events
+
+        private void Update() {
+            UpdateLoadingProgress();
         }
 
-        private void OnDisable() {
-            App.modulesLoaded -= App_modulesLoaded;
-        }
+        #endregion
 
-        private void App_modulesLoaded() {
-            if (AppSettings.instance.startScene == null) {
+        #region Class Implementation
+
+        private void UpdateLoadingProgress() {
+            if (_sceneLoadOperation == null) {
                 return;
             }
-            LoadScene(AppSettings.instance.startScene);
+            
+            loadingProgressUpdated?.Invoke(_sceneLoadOperation.progress);
+
+            if (_sceneLoadOperation.progress >= 1) {
+                _sceneLoadOperation = null;
+                _onLoadingCallback?.Invoke();
+                _onLoadingCallback = null;
+            }
         }
+
+        #endregion
 
         public void LoadScene(SceneItem newScene) {
 
-            _currentSceneItem = newScene;
+            currentSceneItem = newScene;
 
-            SceneManager.LoadScene(_currentSceneItem.name, LoadSceneMode.Single);
+            SceneManager.LoadScene(currentSceneItem.name, LoadSceneMode.Single);
         }
 
-        public void LoadSceneAsync(SceneItem newScene) {
-            StartCoroutine(C_LoadSceneAsync(newScene));
-        }
-
-        public IEnumerator C_LoadSceneAsync(SceneItem newScene) {
-            
-            _currentSceneItem = newScene;
-
-            var asyncOperation = SceneManager.LoadSceneAsync(_currentSceneItem.name);
-
-            while (asyncOperation.isDone) {
-                yield return 0;
+        public void LoadSceneAsync(SceneItem newScene, Action callback = null) {
+            if (currentSceneItem == newScene) {
+                callback?.Invoke();
+                return;
             }
+            _onLoadingCallback = () => {
+                currentSceneItem = newScene;
+                callback?.Invoke();
+            };
+            SceneManager.LoadSceneAsync(newScene.name);
         }
     }
 }

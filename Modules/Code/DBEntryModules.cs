@@ -13,6 +13,10 @@ namespace c1tr00z.AssistLib.AppModules {
         #region Modules
 
         protected override void Awake() {
+            if (GetModulesModules().Any(mm => mm.GetType() == GetType())) {
+                Destroy(gameObject);
+                return;
+            }
             DontDestroyOnLoad(this);
             CheckModules();
             base.Awake();
