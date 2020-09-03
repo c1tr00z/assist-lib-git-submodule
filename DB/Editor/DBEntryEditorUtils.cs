@@ -9,55 +9,9 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
 
     public static class DBEntryEditorUtils {
 
-        public static string GetSelectedPath() {
-            
-            string path = AssetDatabase.GetAssetPath(Selection.activeObject);
-
-            if (path == "") {
-                path = "Assets";
-            }
-            else if (Path.GetExtension(path) != "") {
-                path = path.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
-            }
-
-            return path;
-        }
-
         [MenuItem("Assets/Create DBEntry")]
         public static void CreateDBEntry() {
-            CreateItem<DBEntry>("New DBEntry");
-        }
-
-        public static void CreateItem<T>() where T : ScriptableObject {
-            CreateItem<T>(string.Format("New {0}", typeof(T).Name));
-        }
-
-        public static void CreateItem<T>(string name) where T : ScriptableObject {
-            var path = GetSelectedPath();
-
-            var item = ScriptableObjectsEditorUtils.CreateObject<T>(path, name);
-            
-            AssetDatabase.Refresh();
-
-            CollectItems();
-
-            Selection.activeObject = item;
-        }
-
-        public static void CreateItem(Type type, string name) {
-            if (!type.IsSubclassOf(typeof(ScriptableObject))) {
-                return;
-            }
-            
-            var path = GetSelectedPath();
-
-            var item = ScriptableObjectsEditorUtils.CreateObject(type, path, name);
-            
-            AssetDatabase.Refresh();
-
-            CollectItems();
-
-            Selection.activeObject = item;
+            CreateItem<DBEntry>();
         }
 
         [MenuItem("Assist/Create DB")]
@@ -67,7 +21,7 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
             }
 
             PathUtils.CreatePath("Resources");
-            ScriptableObjectsEditorUtils.CreateObject<DB>(PathUtils.Combine("Assets", "Resources"), "DB");
+            ScriptableObjectsEditorUtils.Create<DB>(PathUtils.Combine("Assets", "Resources"), "DB");
             CollectItems();
         }
 
@@ -82,7 +36,7 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
             }
 
             PathUtils.CreatePath("AssistLib", "Resources");
-            ScriptableObjectsEditorUtils.CreateObject<AppSettings>(PathUtils.Combine("Assets", "AssistLib", "Resources"),
+            CreateItem<AppSettings>(PathUtils.Combine("Assets", "AssistLib", "Resources"),
                 "AppSettings");
             CollectItems();
         }
@@ -169,6 +123,24 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
             if (DBSettings.autoCollect) {
                 CollectItems();
             }
+        }
+
+        public static T CreateItem<T>() where T : DBEntry {
+
+            var item = ScriptableObjectsEditorUtils.Create<T>();
+            
+            CollectItems();
+
+            return item;
+        }
+        
+        public static T CreateItem<T>(string path, string name) where T : DBEntry {
+
+            var item = ScriptableObjectsEditorUtils.Create<T>(path, name);
+            
+            CollectItems();
+
+            return item;
         }
     }
 }

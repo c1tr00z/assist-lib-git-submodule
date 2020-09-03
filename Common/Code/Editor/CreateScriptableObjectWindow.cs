@@ -70,12 +70,12 @@ namespace c1tr00z.AssistLib.Common {
             CheckName();
             _newSOName = EditorGUILayout.TextField("New asset name", _newSOName);
             
-            GUILayout.Label($"Current path: {Path.Combine(DBEntryEditorUtils.GetSelectedPath(), _newSOName)}.asset");
+            GUILayout.Label($"Current path: {Path.Combine(SelectionUtils.GetSelectedPath(), _newSOName)}.asset");
 
             EditorGUILayout.BeginHorizontal(); 
             
             if (GUILayout.Button("Create")) {
-                DBEntryEditorUtils.CreateItem(_selectedType, _newSOName);
+                ScriptableObjectsEditorUtils.Create(_selectedType, _newSOName);
                 Close();
             }
             
