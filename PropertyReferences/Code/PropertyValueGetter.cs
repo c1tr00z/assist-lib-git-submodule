@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using UnityEngine;
 
 namespace c1tr00z.AssistLib.PropertyReferences {
     public abstract class PropertyValueGetter {

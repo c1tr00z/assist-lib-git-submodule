@@ -46,35 +46,81 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 
         private List<Type> ScanPrefab(string path) {
             var types = new List<Type>();
-            var assets = AssetDatabase.LoadAllAssetsAtPath(path);
+            var assets = AssetDatabase.LoadAllAssetsAtPath(path).SelectNotNull();
             assets.ForEach(a => {
+
+                var allFittedFields = a.GetType().GetFields(BindingFlags.Default | BindingFlags.Public |
+                                                            BindingFlags.NonPublic |
+                                                            BindingFlags.Instance);
                 
-                var propRefFields = a.GetType().
-                    GetFields(BindingFlags.Default | BindingFlags.Public | BindingFlags.NonPublic |
-                                      BindingFlags.Instance).Where(f => f.FieldType == typeof(PropertyReference)).ToList();
+                var propRefFields = allFittedFields.Where(f => f.FieldType == typeof(PropertyReference)).ToList();
 
                 propRefFields.ForEach(f => {
                     var propReference = (PropertyReference)f.GetValue(a);
-                    if (propReference == null || !propReference.IsValid()) {
-                        Debug.LogError($"Invalid PropertyReference in {a.name} (type: {a.GetType()}, fieldName: {f.Name})", a);
+                    
+                    var referenceTypeAttribute = f.GetCustomAttributes().OfType<ReferenceTypeAttribute>().FirstOrDefault();
+
+                    if (CachePropertyReference(propReference, referenceTypeAttribute, out List<Type> foundedTypes)) {
+                        types.AddRange(foundedTypes);
+                    }
+                });
+                
+                var propRefEnumerableFields = new List<FieldInfo>();
+                propRefEnumerableFields.AddRange(allFittedFields.Where(f => f.FieldType == typeof(PropertyReference[])));
+                propRefEnumerableFields.AddRange(allFittedFields.Where(f => f.FieldType == typeof(List<PropertyReference>)));
+                
+                
+                propRefEnumerableFields.ForEach(f => {
+                    
+                    var referenceTypeAttribute = f.GetCustomAttributes().OfType<ReferenceTypeAttribute>().FirstOrDefault();
+
+                    var propRefArray = (IEnumerable<PropertyReference>)f.GetValue(a);
+
+                    if (propRefArray == null) {
                         return;
                     }
-
-                    var target = propReference.target;
-
-                    var referenceTypeAttribute = f.GetCustomAttributes().OfType<ReferenceTypeAttribute>().FirstOrDefault();
-                    if (referenceTypeAttribute != null && !referenceTypeAttribute.type.IsGenericType) {
-                        types.Add(referenceTypeAttribute.type);
-                    } else {
-                        types.Add(typeof(object));
-                    }
-
-                    var propertyInfo = ReflectionUtils.GetPublicPropertyInfo(target.GetType(), propReference.fieldName);
-                    types.Add(propertyInfo.PropertyType);
+                    
+                    propRefArray.ForEach(propReference => {
+                        if (CachePropertyReference(propReference, referenceTypeAttribute, out List<Type> foundedTypes)) {
+                            types.AddRange(foundedTypes);
+                        }
+                    });
                 });
             });
 
             return types;
+        }
+
+        private bool CachePropertyReference(PropertyReference propertyReference, ReferenceTypeAttribute referenceTypeAttribute, out List<Type> types) {
+            
+            types = new List<Type>();
+            
+            if (propertyReference == null || !propertyReference.IsValid()) {
+                return false;
+            }
+            
+            var property = propertyReference.GetPropertyInfo();
+            
+            types.Add(property.PropertyType);
+
+            if (referenceTypeAttribute == null) {
+                types.Add(typeof(object));
+                return true;
+            }
+
+            var target = propertyReference.target;
+
+            if (!referenceTypeAttribute.type.IsGenericType) {
+                types.Add(referenceTypeAttribute.type);
+                if (property.PropertyType != referenceTypeAttribute.type) {
+                    types.Add(property.PropertyType);
+                }
+            }
+
+            var propertyInfo = ReflectionUtils.GetPublicPropertyInfo(target.GetType(), propertyReference.fieldName);
+            types.Add(propertyInfo.PropertyType);
+
+            return true;
         }
 
         private void ScanScriptableObject(string path) {
@@ -87,7 +133,7 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 
             classText += MakeLine($"public class il_2_cpp_Cache : {typeof(PropertyReferenceCacher).FullName} {{", 0);
 
-            classText += MakeLine("public void Cache() {", 1);
+            classText += MakeLine("public override void Cache() {", 1);
             
             classText += MakeLine("", 2);
             

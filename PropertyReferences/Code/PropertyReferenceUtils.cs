@@ -11,18 +11,15 @@ namespace c1tr00z.AssistLib.PropertyReferences {
         public static T Get<T>(this PropertyReference propertyReference) {
             if (propertyReference.getter == null) {
 
+                var propertyInfo = propertyReference.GetPropertyInfo();
                 
-                var key = propertyReference.GetPropertyKey();
-                
-                if (!_properties.ContainsKey(key)) {
-                    var type = propertyReference.target.GetType();
-                    _properties.AddOrSet(key, type.GetPublicPropertyInfo(propertyReference.fieldName));
+                if (typeof(T) == typeof(string) && propertyInfo.PropertyType != typeof(string))
+                {
+                    propertyReference.getter = PropertyValueGetterUtils.MakeGetter(propertyInfo.PropertyType, propertyReference.target, propertyInfo);
+                } else {
+                    propertyReference.getter = PropertyValueGetterUtils.MakeGetter<T>(propertyReference.target, propertyInfo);
                 }
-
-                var propertyInfo = _properties[key];
-
-                propertyReference.getter = PropertyValueGetterUtils.MakeGetter<T>(propertyReference.target, propertyInfo);
-
+                
             }
             if (propertyReference.getter == null) {
                 return default(T);
@@ -39,6 +36,17 @@ namespace c1tr00z.AssistLib.PropertyReferences {
                 return (T)value;
             }
             return default(T);
+        }
+
+        public static PropertyInfo GetPropertyInfo(this PropertyReference propertyReference) {
+            var key = propertyReference.GetPropertyKey();
+                
+            if (!_properties.ContainsKey(key)) {
+                var type = propertyReference.target.GetType();
+                _properties.AddOrSet(key, type.GetPublicPropertyInfo(propertyReference.fieldName));
+            }
+
+            return _properties[key];
         }
 
         public static List<T> GetList<T>(this PropertyReference propertyReference) {
