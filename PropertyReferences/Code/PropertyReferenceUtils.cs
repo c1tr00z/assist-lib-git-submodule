@@ -13,14 +13,9 @@ namespace c1tr00z.AssistLib.PropertyReferences {
 
                 var propertyInfo = propertyReference.GetPropertyInfo();
                 
-                if (typeof(T) == typeof(string) && propertyInfo.PropertyType != typeof(string))
-                {
-                    propertyReference.getter = PropertyValueGetterUtils.MakeGetter(propertyInfo.PropertyType, propertyReference.target, propertyInfo);
-                } else {
-                    propertyReference.getter = PropertyValueGetterUtils.MakeGetter<T>(propertyReference.target, propertyInfo);
-                }
-                
+                propertyReference.getter = PropertyValueGetterUtils.MakeGetter(propertyInfo.PropertyType, propertyReference.target, propertyInfo);
             }
+            
             if (propertyReference.getter == null) {
                 return default(T);
             }

@@ -6,7 +6,7 @@ namespace c1tr00z.AssistLib.DataModels {
 
     public class TextFormatTranslator : DataTranslator {
 
-        [ReferenceType(typeof(string))] [SerializeField]
+        [ReferenceType(typeof(object))] [SerializeField]
         private PropertyReference[] _textSources;
 
         [SerializeField] private string _format;
@@ -14,7 +14,7 @@ namespace c1tr00z.AssistLib.DataModels {
         public string text { get; private set; }
 
         public override void UpdateReceiver() {
-            var formatParams = _textSources.Select(s => s.Get<string>()).ToArray();
+            var formatParams = _textSources.Select(s => s.Get<object>()).ToArray();
             text = string.Format(_format, formatParams);
             OnDataChanged();
         }
