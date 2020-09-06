@@ -53,8 +53,6 @@ namespace c1tr00z.AssistLib.SceneManagement {
             }
         }
 
-        #endregion
-
         public void LoadScene(SceneItem newScene) {
 
             currentSceneItem = newScene;
@@ -73,5 +71,7 @@ namespace c1tr00z.AssistLib.SceneManagement {
             };
             SceneManager.LoadSceneAsync(newScene.name);
         }
+
+        #endregion
     }
 }
