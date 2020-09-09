@@ -60,8 +60,8 @@ namespace c1tr00z.AssistLib.SceneManagement {
             SceneManager.LoadScene(currentSceneItem.name, LoadSceneMode.Single);
         }
 
-        public void LoadSceneAsync(SceneItem newScene, Action callback = null) {
-            if (currentSceneItem == newScene) {
+        public void LoadSceneAsync(SceneItem newScene, Action callback = null, bool force = false) {
+            if (currentSceneItem == newScene && !force) {
                 callback?.Invoke();
                 return;
             }
