@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using c1tr00z.AssistLib.AppModules;
+using UnityEngine;
 
 namespace c1tr00z.AssistLib.GameUI {
     public class UIFrameDBEntry : DBEntry {
@@ -9,14 +9,6 @@ namespace c1tr00z.AssistLib.GameUI {
 
         public UILayerDBEntry layer {
             get { return _layer; }
-        }
-
-        public UIFrame LoadFrame() {
-            return this.LoadPrefab<UIFrame>();
-        }
-
-        public void Show(params object[] args) {
-            AppModules.Modules.Get<UI>().Show(this, args);
         }
     }
 }
