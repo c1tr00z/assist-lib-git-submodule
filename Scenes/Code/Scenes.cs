@@ -20,11 +20,22 @@ namespace c1tr00z.AssistLib.SceneManagement {
 
         private Action _onLoadingCallback;
 
+        private SceneItem _currentSceneItem;
+
         #endregion
 
         #region Accessors
-        
-        public SceneItem currentSceneItem { get; private set; }
+
+        public SceneItem currentSceneItem {
+            get {
+                if (_currentSceneItem == null) {
+                    _currentSceneItem = DB.Get<SceneItem>(SceneManager.GetActiveScene().name);
+                }
+
+                return _currentSceneItem;
+            }
+            set => _currentSceneItem = value;
+        }
 
         #endregion
 

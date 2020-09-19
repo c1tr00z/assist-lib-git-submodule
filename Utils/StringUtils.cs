@@ -25,11 +25,12 @@ namespace c1tr00z.AssistLib.Localization {
             if (useNumbers) {
                 chars += "0123456789";
             }
+
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
-        
-       public static string GenerateWord(int lenght, bool fromCapital) {
+
+        public static string GenerateWord(int lenght, bool fromCapital) {
             var vovels = "AEIOUY".ToCharArray();
             var consonants = "BCDFGHJKLMNPQRSTVWXZ".ToCharArray();
 
@@ -60,7 +61,7 @@ namespace c1tr00z.AssistLib.Localization {
                     fromVowels = !fromVowels;
                     sameTypeCounter = 0;
                 }
-                
+
                 prevIsFromVowels = fromVowels;
             }
 
@@ -70,11 +71,28 @@ namespace c1tr00z.AssistLib.Localization {
             var tail = str.Substring(1, str.Length - 1);
             return $"{(fromCapital ? head.ToUpper() : head)}{tail}";
         }
-        public static string GenerateSentence(int wordsCount, int minWordLenght, int maxWordLenght, bool everyWordIsCapital = false) {
+
+        public static string GenerateSentence(int wordsCount, int minWordLenght, int maxWordLenght,
+            bool everyWordIsCapital = false) {
             var wordsList = new List<string>();
-            wordsCount.DoTimes(i => wordsList.Add(GenerateWord(UnityEngine.Random.Range(minWordLenght, maxWordLenght + 1)
-            , i == 0 || everyWordIsCapital ? true : false)));
+            wordsCount.DoTimes(i => wordsList.Add(GenerateWord(
+                UnityEngine.Random.Range(minWordLenght, maxWordLenght + 1)
+                , i == 0 || everyWordIsCapital ? true : false)));
             return string.Join(" ", wordsList).Trim();
+        }
+
+        public static string GetOnlyDigitsString(this string originalString, out string onlyText) {
+            var numbersString = "";
+            var notDigits = "";
+            originalString.ForEach(c => {
+                if (char.IsDigit(c)) {
+                    numbersString += c;
+                } else {
+                    notDigits += c;
+                }
+            });
+            onlyText = notDigits;
+            return numbersString;
         }
     }
 }

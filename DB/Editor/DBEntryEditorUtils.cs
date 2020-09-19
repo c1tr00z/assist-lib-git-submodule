@@ -55,9 +55,9 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
                     : path;
                 return path;
             }).ToArray();
-            if (itemsObject.paths.Length != newItemsPaths.Length) {
+            // if (itemsObject.paths.Length != newItemsPaths.Length) {
                 itemsObject.paths = newItemsPaths;
-            }
+            // }
 
             foreach (DBEntry i in items) {
                 var itemPrefab = i.LoadPrefab<GameObject>();

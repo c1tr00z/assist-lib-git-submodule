@@ -41,7 +41,7 @@ namespace c1tr00z.AssistLib.Common {
         public static T Create<T>(string name) where T : ScriptableObject {
             var path = SelectionUtils.GetSelectedPath();
 
-            var item = ScriptableObjectsEditorUtils.Create<T>(path, name);
+            var item = Create<T>(path, name);
 
             Selection.activeObject = item;
 
