@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using c1tr00z.AssistLib.ResourcesManagement;
+using UnityEngine;
 
 namespace c1tr00z.AssistLib.GameUI {
     public class UILayerDBEntry : DBEntry {

@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using c1tr00z.AssistLib.ResourcesManagement;
 using UnityEngine.Events;
 using UnityEngine.UI;
 

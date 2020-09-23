@@ -1,6 +1,6 @@
 ﻿using c1tr00z.AssistLib.EditorTools;
-using System.Collections;
 using System.Collections.Generic;
+using c1tr00z.AssistLib.ResourcesManagement;
 using UnityEditor;
 using UnityEngine;
 

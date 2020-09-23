@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using c1tr00z.AssistLib.ResourcesManagement;
 
 namespace c1tr00z.AssistLib.AppModules {
     public class DBEntryModules : Modules {

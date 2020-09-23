@@ -1,4 +1,4 @@
-﻿using c1tr00z.AssistLib.AppModules;
+﻿using c1tr00z.AssistLib.ResourcesManagement;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.GameUI {

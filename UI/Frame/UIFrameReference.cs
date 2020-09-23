@@ -1,4 +1,5 @@
 ﻿using c1tr00z.AssistLib.PropertyReferences;
+using c1tr00z.AssistLib.ResourcesManagement;
 using UnityEditor;
 using UnityEngine;
 

@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using c1tr00z.AssistLib.ResourcesManagement;
 
 public class App : BehaviourSingleton<App> {
-
-
     public static event System.Action modulesLoaded;
 
     private Dictionary<ModuleDBEntry, GameObject> _modules;

@@ -1,26 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DBEntryResource : MonoBehaviour {
+namespace c1tr00z.AssistLib.ResourcesManagement {
 
-    [SerializeField] private DBEntry _dbEntry;
+    public class DBEntryResource : MonoBehaviour {
 
-    [SerializeField] private string _key;
+        [SerializeField] private DBEntry _dbEntry;
 
-    public DBEntry parent {
-        get {
-            return _dbEntry;
+        [SerializeField] private string _key;
+
+        public DBEntry parent {
+            get {
+                return _dbEntry;
+            }
         }
-    }
 
-    public string key {
-        get {
-            return _key;
+        public string key {
+            get {
+                return _key;
+            }
         }
-    }
 
-    public void SetParent(DBEntry newParent, string newKey) {
-        _dbEntry = newParent;
-        _key = newKey;
+        public void SetParent(DBEntry newParent, string newKey) {
+            _dbEntry = newParent;
+            _key = newKey;
+        }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using c1tr00z.AssistLib.Json;
+using c1tr00z.AssistLib.ResourcesManagement;
 
 namespace c1tr00z.AssistLib.Localization {
     public static class Localization {

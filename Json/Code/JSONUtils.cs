@@ -3,9 +3,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using c1tr00z.AssistLib.Json;
-using UnityEditorInternal.VersionControl;
+using c1tr00z.AssistLib.ResourcesManagement;
 using UnityEngine;
 
 public static class JSONUtuls {

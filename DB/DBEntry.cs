@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class DBEntry : ScriptableObject {
+namespace c1tr00z.AssistLib.ResourcesManagement {
+    public class DBEntry : ScriptableObject {
 
-    
+
+    }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using c1tr00z.AssistLib.Common;
+using c1tr00z.AssistLib.ResourcesManagement;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,18 +17,18 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
 
         [MenuItem("Assist/Create DB")]
         public static void CreateDB() {
-            if (DB.Get<global::DB>() != null) {
+            if (DB.Get<DBCollection>() != null) {
                 return;
             }
 
             PathUtils.CreatePath("Resources");
-            ScriptableObjectsEditorUtils.Create<DB>(PathUtils.Combine("Assets", "Resources"), "DB");
+            ScriptableObjectsEditorUtils.Create<DBCollection>(PathUtils.Combine("Assets", "Resources"), "DB");
             CollectItems();
         }
 
         [MenuItem("Assist/Create AppSettings")]
         public static void CreateAppSettings() {
-            if (DB.Get<DB>() == null) {
+            if (DB.Get<DBCollection>() == null) {
                 return;
             }
 
@@ -43,7 +44,7 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
 
         [MenuItem("Assist/Collect items")]
         public static void CollectItems() {
-            var itemsObject = Resources.Load<DB>("DB");
+            var itemsObject = Resources.Load<DBCollection>("DB");
             var dirs = new List<string>();
             var items = Resources.LoadAll<DBEntry>("");
             var newItemsPaths = items.Select(i => {

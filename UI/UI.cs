@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using c1tr00z.AssistLib.AppModules;
+using c1tr00z.AssistLib.ResourcesManagement;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace c1tr00z.AssistLib.GameUI {
     public class UI : Module {

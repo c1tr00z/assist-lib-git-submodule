@@ -1,4 +1,5 @@
 ﻿using c1tr00z.AssistLib.GameUI;
+using c1tr00z.AssistLib.ResourcesManagement;
 using UnityEngine;
 
 public class AppSettings : DBEntry {

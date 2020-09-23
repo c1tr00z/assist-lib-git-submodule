@@ -1,7 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
+using c1tr00z.AssistLib.ResourcesManagement;
 
 public abstract class SaveMethod : DBEntry {
 

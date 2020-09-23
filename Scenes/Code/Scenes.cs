@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using c1tr00z.AssistLib.AppModules;
+using c1tr00z.AssistLib.ResourcesManagement;
 using UnityEngine.SceneManagement;
 
 namespace c1tr00z.AssistLib.SceneManagement {

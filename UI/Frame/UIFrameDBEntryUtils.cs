@@ -1,4 +1,5 @@
 using c1tr00z.AssistLib.AppModules;
+using c1tr00z.AssistLib.ResourcesManagement;
 
 namespace c1tr00z.AssistLib.GameUI {
     public static class UIFrameDBEntryUtils {

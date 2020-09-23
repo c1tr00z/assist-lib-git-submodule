@@ -1,4 +1,6 @@
-﻿namespace c1tr00z.AssistLib.Localization {
+﻿using c1tr00z.AssistLib.ResourcesManagement;
+
+namespace c1tr00z.AssistLib.Localization {
     public static class LocalizatioUtils {
 
         private static string KEY_TITLE = "Title";
