@@ -27,7 +27,7 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             if (_items.Count < _instance.paths.Length) {
                 _instance.paths.SelectNotNull().ForEach(path => {
                     var dbItem = Resources.Load<DBEntry>(path);
-                    if (dbItem != null) {
+                    if (dbItem != null && !_items.ContainsKey(dbItem)) {
                         _items.Add(dbItem, path);
                     }
                 });
