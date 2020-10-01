@@ -55,6 +55,12 @@ namespace c1tr00z.AssistLib.Sprites {
                 return _curretState;
             }
             set {
+                if (value == null) {
+                    return;
+                }
+                if (_curretState != null && _curretState.name == value.name) {
+                    return;
+                }
                 _curretState = value;
                 _curretState.Activate();
             }
@@ -77,6 +83,10 @@ namespace c1tr00z.AssistLib.Sprites {
         #endregion
 
         #region Class Implementation
+
+        public void PlayState(string stateName) {
+            currentState = GetState(stateName);
+        }
 
         private void Play() {
 
@@ -118,10 +128,6 @@ namespace c1tr00z.AssistLib.Sprites {
                 return;
             }
 
-            var angles = transform.parent.rotation.eulerAngles;
-            angles.x = -angles.x;
-            angles.y = -angles.y;
-            angles.z = -angles.z;
             transform.localRotation = Quaternion.Inverse(transform.parent.rotation);
         }
 
