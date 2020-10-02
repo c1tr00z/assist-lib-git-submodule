@@ -13,6 +13,8 @@ namespace c1tr00z.AssistLib.SceneManagement {
 
         public static event Action<float> loadingProgressUpdated;
 
+        public static event Action<SceneItem> sceneLoaded;
+
         #endregion
 
         #region Private Fields
@@ -22,6 +24,8 @@ namespace c1tr00z.AssistLib.SceneManagement {
         private Action _onLoadingCallback;
 
         private SceneItem _currentSceneItem;
+
+        private SceneItem _sceneToLoad;
 
         #endregion
 
@@ -62,6 +66,7 @@ namespace c1tr00z.AssistLib.SceneManagement {
                 _sceneLoadOperation = null;
                 _onLoadingCallback?.Invoke();
                 _onLoadingCallback = null;
+                _currentSceneItem = _sceneToLoad;
             }
         }
 
@@ -70,6 +75,8 @@ namespace c1tr00z.AssistLib.SceneManagement {
             currentSceneItem = newScene;
 
             SceneManager.LoadScene(currentSceneItem.name, LoadSceneMode.Single);
+            
+            sceneLoaded?.Invoke(newScene);
         }
 
         public void LoadSceneAsync(SceneItem newScene, Action callback = null, bool force = false) {
@@ -81,6 +88,7 @@ namespace c1tr00z.AssistLib.SceneManagement {
                 currentSceneItem = newScene;
                 callback?.Invoke();
             };
+            _sceneToLoad = newScene;
             SceneManager.LoadSceneAsync(newScene.name);
         }
 
