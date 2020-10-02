@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using c1tr00z.AssistLib.Json;
-using c1tr00z.Drill.Levels.Editor;
 using UnityEditor;
 using UnityEngine;
 
