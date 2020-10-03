@@ -33,6 +33,11 @@ public static class TransformUtils {
     }
     
     public static Vector3 GetHeading(this Transform transform, Transform to) {
+
+        if (to == null) {
+            return Vector3.zero;
+        }
+        
         var targetPosition = to.position;
         var position = transform.position;
 

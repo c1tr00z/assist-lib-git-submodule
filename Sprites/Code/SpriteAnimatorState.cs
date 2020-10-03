@@ -14,7 +14,7 @@ namespace c1tr00z.AssistLib.Sprites {
         private int _currentFrameIndex;
 
         public void Activate() {
-            _currentFrameIndex = 0;
+            _currentFrameIndex = -1;
         }
 
         public SpriteAnimatorFrameInfo NextFrame() {
@@ -38,7 +38,7 @@ namespace c1tr00z.AssistLib.Sprites {
 
             var frameInfo = new SpriteAnimatorFrameInfo {
                 sprite = sprites[_currentFrameIndex],
-                nextStateName = nextStateName,
+                nextStateName = _currentFrameIndex == sprites.Count - 1 ? nextStateName : null,
                 events = events.Where(e => e.frame == _currentFrameIndex).ToList(),
             };
             
