@@ -39,6 +39,10 @@ public static class VectorUtils {
         return new Vector3(Random.Range(minValue.x, maxValue.x), Random.Range(minValue.y, maxValue.y), Random.Range(minValue.z, maxValue.z));
     }
     
+    public static Vector3 ToVector3XZ(this Vector2 v) {
+        return new Vector3(v.x, 0, v.y);
+    }
+    
     public static Vector3 ToVector3XZ(this Vector3 v) {
         return new Vector3(v.x, 0, v.y);
     }

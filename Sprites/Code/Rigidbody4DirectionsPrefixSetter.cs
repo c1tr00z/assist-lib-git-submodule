@@ -36,17 +36,17 @@ namespace c1tr00z.AssistLib.Sprites {
 
         [SerializeField] private List<DirectionPrefix> _directions = new List<DirectionPrefix>();
 
-        [SerializeField] private string _moveStateName;
+        // [SerializeField] private string _moveStateName;
 
-        [SerializeField] private float _speed = 1;
+        // [SerializeField] private float _speed = 1;
 
-        [SerializeField] private KeyCode _upKey;
-        
-        [SerializeField] private KeyCode _downKey;
-        
-        [SerializeField] private KeyCode _rightKey;
-        
-        [SerializeField] private KeyCode _leftKey;
+        // [SerializeField] private KeyCode _upKey;
+        //
+        // [SerializeField] private KeyCode _downKey;
+        //
+        // [SerializeField] private KeyCode _rightKey;
+        //
+        // [SerializeField] private KeyCode _leftKey;
         
         #endregion
 
@@ -91,23 +91,23 @@ namespace c1tr00z.AssistLib.Sprites {
             }
         }
 
-        public void Update() {
-            var velocity = new Vector3();
-            if (Input.GetKey(_upKey)) {
-                velocity.z += _speed;
-            }
-            if (Input.GetKey(_downKey)) {
-                velocity.z -= _speed;
-            }
-            if (Input.GetKey(_rightKey)) {
-                velocity.x += _speed;
-            }
-            if (Input.GetKey(_leftKey)) {
-                velocity.x -= _speed;
-            }
-
-            rigidbody.velocity = velocity;
-        }
+        // public void Update() {
+        //     var velocity = new Vector3();
+        //     if (Input.GetKey(_upKey)) {
+        //         velocity.z += _speed;
+        //     }
+        //     if (Input.GetKey(_downKey)) {
+        //         velocity.z -= _speed;
+        //     }
+        //     if (Input.GetKey(_rightKey)) {
+        //         velocity.x += _speed;
+        //     }
+        //     if (Input.GetKey(_leftKey)) {
+        //         velocity.x -= _speed;
+        //     }
+        //
+        //     rigidbody.velocity = velocity;
+        // }
 
         private void RefreshPrefix(Directions direction) {
             currentPrefix = _directions.FirstOrDefault(d => d.direction == direction)?.prefix;
