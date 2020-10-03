@@ -70,8 +70,12 @@ namespace c1tr00z.AssistLib.SceneManagement {
             }
         }
 
-        public void LoadScene(SceneItem newScene) {
+        public void LoadScene(SceneItem newScene, bool force = false) {
 
+            if (currentSceneItem == newScene && !force) {
+                return;
+            }
+            
             currentSceneItem = newScene;
 
             SceneManager.LoadScene(currentSceneItem.name, LoadSceneMode.Single);
