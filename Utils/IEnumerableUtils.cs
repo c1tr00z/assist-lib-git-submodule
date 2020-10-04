@@ -291,4 +291,18 @@ public static class IEnumerableUtils {
             iterator(i);
         }
     }
+
+    public static void Limit<T>(this List<T> list, int newSize) {
+        if (list.Count <= newSize) {
+            return;
+        }
+
+        var other = list.ToQueue();
+        
+        list.Clear();
+
+        while (list.Count < newSize) {
+            list.Add(other.Dequeue());
+        }
+    }
 }

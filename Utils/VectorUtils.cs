@@ -148,4 +148,8 @@ public static class VectorUtils {
     public static string ToInvariantCultureString(this Vector4 vector) {
         return vector.ToString("G", CultureInfo.InvariantCulture);
     }
+
+    public static Vector3 ToVector3(this Vector2Int vector2Int) {
+        return new Vector3(vector2Int.x, vector2Int.y);
+    }
 }

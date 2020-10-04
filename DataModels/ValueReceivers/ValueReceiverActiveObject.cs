@@ -10,9 +10,10 @@ namespace c1tr00z.AssistLib.DataModels {
         [ReferenceTypeAttribute(typeof(bool))]
         [SerializeField] private PropertyReference _isActiveSrc;
         [SerializeField] private GameObject _target;
+        [SerializeField] private bool _inverse;
         
         public override void UpdateReceiver() {
-            _target.SetActive(_isActiveSrc.Get<bool>());
+            _target.SetActive(!_inverse ? _isActiveSrc.Get<bool>() : !_isActiveSrc.Get<bool>());
         }
 
         public override IEnumerator<PropertyReference> GetReferences() {
