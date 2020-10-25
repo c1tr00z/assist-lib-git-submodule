@@ -136,4 +136,17 @@ public static class VectorUtils {
     public static string ToInvariantCultureString(this Vector4 vector) {
         return vector.ToString("G", CultureInfo.InvariantCulture);
     }
+
+    public static Vector3 GetHeading(this Vector3 from, Vector3 to) {
+        return to - from;
+    }
+
+    public static float GetDistance(this Vector3 from, Vector3 to) {
+        return from.GetHeading(to).magnitude;
+    }
+
+    public static Vector3 GetDirection(this Vector3 from, Vector3 to) {
+        var heading = from.GetHeading(to);
+        return heading / heading.magnitude;
+    }
 }
