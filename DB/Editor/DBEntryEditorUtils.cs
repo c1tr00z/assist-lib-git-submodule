@@ -74,7 +74,7 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
                         save = true;
                     }
 
-                    if (!save && (itemResource.parent != i || itemResource.key != "Prefab")) {
+                    if (itemResource.parent != i || itemResource.key != "Prefab") {
                         itemResource.SetParent(i, "Prefab");
                         save = true;
                     }
