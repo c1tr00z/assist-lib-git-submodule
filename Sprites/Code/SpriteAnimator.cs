@@ -76,7 +76,7 @@ namespace c1tr00z.AssistLib.Sprites {
             FixRotation();
         }
 
-        private void FixedUpdate() {
+        private void Update() {
             Play();
         }
 

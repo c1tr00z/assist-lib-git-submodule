@@ -26,6 +26,8 @@ namespace c1tr00z.AssistLib.SceneManagement {
 
         private SceneItem _currentSceneItem;
 
+        private SceneItem _sceneToLoad;
+
         #endregion
 
         #region Accessors
@@ -64,11 +66,16 @@ namespace c1tr00z.AssistLib.SceneManagement {
                 _sceneLoadOperation = null;
                 _onLoadingCallback?.Invoke();
                 _onLoadingCallback = null;
+                _currentSceneItem = _sceneToLoad;
             }
         }
 
-        public void LoadScene(SceneItem newScene) {
+        public void LoadScene(SceneItem newScene, bool force = false) {
 
+            if (currentSceneItem == newScene && !force) {
+                return;
+            }
+            
             currentSceneItem = newScene;
 
             sceneStartedToLoad?.Invoke(newScene);

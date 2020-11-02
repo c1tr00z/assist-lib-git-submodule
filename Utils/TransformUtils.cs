@@ -31,4 +31,30 @@ public static class TransformUtils {
         
         listDestroy.ForEach(t => Object.DestroyImmediate(t.gameObject));
     }
+    
+    public static Vector3 GetHeading(this Transform transform, Transform to) {
+
+        if (to == null) {
+            return Vector3.zero;
+        }
+        
+        var targetPosition = to.position;
+        var position = transform.position;
+
+        return targetPosition - position;
+    }
+
+    public static float GetDistance(this Transform transform, Transform to) {
+        var heading = transform.GetHeading(to);
+
+        return heading.magnitude;
+    }
+
+    public static Vector3 GetDirection(this Transform transform, Transform to) {
+        
+        var heading = transform.GetHeading(to);
+        var distance = heading.magnitude;
+
+        return heading / distance;
+    }
 }

@@ -275,4 +275,34 @@ public static class IEnumerableUtils {
             indexProcessor?.Invoke(indexes[i]);
         }
     }
+
+    /**
+     * <summary>Iterate from fromTo[0] (Include) to fromTo[1] (Exclude)</summary>
+     */
+    public static void Iterate(this int[] fromTo, Action<int> iterator) {
+        if (fromTo.Length == 0 || iterator == null) {
+            return;
+        }
+
+        var from = fromTo.Length > 1 ? fromTo[0] : 0;
+        var to = fromTo.Length > 1 ? fromTo[1] : fromTo[0];
+
+        for (int i = from; i < to; i++) {
+            iterator(i);
+        }
+    }
+
+    public static void Limit<T>(this List<T> list, int newSize) {
+        if (list.Count <= newSize) {
+            return;
+        }
+
+        var other = list.ToQueue();
+        
+        list.Clear();
+
+        while (list.Count < newSize) {
+            list.Add(other.Dequeue());
+        }
+    }
 }

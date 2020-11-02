@@ -7,5 +7,5 @@ public class ModuleDBEntry : DBEntry {
 
     public int priority;
 
-    public bool enabled = false;
+    public bool enabled = true;
 }

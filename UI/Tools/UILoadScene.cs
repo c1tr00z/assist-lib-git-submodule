@@ -7,9 +7,10 @@ namespace c1tr00z.AssistLib.GameUI {
 
         public SceneItem sceneDBEntry;
 
+        public bool force = false;
+
         public void Load() {
-            Modules.Get<UI>().CloseAllFrames();
-            Modules.Get<Scenes>().LoadScene(sceneDBEntry);
+            sceneDBEntry.Load(force);
         }
     }
 }

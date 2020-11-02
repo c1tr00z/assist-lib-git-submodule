@@ -38,6 +38,18 @@ public static class VectorUtils {
     public static Vector3 RandomV3(Vector3 minValue, Vector3 maxValue) {
         return new Vector3(Random.Range(minValue.x, maxValue.x), Random.Range(minValue.y, maxValue.y), Random.Range(minValue.z, maxValue.z));
     }
+    
+    public static Vector3 ToVector3XZ(this Vector2 v) {
+        return new Vector3(v.x, 0, v.y);
+    }
+    
+    public static Vector3 ToVector3XZ(this Vector3 v) {
+        return new Vector3(v.x, 0, v.y);
+    }
+
+    public static Vector3 RemoveY(this Vector3 v) {
+        return new Vector3(v.x, 0, v.z);
+    }
 
     /* 
      * found https://answers.unity.com/questions/1134997/string-to-vector3.html
@@ -148,5 +160,9 @@ public static class VectorUtils {
     public static Vector3 GetDirection(this Vector3 from, Vector3 to) {
         var heading = from.GetHeading(to);
         return heading / heading.magnitude;
+    }
+
+    public static Vector3 ToVector3(this Vector2Int vector2Int) {
+        return new Vector3(vector2Int.x, vector2Int.y);
     }
 }
