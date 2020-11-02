@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -53,6 +54,12 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             }
 
             return _items.Keys.OfType<T>().ToList();
+        }
+
+        public static List<T> GetAll<T>(Func<T, bool> selector) where T : DBEntry {
+            var allOfType = GetAll<T>();
+
+            return allOfType.Where(selector).ToList();
         }
 
         public static string GetPath(DBEntry item) {

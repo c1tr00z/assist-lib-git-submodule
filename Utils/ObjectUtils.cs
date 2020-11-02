@@ -34,4 +34,21 @@ public static class ObjectUtils {
         rot.eulerAngles = Vector3.zero;
         obj.transform.localRotation = rot;
     }
+
+    public static bool IsAssigned(this object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj is GameObject gameObject) {
+            return gameObject != null && !"null".Equals(gameObject) && !"Null".Equals(gameObject);
+        }
+
+        if (obj is Component component) {
+            return component != null && component.gameObject.IsAssigned() && component.transform != null &&
+                   !"null".Equals(component) && !"Null".Equals(component);
+        }
+
+        return obj != null;
+    }
 }
