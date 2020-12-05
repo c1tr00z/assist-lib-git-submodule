@@ -9,6 +9,8 @@ namespace c1tr00z.AssistLib.Sprites {
         #region Events
 
         public event Action<string> animationEvent;
+        
+        public event Action<Flipbook> animationFinished;
 
         #endregion
         
@@ -16,6 +18,10 @@ namespace c1tr00z.AssistLib.Sprites {
 
         [Serializable]
         public class AnimationEvent : UnityEvent<string> {
+        };
+        
+        [Serializable]
+        public class FlipbookEvent : UnityEvent<Flipbook> {
         };
 
         #endregion
@@ -34,6 +40,9 @@ namespace c1tr00z.AssistLib.Sprites {
 
         [SerializeField]
         private AnimationEvent _animationEvent;
+        
+        [SerializeField]
+        private FlipbookEvent _animationFinishedEvent;
 
         [SerializeField]
         private Flipbook _flipbook;
@@ -82,7 +91,9 @@ namespace c1tr00z.AssistLib.Sprites {
             }
 
             if (_frame >= flipbook.length) {
-                _frame = 0;
+                // _frame = 0;
+                OnAnimationFinished();
+                return;
             }
 
             _lastTime = Time.time;
@@ -95,7 +106,7 @@ namespace c1tr00z.AssistLib.Sprites {
             _frame++;
         }
 
-        private void RestartAnimation() {
+        public void RestartAnimation() {
             _frame = 0;
         }
         
@@ -106,6 +117,11 @@ namespace c1tr00z.AssistLib.Sprites {
         private void OnAnimationEvent(string eventName) {
             _animationEvent.SafeInvoke(eventName);
             animationEvent?.Invoke(eventName);
+        }
+
+        private void OnAnimationFinished() {
+            animationFinished?.Invoke(flipbook);
+            _animationFinishedEvent.SafeInvoke(flipbook);
         }
 
         #endregion

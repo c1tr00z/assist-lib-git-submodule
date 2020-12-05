@@ -94,5 +94,9 @@ namespace c1tr00z.AssistLib.Localization {
             onlyText = notDigits;
             return numbersString;
         }
+
+        public static bool IsNullOrEmpty(this string str) {
+            return string.IsNullOrEmpty(str);
+        }
     }
 }

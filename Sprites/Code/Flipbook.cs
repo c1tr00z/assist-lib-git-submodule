@@ -12,8 +12,6 @@ namespace c1tr00z.AssistLib.Sprites {
 
         [SerializeField] private List<FlipbookAnimationEvent> _events = new List<FlipbookAnimationEvent>();
 
-        [SerializeField] private bool _isLoop;
-
         [SerializeField] private float _fps;
 
         #endregion
@@ -23,8 +21,6 @@ namespace c1tr00z.AssistLib.Sprites {
         public float fps => _fps;
 
         public int length => _sprites.Count;
-
-        public Texture tex;
 
         #endregion
 

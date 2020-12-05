@@ -1,10 +1,20 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using c1tr00z.AssistLib.Localization;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace c1tr00z.AssistLib.ResourcesManagement {
 
     public static class DBEntryUtils {
+
+        #region Private Fields
+
+        private static Dictionary<Type, DBEntry> _singletones = new Dictionary<Type, DBEntry>();
+
+        #endregion
+
+        #region Class Implementations
 
         public static string GetPath(this DBEntry item) {
             return DB.GetPath(item);
@@ -34,5 +44,31 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
         public static Sprite LoadIcon(this DBEntry item) {
             return item.LoadSprite("Icon");
         }
+
+        public static T GetCached<T>(ref T cachedDBEntry, string key = null) where T : DBEntry {
+            if (cachedDBEntry.IsAssigned()) {
+                return cachedDBEntry;
+            }
+
+            if (key.IsNullOrEmpty()) {
+                cachedDBEntry = DB.Get<T>(key);
+            } else {
+                cachedDBEntry = Get<T>();
+            }
+
+            return cachedDBEntry;
+        }
+
+        public static T Get<T>() where T : DBEntry {
+            var type = typeof(T);
+            if (!_singletones.ContainsKey(type)) {
+                var singleton = DB.Get<T>();
+                _singletones.Add(type, singleton);
+            }
+
+            return (T)_singletones[type];
+        }
+
+        #endregion
     }
 }
