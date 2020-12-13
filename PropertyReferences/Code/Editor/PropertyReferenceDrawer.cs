@@ -122,12 +122,12 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 			
 			var selectedProperty = data.propertyNameProperty == null 
 			                       || string.IsNullOrEmpty(data.propertyNameProperty.stringValue) 
-			                       || data.selectedTypeProperties.Select(p => p.Name == data.propertyNameProperty.stringValue).Count() == 0
-				? data.selectedTypeProperties.First() 
-				: data.selectedTypeProperties.Where(f => f.Name == data.propertyNameProperty.stringValue).First();
+			                       || !data.selectedTypeProperties.Select(p => p.Name == data.propertyNameProperty.stringValue).Any()
+				? data.selectedTypeProperties.FirstOrDefault() 
+				: data.selectedTypeProperties.FirstOrDefault(f => f.Name == data.propertyNameProperty.stringValue);
 
 			if (selectedProperty == null) {
-				selectedProperty = data.selectedTypeProperties.First();
+				selectedProperty = data.selectedTypeProperties.FirstOrDefault();
 			}
 
 			if (selectedProperty == null) {

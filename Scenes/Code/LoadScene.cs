@@ -11,6 +11,8 @@ namespace c1tr00z.AssistLib.SceneManagement {
 
         [SerializeField] private bool _loadOnStart;
 
+        [SerializeField] private bool _force;
+
         #endregion
 
         #region Unity Events
@@ -25,8 +27,8 @@ namespace c1tr00z.AssistLib.SceneManagement {
 
         #region Class Implementation
 
-        private void Load() {
-            Modules.Get<Scenes>().LoadSceneAsync(_sceneItem);
+        public void Load() {
+            Modules.Get<Scenes>().LoadSceneAsync(_sceneItem, null, _force);
         }
 
         #endregion

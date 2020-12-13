@@ -3,6 +3,10 @@ using System.Collections;
 
 namespace c1tr00z.AssistLib.ResourcesManagement {
 
+    /**
+     * <summary>Every time Assist > Collect items called this script attached to any X@Prefab in system, where X is
+     * name of DBEntry</summary>
+     */
     public class DBEntryResource : MonoBehaviour {
 
         #region Serialized Fields

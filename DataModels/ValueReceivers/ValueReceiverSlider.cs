@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using c1tr00z.AssistLib.PropertyReferences;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace c1tr00z.AssistLib.DataModels {
@@ -16,11 +17,11 @@ namespace c1tr00z.AssistLib.DataModels {
         
         #region Accessors
 
-        public override bool isRecieverEnabled => base.isRecieverEnabled && slider != null;
-
         #endregion
 
         #region ValueReceiverBase Implementation
+
+        public override bool isRecieverEnabled => base.isRecieverEnabled && slider != null;
 
         public override void UpdateReceiver() {
             slider.value = valueSrc.Get<float>();

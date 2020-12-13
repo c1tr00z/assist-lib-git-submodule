@@ -11,6 +11,13 @@ namespace c1tr00z.AssistLib.GameUI {
 [RequireComponent(typeof(LayoutGroup))]
     public class UIList : MonoBehaviour {
 
+        #region Nested Classes
+
+        [Serializable]
+        private class ObjectEvent : UnityEvent<object> {}
+
+        #endregion
+        
         #region Private Fields
 
         private List<UIListItem> _listItems;
@@ -25,7 +32,7 @@ namespace c1tr00z.AssistLib.GameUI {
 
         [SerializeField] private bool _allowReselectSame;
 
-        [SerializeField] private UnityEvent _onSelected;
+        [SerializeField] private ObjectEvent _onSelected;
 
         #endregion
 
@@ -77,7 +84,19 @@ namespace c1tr00z.AssistLib.GameUI {
 
             selectedValue = item.item;
             
-            _onSelected?.Invoke();
+            _onSelected?.Invoke(selectedValue);
+        }
+
+        public void SelectValue(object item) {
+            if (item == null) {
+                selectedValue = null;
+                _listItems.ForEach(li => li.SetSelected(li.item == null));
+                _onSelected?.Invoke(null);
+            }
+            
+            selectedValue = item;
+            _listItems.ForEach(li => li.SetSelected(li.item == selectedValue));
+            _onSelected?.Invoke(selectedValue);
         }
 
         #endregion

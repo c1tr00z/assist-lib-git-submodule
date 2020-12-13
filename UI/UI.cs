@@ -6,6 +6,10 @@ using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.GameUI {
+    /**
+     * <summary>Main class for UI subsystem. Hierarchy is UI has several layers, each layer can have one or several
+     * frames (depends on implementation). Uses resource management subsystem (<see cref="DB"/>, <see cref="DBEntry"/>)</summary>
+     */
     public class UI : Module {
 
         #region Private Fields

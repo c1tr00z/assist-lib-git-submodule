@@ -5,6 +5,13 @@ using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.ResourcesManagement {
+    /**
+     * <summary>Main class for resource management subsystem. Has link to <see cref="DBCollection"/> where all paths to
+     * DBEntries (extended ScriptableObject) stored. When first time <see cref="Get{T}()"/> or <see cref="GetAll{T}()"/>
+     * called that paths converts to links to assets (of type DBEntry). From DBEntry any UnityObjects can be loaded with
+     * Load<T> method. To collect all DBEntry paths in projects do Assist > Collect items in Unity. All DBEntry scriptable
+     * objects should be in or under Resources folders.</summary>
+     */
     public static class DB {
 
         #region Private Fields
