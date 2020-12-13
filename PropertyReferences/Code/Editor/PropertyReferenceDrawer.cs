@@ -2,35 +2,51 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using c1tr00z.AssistLib.Utils;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 	[CustomPropertyDrawer(typeof(ReferenceTypeAttribute))]
 	public class PropertyReferenceDrawer : PropertyDrawer {
 
-        private static readonly string FIELD_TARGET_OBJECT = "target";
-        private static readonly string FIELD_FIELD_NAME = "fieldName";
+		#region Readonly Fields
 
-        private class PropertyData {
-	        public string property;
-	        public SerializedProperty targetRefProperty;
-	        public SerializedProperty propertyNameProperty;
+		private static readonly string FIELD_TARGET_OBJECT = "target";
+		private static readonly string FIELD_FIELD_NAME = "fieldName";
+
+		#endregion
+
+		#region Nested Classes
+
+		private class PropertyData {
+			public string property;
+			public SerializedProperty targetRefProperty;
+			public SerializedProperty propertyNameProperty;
         
-	        public UnityEngine.Object targetObject;
-	        public List<Component> allComponents;
-	        public Dictionary<Type, List<Component>> componentsByType;
-	        public string[] displayedCoomponents;
-	        public Type selectedType;
-	        public List<PropertyInfo> selectedTypeProperties = new List<PropertyInfo>();
-	        public string[] propertiesByType;
-        }
+			public Object targetObject;
+			public List<Component> allComponents;
+			public Dictionary<Type, List<Component>> componentsByType;
+			public string[] displayedCoomponents;
+			public Type selectedType;
+			public List<PropertyInfo> selectedTypeProperties = new List<PropertyInfo>();
+			public string[] propertiesByType;
+		}
 
-        private string _prevProperty;
+		#endregion
+
+		#region Private Fields
+
+		private string _prevProperty;
         
-        private Dictionary<string, PropertyData> _propertiesData = new Dictionary<string, PropertyData>();
+		private Dictionary<string, PropertyData> _propertiesData = new Dictionary<string, PropertyData>();
 
-        public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
+		#endregion
+
+		#region PropertyDrawer Implementation
+
+		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
 			EditorGUI.BeginProperty(position, label, property);
 			
 			if (!_propertiesData.ContainsKey(property.propertyPath)) {
@@ -126,110 +142,115 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 
 			_prevProperty = data.property;
 
-            EditorGUI.EndProperty();
+			EditorGUI.EndProperty();
+		}
+		
+		public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
+			return 60;
 		}
 
-        private bool GetObjectFromComponents(PropertyData data, UnityEngine.Object targetObject, 
-	        bool changed, Rect position, out Component component, out bool componentTypeChanged) {
-	        component = null;
-	        componentTypeChanged = false;
+		#endregion
 
-	        GameObject gameObject = null;
+		#region Class Implementation
 
-	        var currentComponent = targetObject as Component;
+		private bool GetObjectFromComponents(PropertyData data, Object targetObject, 
+			bool changed, Rect position, out Component component, out bool componentTypeChanged) {
+			component = null;
+			componentTypeChanged = false;
 
-	        if (currentComponent != null) {
-		        gameObject = currentComponent.gameObject;
-	        } else {
-		        gameObject = targetObject as GameObject;
-	        }
+			GameObject gameObject = null;
 
-	        if (gameObject == null) {
-		        return false;
-	        }
+			var currentComponent = targetObject as Component;
+
+			if (currentComponent != null) {
+				gameObject = currentComponent.gameObject;
+			} else {
+				gameObject = targetObject as GameObject;
+			}
+
+			if (gameObject == null) {
+				return false;
+			}
 	        
-	        if (changed) {
-		        data.allComponents = gameObject.GetComponents<Component>().ToList();
+			if (changed) {
+				data.allComponents = gameObject.GetComponents<Component>().ToList();
 	            
-		        data.componentsByType = new Dictionary<System.Type, List<Component>>();
-		        data.allComponents.ForEach(c => {
-			        var type = c.GetType();
-			        if (data.componentsByType.ContainsKey(type)) {
-				        data.componentsByType[type].Add(c);
-			        } else {
-				        var componentsList = new List<Component>();
-				        componentsList.Add(c);
-				        data.componentsByType.Add(type, componentsList);
-			        }
-		        });
+				data.componentsByType = new Dictionary<Type, List<Component>>();
+				data.allComponents.ForEach(c => {
+					var type = c.GetType();
+					if (data.componentsByType.ContainsKey(type)) {
+						data.componentsByType[type].Add(c);
+					} else {
+						var componentsList = new List<Component>();
+						componentsList.Add(c);
+						data.componentsByType.Add(type, componentsList);
+					}
+				});
 
-		        data.displayedCoomponents = data.allComponents.Select(c =>
-			        $"{c.GetType().Name}[{data.componentsByType[c.GetType()].IndexOf(c)}]").ToArray();
+				data.displayedCoomponents = data.allComponents.Select(c =>
+					$"{c.GetType().Name}[{data.componentsByType[c.GetType()].IndexOf(c)}]").ToArray();
 	            
-		        component = currentComponent == null ? data.allComponents.FirstOrDefault() : currentComponent;
-	        } else {
-		        component = currentComponent;
-	        }
+				component = currentComponent == null ? data.allComponents.FirstOrDefault() : currentComponent;
+			} else {
+				component = currentComponent;
+			}
 	        
-	        if (data.allComponents.Count == 0) {
-		        return false;
-	        }
+			if (data.allComponents.Count == 0) {
+				return false;
+			}
 
-	        var selectedTypeChanged = false;
-	        if (changed || (data.selectedType == null)) {
-		        var savedType = component.GetType();
-		        if (savedType != data.selectedType) {
-			        data.selectedType = savedType;
-		        }
-	        }
+			var selectedTypeChanged = false;
+			if (changed || (data.selectedType == null)) {
+				var savedType = component.GetType();
+				if (savedType != data.selectedType) {
+					data.selectedType = savedType;
+				}
+			}
             
-	        if (data.selectedType == null || !data.componentsByType.ContainsKey(data.selectedType)) {
-		        data.selectedType = data.allComponents.First().GetType();
-	        }
+			if (data.selectedType == null || !data.componentsByType.ContainsKey(data.selectedType)) {
+				data.selectedType = data.allComponents.First().GetType();
+			}
 
-	        var componentIndex = data.allComponents.IndexOf(component);
+			var componentIndex = data.allComponents.IndexOf(component);
 
-	        componentIndex = EditorGUI.Popup(position, componentIndex, 
-		        data.displayedCoomponents);
+			componentIndex = EditorGUI.Popup(position, componentIndex, 
+				data.displayedCoomponents);
 
-	        componentIndex = componentIndex >= 0 && componentIndex < data.allComponents.Count ? componentIndex : 0;
+			componentIndex = componentIndex >= 0 && componentIndex < data.allComponents.Count ? componentIndex : 0;
 
-	        component = data.allComponents[componentIndex];
+			component = data.allComponents[componentIndex];
 
-	        var newSelectedType = component.GetType();
+			var newSelectedType = component.GetType();
 
-	        if (data.selectedType != newSelectedType) {
-		        componentTypeChanged = true;
-		        data.selectedType = newSelectedType;
-	        }
+			if (data.selectedType != newSelectedType) {
+				componentTypeChanged = true;
+				data.selectedType = newSelectedType;
+			}
 
-	        data.targetObject = component;
+			data.targetObject = component;
 
-	        return true;
-        }
+			return true;
+		}
 
-        private bool IsTargetChanged(UnityEngine.Object newObject, PropertyData data) {
-	        if (newObject == null || data.targetObject == null) {
-		        return true;
-	        }
+		private bool IsTargetChanged(Object newObject, PropertyData data) {
+			if (newObject == null || data.targetObject == null) {
+				return true;
+			}
 
-	        var newComponent = newObject as Component;
-	        var targetComponent = data.targetObject as Component;
+			var newComponent = newObject as Component;
+			var targetComponent = data.targetObject as Component;
 
-	        if (newComponent != null && targetComponent == null) {
-		        return true;
-	        }
+			if (newComponent != null && targetComponent == null) {
+				return true;
+			}
 	        
-	        if (newComponent == null && targetComponent != null) {
-		        return true;
-	        }
+			if (newComponent == null && targetComponent != null) {
+				return true;
+			}
 	        
-	        return newObject != data.targetObject;
-        }
+			return newObject != data.targetObject;
+		}
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-//            return _height;
-	        return 60;
-        }
-    }
+		#endregion
+	}
 }

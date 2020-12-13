@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using c1tr00z.AssistLib.ResourcesManagement;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,11 +10,21 @@ namespace c1tr00z.AssistLib.GameUI {
     [RequireComponent(typeof(RectTransform))]
     public abstract class UILayerBase : MonoBehaviour {
 
+        #region Private Fields
+
         private RectTransform _rectTransform;
         private Canvas _canvas;
 
+        #endregion
+
+        #region Serialized Fields
+
         [SerializeField]
         private UILayerDBEntry _layerDBEntry;
+
+        #endregion
+
+        #region Accessors
 
         public RectTransform rectTransform {
             get {
@@ -33,23 +44,21 @@ namespace c1tr00z.AssistLib.GameUI {
             }
         }
 
-        public UILayerDBEntry layerDBEntry {
-            get { return _layerDBEntry; }
-        }
+        public UILayerDBEntry layerDBEntry => _layerDBEntry;
 
-        public bool usedByHotkeys {
-            get { return layerDBEntry.usedByHotkeys; }
-        }
+        public bool usedByHotkeys => layerDBEntry.usedByHotkeys;
+        
+        public abstract List<UIFrame> currentFrames { get; }
+
+        #endregion
+
+        #region Class Implementation
 
         public void Init(UILayerDBEntry layerDBEntry) {
             _layerDBEntry = layerDBEntry;
             name = layerDBEntry.name;
             canvas.sortingOrder = layerDBEntry.sortOrder;
         }
-
-        public abstract List<UIFrame> currentFrames { get; }
-
-        public abstract void Show(UIFrameDBEntry frame, params object[] args);
 
         protected UIFrame ShowFrame(UIFrameDBEntry frameItem, params object[] args) {
             var frame = frameItem.LoadFrame().Clone(rectTransform);
@@ -59,10 +68,18 @@ namespace c1tr00z.AssistLib.GameUI {
             return frame;
         }
 
-        public abstract void Close(UIFrameDBEntry frameDBEntry);
-
         public void CloseAll() {
             currentFrames.ForEach(f => Close(f.GetComponent<DBEntryResource>().parent as UIFrameDBEntry));
         }
+
+        #endregion
+
+        #region Abstract Methods
+
+        public abstract void Show(UIFrameDBEntry frame, params object[] args);
+
+        public abstract void Close(UIFrameDBEntry frameDBEntry);
+
+        #endregion
     }
 }

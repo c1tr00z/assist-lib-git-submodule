@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using c1tr00z.AssistLib.DataModels;
-using c1tr00z.AssistLib.PropertyReferences;
+﻿using System.Collections.Generic;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -37,17 +35,21 @@ namespace c1tr00z.AssistLib.GameUI {
         public object selectedValue { get; private set; }
         
         public bool isShowOptions { get; private set; }
+        
+        public RectTransform rectTransform => this.GetCachedComponent(ref _rectTransform);
 
         #endregion
 
-        public RectTransform rectTransform {
-            get { return this.GetCachedComponent(ref _rectTransform); }
-        }
-
+        #region Unity Fields
+        
         private void Start() {
             UpdateControls();
             OnSelected();
         }
+
+        #endregion
+
+        #region Class Implementation
 
         public void UpdateCombobox(List<object> options, object selectedValue) {
             this.selectedValue = selectedValue;
@@ -116,5 +118,7 @@ namespace c1tr00z.AssistLib.GameUI {
             
             _currentValue.UpdateItem(selectedValue);
         }
+
+        #endregion
     }
 }

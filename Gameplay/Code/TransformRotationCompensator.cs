@@ -1,7 +1,7 @@
-using System;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
-namespace AssistLib.Gameplay.Code {
+namespace c1tr00z.AssistLib.Gameplay {
     public class TransformRotationCompensator : MonoBehaviour {
 
         #region Private Fields

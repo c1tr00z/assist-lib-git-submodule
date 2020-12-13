@@ -6,8 +6,14 @@ using UnityEngine;
 namespace c1tr00z.AssistLib {
     public class UIFrameSceneButton : MonoBehaviour {
 
+        #region Serialized Fields
+
         [SerializeField] private SceneItem _scene;
         [SerializeField] private UIFrameDBEntry _frame;
+
+        #endregion
+
+        #region Class Implementation
 
         public void Load() {
             if (_scene != null) {
@@ -17,5 +23,7 @@ namespace c1tr00z.AssistLib {
                 Modules.Get<UI>().Show(_frame);
             }
         }
+
+        #endregion
     }
 }

@@ -7,21 +7,13 @@ using UnityEngine;
 namespace c1tr00z.AssistLib.EditorTools {
     public class EditorToolsWindow : EditorWindow {
 
+        #region Private Fields
+
         private EditorToolsController _controller;
 
-        [MenuItem("Assist/Tools")]
-        public static void ShowSettingsWindow() {
-            var toolWindow = (EditorToolsWindow)EditorWindow.GetWindow(typeof(EditorToolsWindow), true);
-            toolWindow.Load();
-        }
+        #endregion
 
-        private void Load() {
-            var title = new GUIContent();
-            title.text = "Editor tools";
-            titleContent = title;
-
-            _controller = new EditorToolsController();
-        }
+        #region Unity Events
 
         void OnGUI() {
 
@@ -36,5 +28,29 @@ namespace c1tr00z.AssistLib.EditorTools {
                 _controller.SaveTools();
             }
         }
+
+        #endregion
+
+        #region Class Implementation
+
+        private void Load() {
+            var title = new GUIContent();
+            title.text = "Editor tools";
+            titleContent = title;
+
+            _controller = new EditorToolsController();
+        }
+
+        #endregion
+
+        #region Static Methods
+
+        [MenuItem("Assist/Tools")]
+        public static void ShowSettingsWindow() {
+            var toolWindow = (EditorToolsWindow)GetWindow(typeof(EditorToolsWindow), true);
+            toolWindow.Load();
+        }
+
+        #endregion
     }
 }

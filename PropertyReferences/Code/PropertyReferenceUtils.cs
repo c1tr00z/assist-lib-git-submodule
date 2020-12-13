@@ -1,12 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.PropertyReferences {
     public static class PropertyReferenceUtils {
-        
+
+        #region Private Fields
+
         private static Dictionary<string, PropertyInfo> _properties = new Dictionary<string, PropertyInfo>();
+
+        #endregion
+
+        #region Class Implementation
 
         public static T Get<T>(this PropertyReference propertyReference) {
             if (propertyReference.getter == null) {
@@ -72,5 +79,7 @@ namespace c1tr00z.AssistLib.PropertyReferences {
         public static bool IsValid(this PropertyReference propertyReference) {
             return propertyReference.target != null && !string.IsNullOrEmpty(propertyReference.fieldName);
         }
+
+        #endregion
     }
 }

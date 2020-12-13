@@ -1,14 +1,23 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using c1tr00z.AssistLib.PropertyReferences;
 
 namespace c1tr00z.AssistLib.DataModels {
     public abstract class DataTranslator : DataModelBase, IValueReceiver {
-        
-        private List<IDataModelBase> _models = null;
+
+        #region Private Fields
+
+        private List<IDataModelBase> _models = new List<IDataModelBase>();
+
+        #endregion
+
+        #region Unity Events
 
         protected virtual void Awake() {
-            GetModels().ForEach(m => m.AddReceiver(this));
+            GetModels().ToList().ForEach(m => m.AddReceiver(this));
         }
+
+        #endregion
         
         #region IValueReceiver Implementation
 

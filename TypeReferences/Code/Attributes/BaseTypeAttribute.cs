@@ -1,17 +1,29 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace c1tr00z.AssistLib.TypeReferences {
 
     public class BaseTypeAttribute : PropertyAttribute {
-        public System.Type type { get; private set; }
+
+        #region Accessors
+
+        public Type type { get; private set; }
         
         public bool includeBaseClass { get; private set; }
 
-        public BaseTypeAttribute (System.Type type, bool includeBaseClass = false) {
+        #endregion
+
+        #region Constructors
+
+        public BaseTypeAttribute (Type type, bool includeBaseClass = false) {
             this.type = type;
             this.includeBaseClass = includeBaseClass;
         }
-        
+
+        #endregion
+
+        #region Attributes
+
         public override bool Match (object obj) {
             var other = obj as BaseTypeAttribute;
             if (other == null) {
@@ -20,5 +32,7 @@ namespace c1tr00z.AssistLib.TypeReferences {
 
             return other.type == this.type;
         }
+
+        #endregion
     }
 }

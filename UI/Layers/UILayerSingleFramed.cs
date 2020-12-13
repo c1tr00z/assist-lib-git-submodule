@@ -5,15 +5,21 @@ using UnityEngine;
 namespace c1tr00z.AssistLib.GameUI {
     public class UILayerSingleFramed : UILayerBase {
 
+        #region Private Fields
+
         private UIFrame _currentFrame;
 
         private UIFrameDBEntry _currentFrameDBEntry;
 
-        public override List<UIFrame> currentFrames {
-            get {
-                return new List<UIFrame> { _currentFrame };
-            }
-        }
+        #endregion
+
+        #region Accessors
+
+        public override List<UIFrame> currentFrames => new List<UIFrame> { _currentFrame };
+
+        #endregion
+
+        #region Class Implementation
 
         public override void Close(UIFrameDBEntry frameDBEntry) {
             if (_currentFrameDBEntry == frameDBEntry) {
@@ -39,5 +45,7 @@ namespace c1tr00z.AssistLib.GameUI {
                 Destroy(prevFrame.gameObject);
             }
         }
+
+        #endregion
     }
 }

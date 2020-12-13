@@ -1,7 +1,9 @@
 using UnityEngine.Events;
 
-namespace AssistLib.Utils {
+namespace c1tr00z.AssistLib.Utils {
     public static class UnityEventsUtils {
+
+        #region Class Implementations
 
         public static void SafeInvoke(this UnityEvent unityEvent) {
             if (!unityEvent.IsAssigned()) {
@@ -16,5 +18,7 @@ namespace AssistLib.Utils {
             }
             unityEvent?.Invoke(param);
         }
+
+        #endregion
     }
 }

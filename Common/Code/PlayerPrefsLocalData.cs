@@ -1,15 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
 public class PlayerPrefsLocalData : MonoBehaviour {
-    private static Dictionary<string, object> _playerPrefsLocalData;
 
-    public static string editorSettingsKey {
-        get {
-            return "AssistLib";
-        }
-    }
+    #region Private Fields
+
+    private static Dictionary<string, object> _playerPrefsLocalData = new Dictionary<string, object>();
+
+    #endregion
+
+    #region Accessors
+
+    public static string editorSettingsKey => "AssistLib";
+
+    #endregion
+
+    #region Class Implementation
 
     private static void CheckLoading() {
         if (_playerPrefsLocalData == null) {
@@ -39,4 +46,6 @@ public class PlayerPrefsLocalData : MonoBehaviour {
     public static void Save() {
         PlayerPrefs.SetString(editorSettingsKey, JSONUtuls.Serialize(_playerPrefsLocalData));
     }
+
+    #endregion
 }

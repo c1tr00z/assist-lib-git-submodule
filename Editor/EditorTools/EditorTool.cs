@@ -1,13 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.EditorTools {
     public class EditorTool {
 
+        #region Private Fields
+
         private bool _toggle = false;
 
         private string _toolLabel = "Empty...";
+
+        #endregion
+
+        #region Class Implementation
 
         public void Draw() {
             if (DrawTitle()) {
@@ -29,7 +36,7 @@ namespace c1tr00z.AssistLib.EditorTools {
         }
 
         private bool DrawTitle() {
-            var editorToolName = (EditorToolName)System.Attribute.GetCustomAttribute(GetType(), typeof(EditorToolName));
+            var editorToolName = (EditorToolName)Attribute.GetCustomAttribute(GetType(), typeof(EditorToolName));
             _toolLabel = editorToolName != null ? editorToolName.toolName : GetType().ToString();
             _toggle = EditorGUILayout.Foldout(_toggle, _toolLabel);
             return _toggle;
@@ -42,5 +49,7 @@ namespace c1tr00z.AssistLib.EditorTools {
         protected void Label(string caption) {
             EditorGUILayout.LabelField(caption);
         }
+
+        #endregion
     }
 }

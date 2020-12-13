@@ -1,5 +1,5 @@
 using System;
-using AssistLib.Utils;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 using UnityEngine.Events;
 

@@ -6,6 +6,8 @@ namespace c1tr00z.AssistLib.Common {
  
     public static class ScriptableObjectsEditorUtils {
 
+        #region Class Implementation
+
         public static T Create<T>(string path, string name) where T : ScriptableObject {
             return Create<T>(path, name, false);
         }
@@ -55,7 +57,7 @@ namespace c1tr00z.AssistLib.Common {
             
             var path = SelectionUtils.GetSelectedPath();
 
-            var item = ScriptableObjectsEditorUtils.Create(type, path, name);
+            var item = Create(type, path, name);
             
             AssetDatabase.Refresh();
 
@@ -63,5 +65,7 @@ namespace c1tr00z.AssistLib.Common {
 
             return item;
         }
+
+        #endregion
     }
 }

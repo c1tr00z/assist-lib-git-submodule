@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,11 +8,17 @@ namespace c1tr00z.AssistLib.GameUI {
     [ExecuteInEditMode]
     public class UIRadialLayoutGroup : LayoutGroup {
 
+        #region Public Fields
+
         public int radius = 100;
 
         public int angleDelta = 90;
 
         public int step = 10;
+
+        #endregion
+
+        #region LayoutGroup Implementation
 
         public override void CalculateLayoutInputVertical() {
             Refresh();
@@ -23,6 +31,10 @@ namespace c1tr00z.AssistLib.GameUI {
         public override void SetLayoutVertical() {
             Refresh();
         }
+
+        #endregion
+
+        #region Class Implementation
 
         protected List<RectTransform> GetChildren() {
             return transform.GetChildren().Where(c => {
@@ -55,5 +67,7 @@ namespace c1tr00z.AssistLib.GameUI {
                 SetPositionByAngleAndRadius(child, angle, true);
             }
         }
+
+        #endregion
     }
 }

@@ -1,28 +1,27 @@
 ﻿using c1tr00z.AssistLib.GameUI;
 using c1tr00z.AssistLib.ResourcesManagement;
+using c1tr00z.AssistLib.SceneManagement;
 using UnityEngine;
 
-public class AppSettings : DBEntry {
+namespace c1tr00z.AssistLib.Settings {
+    public class AppSettings : DBEntry {
 
-    [SerializeField] private SceneItem _startScene;
+        #region Serialized Fields
 
-    public static AppSettings instance {
-        get {
-            return DB.Get<AppSettings>("AppSettings");
-        }
-    }
+        [SerializeField] private SceneItem _startScene;
+        
+        [SerializeField] private UIFrameDBEntry _startFrame;
 
-    public SceneItem startScene {
-        get {
-            return _startScene;
-        }
-    }
+        #endregion
 
-    [SerializeField] private UIFrameDBEntry _startFrame;
+        #region Accessors
 
-    public UIFrameDBEntry startFrame {
-        get {
-            return _startFrame;
-        }
+        public static AppSettings instance => DB.Get<AppSettings>("AppSettings");
+
+        public SceneItem startScene => _startScene;
+
+        public UIFrameDBEntry startFrame => _startFrame;
+
+        #endregion
     }
 }

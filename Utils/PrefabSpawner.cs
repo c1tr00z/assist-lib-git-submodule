@@ -1,20 +1,27 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class PrefabSpawner : MonoBehaviour {
+namespace c1tr00z.AssistLib.Utils {
+    public class PrefabSpawner : MonoBehaviour {
 
-    [SerializeField]
-    private GameObject _prefabSrc;
+        #region Serialized Fields
 
-    private void Awake() {
-        var clone = _prefabSrc.Clone();
-        clone.name = _prefabSrc.name;
-        clone.transform.SetParent(transform.parent);
-        clone.transform.localPosition = transform.localPosition;
-        clone.transform.localRotation = transform.localRotation;
-        clone.transform.localScale = transform.localScale;
-        Destroy(gameObject);
+        [SerializeField] private GameObject _prefabSrc;
+
+        #endregion
+
+        #region Unity Events
+
+        private void Awake() {
+            var clone = _prefabSrc.Clone();
+            clone.name = _prefabSrc.name;
+            clone.transform.SetParent(transform.parent);
+            clone.transform.localPosition = transform.localPosition;
+            clone.transform.localRotation = transform.localRotation;
+            clone.transform.localScale = transform.localScale;
+            Destroy(gameObject);
+        }
+
+        #endregion
+
     }
-
 }

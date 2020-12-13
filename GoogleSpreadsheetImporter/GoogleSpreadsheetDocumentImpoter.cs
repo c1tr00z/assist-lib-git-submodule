@@ -1,12 +1,21 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Net.Security;
 using System.Text;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.GoogleSpreadsheetImporter {
     public class GoogleSpreadsheetDocumentImpoter {
 
-        private static System.Net.Security.RemoteCertificateValidationCallback allowCertificate = (sender, cert, chain, sslPolicyErrors) => true;
+        #region Accessors
+
+        private static RemoteCertificateValidationCallback allowCertificate = (sender, cert, chain, sslPolicyErrors) => true;
+
+        #endregion
+
+        #region Class Implementation
 
         public static Dictionary<string, Dictionary<string, string>> Import(GoogleSpreadsheetDocumentPageDBEntry page) {
             ServicePointManager.ServerCertificateValidationCallback += allowCertificate;
@@ -24,7 +33,7 @@ namespace c1tr00z.AssistLib.GoogleSpreadsheetImporter {
             var encoding = ASCIIEncoding.UTF8;
 
             var parsedPage = new Dictionary<string, Dictionary<string, string>>();
-            using (var reader = new System.IO.StreamReader(aResponse.GetResponseStream(), encoding)) {
+            using (var reader = new StreamReader(aResponse.GetResponseStream(), encoding)) {
                 string localizationsString = reader.ReadToEnd();
 
                 var stringRows = localizationsString.Split('\r', '\n');
@@ -59,5 +68,7 @@ namespace c1tr00z.AssistLib.GoogleSpreadsheetImporter {
             Debug.Log(JSONUtuls.Serialize(parsedPage));
             return parsedPage;
         }
+
+        #endregion
     }
 }

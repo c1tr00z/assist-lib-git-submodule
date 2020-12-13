@@ -1,34 +1,51 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
-public abstract class BehaviourSingleton<T> : MonoBehaviour where T: MonoBehaviour {
+namespace c1tr00z.AssistLib.Common {
+    [Obsolete("Logic replaced with Modules subsystem")]
+    public abstract class BehaviourSingleton<T> : MonoBehaviour where T: MonoBehaviour {
 
-    private static T _instance;
+        #region Private Fields
+        
+        private static T _instance;
 
-    public static T instance {
-        get {
-            TryFind();
-            return _instance;
+        #endregion
+
+        #region Accessors
+
+        public static T instance {
+            get {
+                TryFind();
+                return _instance;
+            }
         }
-    }
 
-    protected virtual void Awake() {
-        if (_instance == null || _instance.Equals(default(MonoBehaviour))) {
-            _instance = GetThis();
-        } else if (!_instance.Equals(GetThis())) {
-            Destroy(gameObject);
+        #endregion
+
+        #region Unity Events
+
+        protected virtual void Awake() {
+            if (_instance == null || _instance.Equals(default(MonoBehaviour))) {
+                _instance = GetThis();
+            } else if (!_instance.Equals(GetThis())) {
+                Destroy(gameObject);
+            }
         }
-    }
 
-    private static void TryFind() {
-        if (_instance == null) {
-            _instance = FindObjectOfType<T>();
+        #endregion
+
+        #region Class Implementation
+
+        private static void TryFind() {
+            if (_instance == null) {
+                _instance = FindObjectOfType<T>();
+            }
         }
-    }
 
-    protected virtual T GetThis() {
-        return this as T;
-    }
+        protected virtual T GetThis() {
+            return this as T;
+        }
 
+        #endregion
+    }
 }

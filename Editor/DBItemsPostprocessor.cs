@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEditor;
 
-namespace c1tr00z.AssistLib.DataBase.Editor {
+namespace c1tr00z.AssistLib.ResourceManagement.Editor {
 
     public class DBItemsPostprocessor : AssetPostprocessor {
 

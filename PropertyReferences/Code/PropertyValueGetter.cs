@@ -5,16 +5,26 @@ using UnityEngine;
 namespace c1tr00z.AssistLib.PropertyReferences {
     public abstract class PropertyValueGetter {
 
+        #region Abstract Methods
+
         public abstract Type GetGenericType();
         
         public abstract object GetValue();
 
         public abstract void Init(object target, PropertyInfo propertyInfo);
+
+        #endregion
     }
 
     public class PropertyValueGetter<T> : PropertyValueGetter {
 
+        #region Public Fields
+
         public Func<T> getter;
+
+        #endregion
+
+        #region Class Implementation
 
         public override Type GetGenericType() {
             return typeof(T);
@@ -31,5 +41,7 @@ namespace c1tr00z.AssistLib.PropertyReferences {
             
             getter = (Func<T>)Delegate.CreateDelegate(methodType, target, methodInfo, true);
         }
+
+        #endregion
     }
 }

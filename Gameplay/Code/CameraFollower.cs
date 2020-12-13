@@ -1,13 +1,14 @@
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.Gameplay {
     public class CameraFollower : MonoBehaviour {
 
-        #region Public Fields
+        #region Serialized Fields
 
-        [SerializeField] public Transform target;
-        [SerializeField] public Vector3 offset;
-        [SerializeField] public float speed;
+        [SerializeField] private Transform _target;
+        [SerializeField] private Vector3 _offset;
+        [SerializeField] private float _speed;
 
         #endregion
 
@@ -15,12 +16,12 @@ namespace c1tr00z.AssistLib.Gameplay {
 
         private void LateUpdate() {
 
-            if (!target.IsAssigned()) {
+            if (!_target.IsAssigned()) {
                 return;
             };
             
-            transform.position = Vector3.Lerp(transform.position, target.position + offset,
-                Time.deltaTime * speed);
+            transform.position = Vector3.Lerp(transform.position, _target.position + _offset,
+                Time.deltaTime * _speed);
         }
 
         #endregion

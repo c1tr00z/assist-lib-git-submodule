@@ -1,13 +1,24 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace c1tr00z.AssistLib.PropertyReferences {
 	public class ReferenceTypeAttribute : PropertyAttribute {
 
-		public System.Type type { get; private set; }
+		#region Accessors
 
-		public ReferenceTypeAttribute (System.Type type) {
+		public Type type { get; private set; }
+
+		#endregion
+
+		#region Constructors
+
+		public ReferenceTypeAttribute (Type type) {
 			this.type = type;
 		}
+
+		#endregion
+
+		#region Attribute Implementation
 
 		public override bool Match (object obj) {
 			var other = obj as ReferenceTypeAttribute;
@@ -17,5 +28,7 @@ namespace c1tr00z.AssistLib.PropertyReferences {
 
 			return other.type == this.type;
 		}
+
+		#endregion
 	}
 }

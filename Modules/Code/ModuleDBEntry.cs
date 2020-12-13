@@ -5,7 +5,11 @@ using UnityEngine;
 
 public class ModuleDBEntry : DBEntry {
 
+    #region Public Fields
+
     public int priority;
 
     public bool enabled = true;
+
+    #endregion
 }

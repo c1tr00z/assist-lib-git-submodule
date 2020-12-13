@@ -1,16 +1,24 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using c1tr00z.AssistLib.AppModules;
 using c1tr00z.AssistLib.ResourcesManagement;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.GameUI {
     public class UI : Module {
+
+        #region Private Fields
 
         private Dictionary<UILayerDBEntry, UILayerBase> _layers = new Dictionary<UILayerDBEntry, UILayerBase>();
 
         private UIDefaultsDBEntry _uiDefaults;
 
         private UILayerBase _defaultLayerSrc;
+
+        #endregion
+
+        #region Accessors
 
         private UIDefaultsDBEntry uiDefaults {
             get {
@@ -30,6 +38,10 @@ namespace c1tr00z.AssistLib.GameUI {
             }
         }
 
+        #endregion
+
+        #region Class Implementation
+
         public void Show(UIFrameDBEntry newFrame) {
             Show(newFrame, null);
         }
@@ -46,7 +58,7 @@ namespace c1tr00z.AssistLib.GameUI {
             if (_layers.ContainsKey(layerDBEntry)) {
                 return _layers[layerDBEntry];
             }
-            var existedButNotCached = GetComponentsInChildren<UILayerBase>().Where(l => l.layerDBEntry == layerDBEntry).First();
+            var existedButNotCached = GetComponentsInChildren<UILayerBase>().First(l => l.layerDBEntry == layerDBEntry);
             if (existedButNotCached != null) {
                 _layers.AddOrSet(layerDBEntry, existedButNotCached);
                 return existedButNotCached;
@@ -88,7 +100,9 @@ namespace c1tr00z.AssistLib.GameUI {
         }
         
         public void CloseAllFrames() {
-            _layers.Values.ForEach(l => l.CloseAll());
+            _layers.Values.ToList().ForEach(l => l.CloseAll());
         }
+
+        #endregion
     }
 }

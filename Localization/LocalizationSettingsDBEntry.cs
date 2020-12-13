@@ -1,8 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using c1tr00z.AssistLib.ResourcesManagement;
-using UnityEngine;
+﻿using c1tr00z.AssistLib.ResourcesManagement;
 
-public class LocalizationSettingsDBEntry : DBEntry {
-    public bool supportMultipleTranslations = false;
+namespace c1tr00z.AssistLib.Localization {
+    public class LocalizationSettingsDBEntry : DBEntry {
+
+        #region Public Fields
+
+        public bool supportMultipleTranslations = false;
+
+        #endregion
+
+    }
 }

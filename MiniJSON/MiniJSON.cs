@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using c1tr00z.AssistLib.Json;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
 namespace MiniJSON {

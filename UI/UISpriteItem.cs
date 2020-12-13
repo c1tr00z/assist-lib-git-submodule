@@ -1,10 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
-public class UISpriteItem : ScriptableObject {
+namespace c1tr00z.AssistLib.GameUI {
+    public class UISpriteItem : ScriptableObject {
 
-    public Sprite sprite; 
+        #region Public Fields
 
+        public Sprite sprite;
+
+        #endregion
+
+    }
 }

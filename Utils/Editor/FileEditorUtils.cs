@@ -1,11 +1,15 @@
 using System.IO;
+using System.Linq;
 using c1tr00z.AssistLib.ResourcesManagement;
+using c1tr00z.AssistLib.Utils;
 using UnityEditor;
 using UnityEngine;
 
 namespace AssistLib.Utils.Editor {
     public static class FileEditorUtils {
-        
+
+        #region Class Implementation
+
         public static void SaveTextToFile(TextAsset textAsset, string text) {
             var path = AssetDatabase.GetAssetPath(textAsset);
             SaveTextToFile(path, text);
@@ -45,5 +49,7 @@ namespace AssistLib.Utils.Editor {
             
             AssetDatabase.Refresh();
         }
+
+        #endregion
     }
 }

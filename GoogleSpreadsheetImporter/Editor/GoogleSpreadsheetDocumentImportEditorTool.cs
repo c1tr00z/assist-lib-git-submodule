@@ -6,23 +6,34 @@ using UnityEngine;
 namespace c1tr00z.AssistLib.GoogleSpreadsheetImporter {
     public abstract class GoogleSpreadsheetDocumentImportEditorTool : EditorTools.EditorTool {
 
-        private static string PAGES_KEY = "pages";
+        #region Nested Classes
 
         public class Settings : IJsonSerializable, IJsonDeserializable {
 
             [JsonSerializableField]
             public List<GoogleSpreadsheetDocumentPageDBEntry> pages = new List<GoogleSpreadsheetDocumentPageDBEntry>();
         }
+
+        #endregion
         
+        #region Private Fields
+
+        private static string PAGES_KEY = "pages";
+
+        #endregion
+
+        #region Accessors
+
         protected Settings settings { get; private set; }
 
         protected List<GoogleSpreadsheetDocumentPageDBEntry> pages => settings.pages;
 
-        // protected List<GoogleSpreadsheetDocumentPageDBEntry> pages = new List<GoogleSpreadsheetDocumentPageDBEntry>();
+        #endregion
+
+        #region EditorTool Implementation
 
         public override void Init(Dictionary<string, object> settingsJson) {
-            settings = JSONUtuls.Deserialize<Settings>(settingsJson); 
-            // pages = settingsJson.GetIEnumerable<string>(PAGES_KEY).Select(pageName => DB.Get<GoogleSpreadsheetDocumentPageDBEntry>(pageName)).ToList();
+            settings = JSONUtuls.Deserialize<Settings>(settingsJson);
         }
 
         public override void Save(Dictionary<string, object> settingsJson) {
@@ -30,7 +41,7 @@ namespace c1tr00z.AssistLib.GoogleSpreadsheetImporter {
             settings.Serialize(settingsJson);
             // settingsJson.AddOrSet(PAGES_KEY, pages.SelectNotNull().SelectNotNull(p => p.name).ToArray());
         }
-
+        
         protected override void DrawInterface() {
 
             EditorGUILayout.BeginVertical();
@@ -58,11 +69,22 @@ namespace c1tr00z.AssistLib.GoogleSpreadsheetImporter {
 
             EditorGUILayout.EndHorizontal();
         }
+        
+        #endregion
+
+        #region Class Implementation
 
         private void RemoveIndex(int index) {
             pages.RemoveAt(index);
         }
 
+        #endregion
+
+        #region Abstract Methods
+
         protected abstract void ProcessImport();
+
+        #endregion
+        
     }
 }

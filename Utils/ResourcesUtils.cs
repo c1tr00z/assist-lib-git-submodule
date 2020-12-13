@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿namespace c1tr00z.AssistLib.Utils {
+    public static class ResourcesUtils {
 
-public static class ResourcesUtils {
-    
+    }
 }

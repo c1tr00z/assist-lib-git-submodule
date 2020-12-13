@@ -4,18 +4,22 @@ using UnityEngine;
 namespace c1tr00z.AssistLib.GameUI {
     public class UIDefaultsDBEntry : DBEntry {
 
+        #region Serialized Fields
+
         [SerializeField]
         private UILayerDBEntry _mainLayer;
 
         [SerializeField]
         private UILayerDBEntry _defaultLayer;
 
-        public UILayerDBEntry mainLayer {
-            get { return _mainLayer; }
-        }
+        #endregion
 
-        public UILayerDBEntry defaultLayer {
-            get { return _defaultLayer; }
-        }
+        #region Accessors
+
+        public UILayerDBEntry mainLayer => _mainLayer;
+
+        public UILayerDBEntry defaultLayer => _defaultLayer;
+
+        #endregion
     }
 }

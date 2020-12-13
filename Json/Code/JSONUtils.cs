@@ -5,9 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using c1tr00z.AssistLib.Json;
 using c1tr00z.AssistLib.ResourcesManagement;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
 public static class JSONUtuls {
+
+    #region Class Implementation
 
     public static void Serialize(this IJsonSerializable serializable, Dictionary<string, object> json) {
         if (serializable == null) {
@@ -25,7 +28,7 @@ public static class JSONUtuls {
     public static void Deserialize(this IJsonDeserializable deserializable, Dictionary<string, object> json) {
         var fields = deserializable.GetType().GetJsonSerializedFields();
         
-        json.Keys.ForEach(fieldName => {
+        json.Keys.ToList().ForEach(fieldName => {
             var field = fields.FirstOrDefault(f => f.Name == fieldName);
 
             if (field == null) {
@@ -79,7 +82,7 @@ public static class JSONUtuls {
         object returnValue = value;
 
         var isDeserializeToList = targetType.IsGenericType &&
-                               targetType.GetGenericTypeDefinition().GetInterfaces().Contains(typeof(IList<>));
+                                  targetType.GetGenericTypeDefinition().GetInterfaces().Contains(typeof(IList<>));
 
         if (value == null && isDeserializeToList) {
             return Activator.CreateInstance(targetType);
@@ -194,4 +197,6 @@ public static class JSONUtuls {
     public static Dictionary<string, object> GetChild(this Dictionary<string, object> json, string key) {
         return json.ContainsKey(key) ? (Dictionary<string, object>)json[key] : new Dictionary<string, object>();
     }
+
+    #endregion
 }

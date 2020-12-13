@@ -3,12 +3,21 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using c1tr00z.AssistLib.ResourcesManagement;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace c1tr00z.AssistLib.GameUI {
 [RequireComponent(typeof(LayoutGroup))]
     public class UIList : MonoBehaviour {
+
+        #region Private Fields
+
+        private List<UIListItem> _listItems;
+
+        #endregion
+
+        #region Serialized Fields
 
         [SerializeField] private UIListItemDBEntry listItemDBEntry;
         
@@ -18,9 +27,15 @@ namespace c1tr00z.AssistLib.GameUI {
 
         [SerializeField] private UnityEvent _onSelected;
 
-        private List<UIListItem> _listItems;
+        #endregion
+
+        #region Accessors
 
         public object selectedValue { get; private set; }
+
+        #endregion
+
+        #region Class Implementation
 
         public void UpdateList<T>(IEnumerable<T> items, T selectedItem = default(T)) {
             if (_listItems != null) {
@@ -64,5 +79,7 @@ namespace c1tr00z.AssistLib.GameUI {
             
             _onSelected?.Invoke();
         }
+
+        #endregion
     }
 }

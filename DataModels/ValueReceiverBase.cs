@@ -1,19 +1,34 @@
 ﻿using c1tr00z.AssistLib.PropertyReferences;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.DataModels {
     public abstract class ValueReceiverBase : MonoBehaviour, IValueReceiver {
 
-        private List<IDataModelBase> _models = null;
-        
+        #region Private Fields
+
+        private List<IDataModelBase> _models = new List<IDataModelBase>();
+
+        #endregion
+
+        #region Accessors
+
         public virtual bool isRecieverEnabled {
             get { return GetModels().All(m => m.isDataModelEnabled); }
         }
 
+        #endregion
+
+        #region Unity Events
+
         protected virtual void Awake() {
-			GetModels().ForEach(m => m.AddReceiver(this));
-		}
+            GetModels().ToList().ForEach(m => m.AddReceiver(this));
+        }
+
+        #endregion
+
+        #region Class Implementation
 
         public IEnumerable<IDataModelBase> GetModels() {
             if (_models == null) {
@@ -34,8 +49,14 @@ namespace c1tr00z.AssistLib.DataModels {
             return _models;
         }
 
+        #endregion
+
+        #region Abstract Methods
+
         public abstract IEnumerator<PropertyReference> GetReferences();
 
         public abstract void UpdateReceiver();
+
+        #endregion
     }
 }

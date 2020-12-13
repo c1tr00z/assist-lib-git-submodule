@@ -3,16 +3,21 @@ using UnityEngine;
 
 namespace c1tr00z.AssistLib.GameUI {
     public class UILayerDBEntry : DBEntry {
+
+        #region Serialized Fields
+
         [SerializeField] private int _sortOrder;
 
         [SerializeField] private bool _usedByHotkeys = true;
 
-        public int sortOrder {
-            get { return _sortOrder; }
-        }
+        #endregion
 
-        public bool usedByHotkeys {
-            get { return _usedByHotkeys; }
-        }
+        #region Accessors
+
+        public int sortOrder => _sortOrder;
+
+        public bool usedByHotkeys => _usedByHotkeys;
+
+        #endregion
     }
 }

@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.ResourcesManagement;
+using c1tr00z.AssistLib.Utils;
 using UnityEditor;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.DataBase.Editor {
+namespace c1tr00z.AssistLib.ResourceManagement.Editor {
 
     public static class DBEntryEditorUtils {
+
+        #region Class Implementation
 
         [MenuItem("Assets/Create DBEntry")]
         public static void CreateDBEntry() {
@@ -23,22 +27,6 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
 
             PathUtils.CreatePath("Resources");
             ScriptableObjectsEditorUtils.Create<DBCollection>(PathUtils.Combine("Assets", "Resources"), "DB");
-            CollectItems();
-        }
-
-        [MenuItem("Assist/Create AppSettings")]
-        public static void CreateAppSettings() {
-            if (DB.Get<DBCollection>() == null) {
-                return;
-            }
-
-            if (DB.Get<AppSettings>() != null) {
-                return;
-            }
-
-            PathUtils.CreatePath("AssistLib", "Resources");
-            CreateItem<AppSettings>(PathUtils.Combine("Assets", "AssistLib", "Resources"),
-                "AppSettings");
             CollectItems();
         }
 
@@ -57,7 +45,7 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
                 return path;
             }).ToArray();
             // if (itemsObject.paths.Length != newItemsPaths.Length) {
-                itemsObject.paths = newItemsPaths;
+            itemsObject.paths = newItemsPaths;
             // }
 
             foreach (DBEntry i in items) {
@@ -143,6 +131,8 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
 
             return item;
         }
+
+        #endregion
     }
 }
 

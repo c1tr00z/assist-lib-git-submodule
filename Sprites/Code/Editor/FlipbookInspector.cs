@@ -28,7 +28,6 @@ namespace c1tr00z.AssistLib.Sprites.Editor {
         // }
 
         #endregion
-        
-        
+
     }
 }

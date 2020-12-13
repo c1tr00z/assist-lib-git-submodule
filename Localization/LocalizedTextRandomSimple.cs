@@ -7,8 +7,13 @@ using UnityEngine.UI;
 namespace c1tr00z.AssistLib.Localization {
     [RequireComponent(typeof(Text))]
     public class LocalizedTextRandomSimple : LocalizedText {
+
+        #region LocalizedText Implementation
+
         protected override string GetLocalizedText() {
             return Localization.TranslateRandom(key);
         }
+
+        #endregion
     }
 }

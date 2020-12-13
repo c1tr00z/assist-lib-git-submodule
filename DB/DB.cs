@@ -1,14 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.ResourcesManagement {
     public static class DB {
-        
-        private static Dictionary<DBEntry, string> _items { get; set; }
+
+        #region Private Fields
+
+        private static Dictionary<DBEntry, string> _items = new Dictionary<DBEntry, string>();
 
         private static DBCollection _instance;
+
+        #endregion
+
+        #region Class Implementation
 
         private static void CheckItems() {
             if (_instance == null) {
@@ -26,7 +33,7 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             }
 
             if (_items.Count < _instance.paths.Length) {
-                _instance.paths.SelectNotNull().ForEach(path => {
+                _instance.paths.SelectNotNull().ToList().ForEach(path => {
                     var dbItem = Resources.Load<DBEntry>(path);
                     if (dbItem != null && !_items.ContainsKey(dbItem)) {
                         _items.Add(dbItem, path);
@@ -66,5 +73,7 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             CheckItems();
             return _items.ContainsKey(item) ? _items[item] : null;
         }
+
+        #endregion
     }
 }

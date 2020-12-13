@@ -1,38 +1,49 @@
 ﻿using System.Collections;
 using c1tr00z.AssistLib.PropertyReferences;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.GameUI {
     public class UIShowFrame : MonoBehaviour {
 
-        public UIFrameDBEntry frameDBEntry;
+        #region Serialized Fields
 
-        public bool showOnStart = false;
+        [SerializeField]
+        private UIFrameDBEntry _frameDBEntry;
+
+        [SerializeField]
+        private bool _showOnStart = false;
         
         [ReferenceType(typeof(object))]
         [SerializeField]
         private PropertyReference[] _argsSources;
 
-        private IEnumerator Start() {
+        #endregion
 
-            while (AppModules.Modules.Get<UI>() == null) {
-                yield return null;
-            }
+        #region Unity Events
 
-            if (showOnStart) {
+        private void Start() {
+
+            if (_showOnStart) {
                 Show();
             }
         }
 
+        #endregion
+
+        #region Class Implementation
+
         public void Show() {
-            if (frameDBEntry == null) {
+            if (!_frameDBEntry.IsAssigned()) {
                 return;
             }
 
             var args = _argsSources == null
                 ? new object[0]
                 : _argsSources.SelectNotNull(s => s.Get<object>()).ToArray();
-            frameDBEntry.Show();
+            _frameDBEntry.Show(args);
         }
+
+        #endregion
     }
 }

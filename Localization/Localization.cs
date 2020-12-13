@@ -1,22 +1,44 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using c1tr00z.AssistLib.Json;
 using c1tr00z.AssistLib.ResourcesManagement;
+using c1tr00z.AssistLib.Utils;
 
 namespace c1tr00z.AssistLib.Localization {
     public static class Localization {
+
+        #region Nested Classes
 
         private class Settings : IJsonSerializable, IJsonDeserializable {
 
             [JsonSerializableField] public string savedLanguage;
         }
 
+        #endregion
+
+        #region Events
+
+        public static event System.Action<LanguageItem> changeLanguage;
+
+        #endregion
+
+        #region Readonly Fields
+
+        private static readonly string LOCALIZATION_SETTINGS_KEY = "Localization";
+        private static readonly string LOCALIZATION_SAVED_LANGUAGE_KEY = "Localization";
+
+        #endregion
+
+        #region Const Fields
+
         private const SystemLanguage _defaultSystemLanguage = SystemLanguage.English;
+
+        #endregion
+
+        #region Private Fields
+        
         private static SystemLanguage _currentSystemLanguage = Application.systemLanguage;
         private static LanguageItem _defaultLanguage;
-        public static LanguageItem currentLanguage { get; private set; }
-
-        private static string LOCALIZATION_SETTINGS_KEY = "Localization";
-        private static string LOCALIZATION_SAVED_LANGUAGE_KEY = "Localization";
 
         private static LocalizationSettingsDBEntry _settingsDBEntry;
 
@@ -24,14 +46,22 @@ namespace c1tr00z.AssistLib.Localization {
 
         private static bool _inited = false;
 
-        public static System.Action<LanguageItem> changeLanguage = (language) => { };
+        #endregion
 
+        #region Accessors
+
+        public static LanguageItem currentLanguage { get; private set; }
+        
         public static bool isMultipleTranslationsSupported {
             get {
                 Init();
                 return _settingsDBEntry != null && _settingsDBEntry.supportMultipleTranslations;
             }
         }
+
+        #endregion
+
+        #region Class Implementation
 
         private static void Init() {
             if (!_inited) {
@@ -68,12 +98,12 @@ namespace c1tr00z.AssistLib.Localization {
             Init();
 
             if (_defaultLanguage != null && _defaultLanguage.translations != null 
-                && _defaultLanguage.translations.ContainsKey(key) && !string.IsNullOrEmpty(_defaultLanguage.translations[key])) {
+                                         && _defaultLanguage.translations.ContainsKey(key) && !string.IsNullOrEmpty(_defaultLanguage.translations[key])) {
                 translation = _defaultLanguage.translations[key];
             }
 
             if (currentLanguage != null && currentLanguage.translations != null 
-                && currentLanguage.translations.ContainsKey(key) && !string.IsNullOrEmpty(currentLanguage.translations[key])) {
+                                        && currentLanguage.translations.ContainsKey(key) && !string.IsNullOrEmpty(currentLanguage.translations[key])) {
                 translation = currentLanguage.translations[key];
             }
 
@@ -130,8 +160,10 @@ namespace c1tr00z.AssistLib.Localization {
             currentLanguage = newLanguage;
 
             if (_inited) {
-                changeLanguage(newLanguage);
+                changeLanguage?.Invoke(newLanguage);
             }
         }
+
+        #endregion
     }
 }

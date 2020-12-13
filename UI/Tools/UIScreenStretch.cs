@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,19 +10,29 @@ namespace c1tr00z.AssistLib.GameUI {
     [ExecuteInEditMode]
     public class UIScreenStretch : MonoBehaviour {
 
-        [SerializeField] private bool _stretchHorizontal;
-        [SerializeField] private bool _stretchVertical;
+        #region Private Fields
 
         private RectTransform _rectTransform;
         private CanvasScaler _canvasScaler;
 
-        public RectTransform rectTransform {
-            get { return this.GetCachedComponent(ref _rectTransform); }
-        }
+        #endregion
 
-        public CanvasScaler canvasScaler {
-            get { return this.GetCachedComponentInParent(ref _canvasScaler); }
-        }
+        #region Serialized Fields
+
+        [SerializeField] private bool _stretchHorizontal;
+        [SerializeField] private bool _stretchVertical;
+
+        #endregion
+
+        #region Accessors
+
+        public RectTransform rectTransform => this.GetCachedComponent(ref _rectTransform);
+
+        public CanvasScaler canvasScaler => this.GetCachedComponentInParent(ref _canvasScaler);
+
+        #endregion
+
+        #region Unity Events
 
         private void Update() {
 
@@ -56,5 +67,7 @@ namespace c1tr00z.AssistLib.GameUI {
                     Screen.height / canvasScaler.transform.localScale.y);
             }
         }
+
+        #endregion
     }
 }

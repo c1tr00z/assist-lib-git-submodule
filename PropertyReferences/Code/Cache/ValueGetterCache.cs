@@ -9,7 +9,11 @@ namespace c1tr00z.AssistLib.PropertyReferences {
 
         #endregion
 
+        #region Abstract Methods
+
         public abstract PropertyValueGetter MakeValueGetter();
+
+        #endregion
     }
     
     public class ValueGetterCache<T> : ValueGetterCache {

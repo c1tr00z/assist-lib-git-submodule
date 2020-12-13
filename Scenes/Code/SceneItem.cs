@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
-using c1tr00z.AssistLib.ResourcesManagement;
+﻿using c1tr00z.AssistLib.ResourcesManagement;
 
-public class SceneItem : DBEntry {
+namespace c1tr00z.AssistLib.SceneManagement {
+    public class SceneItem : DBEntry {
 
+    }
 }

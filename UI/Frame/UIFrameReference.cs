@@ -1,5 +1,6 @@
 ﻿using c1tr00z.AssistLib.PropertyReferences;
 using c1tr00z.AssistLib.ResourcesManagement;
+using c1tr00z.AssistLib.Utils;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,18 +9,36 @@ namespace c1tr00z.AssistLib.GameUI {
     [ExecuteInEditMode]
     public class UIFrameReference : MonoBehaviour {
 
-        public UIFrameDBEntry frameDBEntry;
-
-        public bool stretch;
+        #region Private Fields
 
         private UIFrame _currentFrame;
+
+        #endregion
+
+        #region Serialized Fields
 
         [ReferenceType(typeof(object))] [SerializeField]
         private PropertyReference[] _argsSrc;
 
+        #endregion
+
+        #region Public Fields
+
+        public UIFrameDBEntry frameDBEntry;
+
+        public bool stretch;
+
+        #endregion
+
+        #region Unity Fields
+
         private void Start() {
             RespawnFrame();
         }
+
+        #endregion
+
+        #region Class Implementation
 
         private void RespawnFrame() {
             transform.DestroyAllChildren();
@@ -55,5 +74,7 @@ namespace c1tr00z.AssistLib.GameUI {
             var args = _argsSrc == null ? new object[0] : _argsSrc.SelectNotNull(src => src.Get<object>()).ToArray();
             _currentFrame.Show(parentFrame.layer, args);
         }
+
+        #endregion
     }
 }

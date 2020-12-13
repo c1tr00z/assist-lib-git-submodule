@@ -5,9 +5,16 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Random = System.Random;
 
-namespace c1tr00z.AssistLib.Localization {
+namespace c1tr00z.AssistLib.Utils {
     public static class StringUtils {
+
+        #region Private Fields
+
         private static Random random = new Random();
+
+        #endregion
+
+        #region Class Implementation
 
         public static string DecodeEncodedNonAscii(this string value) {
             return Regex.Replace(value, @"\\u(?<Value>[a-zA-Z0-9]{4})",
@@ -84,7 +91,7 @@ namespace c1tr00z.AssistLib.Localization {
         public static string GetOnlyDigitsString(this string originalString, out string onlyText) {
             var numbersString = "";
             var notDigits = "";
-            originalString.ForEach(c => {
+            originalString.ToList().ForEach(c => {
                 if (char.IsDigit(c)) {
                     numbersString += c;
                 } else {
@@ -98,5 +105,7 @@ namespace c1tr00z.AssistLib.Localization {
         public static bool IsNullOrEmpty(this string str) {
             return string.IsNullOrEmpty(str);
         }
+
+        #endregion
     }
 }

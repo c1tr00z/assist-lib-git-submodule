@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using c1tr00z.AssistLib.Common;
-using c1tr00z.AssistLib.DataBase.Editor;
+using c1tr00z.AssistLib.ResourceManagement.Editor;
+using c1tr00z.AssistLib.Utils;
 using UnityEditor;
 using UnityEngine;
 
@@ -64,7 +65,7 @@ namespace c1tr00z.AssistLib.Common {
                 GUI.enabled = true;
             }
 
-            _selectedTypeIndex = EditorGUILayout.Popup("Type", _selectedTypeIndex, _typesNames.ToArray());
+            _selectedTypeIndex = EditorGUILayout.Popup("Type", _selectedTypeIndex, Enumerable.ToArray(_typesNames));
             _selectedTypeIndex =  _selectedTypeIndex < _filteredTypes.Count ? _selectedTypeIndex : 0;
             _selectedType = _selectedTypeIndex > -1 && _selectedTypeIndex < _filteredTypes.Count ? _filteredTypes[_selectedTypeIndex] : _defaultType;
             CheckName();
@@ -105,7 +106,7 @@ namespace c1tr00z.AssistLib.Common {
             if (string.IsNullOrEmpty(_filterLine)) {
                 _filteredTypes = _allTypes.ToList();
             } else {
-                _filterLineSplitted = _filterLine.ToLower().Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                _filterLineSplitted = Enumerable.ToArray(_filterLine.ToLower().Split(' ').Where(s => !string.IsNullOrEmpty(s)));
                 _filteredTypes = _allTypes.Where(t => _filterLineSplitted
                         .Any(s => t.FullName.ToLower().Contains(s))).ToList();
             }
@@ -115,7 +116,7 @@ namespace c1tr00z.AssistLib.Common {
                 _selectedType = _filteredTypes.Contains(defaultType) ? defaultType : _filteredTypes.FirstOrDefault();
             }
 
-            _typesNames = _filteredTypes.Select(t => t.FullName.Replace(".", "/")).ToArray();
+            _typesNames = Enumerable.ToArray(_filteredTypes.Select(t => t.FullName.Replace(".", "/")));
             _selectedTypeIndex = _filteredTypes.IndexOf(_selectedType);
             
             CheckName();

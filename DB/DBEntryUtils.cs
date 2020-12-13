@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using c1tr00z.AssistLib.Localization;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

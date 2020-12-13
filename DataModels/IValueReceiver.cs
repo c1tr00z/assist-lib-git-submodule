@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace c1tr00z.AssistLib.DataModels {
     public interface IValueReceiver {

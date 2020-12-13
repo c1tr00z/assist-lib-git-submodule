@@ -4,7 +4,9 @@ using UnityEditor;
 namespace c1tr00z.AssistLib.Common {
  
     public static class SelectionUtils {
-    
+
+        #region Class Implementation
+
         public static string GetSelectedPath() {
             string path = AssetDatabase.GetAssetPath(Selection.activeObject);
 
@@ -17,5 +19,7 @@ namespace c1tr00z.AssistLib.Common {
 
             return path;
         }
+
+        #endregion
     }
 }

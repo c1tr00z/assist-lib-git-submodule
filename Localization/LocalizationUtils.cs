@@ -3,8 +3,14 @@
 namespace c1tr00z.AssistLib.Localization {
     public static class LocalizatioUtils {
 
-        private static string KEY_TITLE = "Title";
-        private static string KEY_DESCRIPTION = "Description";
+        #region Readonly Fields
+
+        private static readonly string KEY_TITLE = "Title";
+        private static readonly string KEY_DESCRIPTION = "Description";
+
+        #endregion
+
+        #region Class Implementation
 
         public static string GetLocalizationText(this string key) {
             return Localization.Translate(key);
@@ -45,5 +51,7 @@ namespace c1tr00z.AssistLib.Localization {
         public static string GetDescription(this DBEntry dBEntry) {
             return GetLocalizationText(dBEntry, KEY_DESCRIPTION);
         }
+
+        #endregion
     }
 }

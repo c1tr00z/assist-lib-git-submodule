@@ -1,38 +1,32 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using c1tr00z.AssistLib.Utils;
 using UnityEditor;
 using UnityEngine;
 
-[CustomPropertyDrawer(typeof(TypeAttribute))]
-public class TypeAttributeInspector : ExtendedPropertyDrawer {
+namespace c1tr00z.AssistLib.CustomAttributes {
+    [CustomPropertyDrawer(typeof(TypeAttribute))]
+    public class TypeAttributeInspector : ExtendedPropertyDrawer {
 
-    private List<Type> _selectedTypes = new List<Type>();
+        private List<Type> _selectedTypes = new List<Type>();
 
-    private TypeAttribute typeAttribute {
-        get { return attribute as TypeAttribute; }
-    }
-    
-    public TypeAttributeInspector() {
-        
-    }
+        private TypeAttribute typeAttribute => attribute as TypeAttribute;
 
-    public override void Show(SerializedProperty property) {
-
-        if (typeAttribute == null) {
-            GUI.Label(position, new GUIContent("No attribute"));
-            return;
+        public TypeAttributeInspector() {
+            
         }
 
-        if (_selectedTypes == null || _selectedTypes.Count == 0) {
-            _selectedTypes = ReflectionUtils.GetSubclassesOf(typeAttribute.baseType);
-        }
+        public override void Show(SerializedProperty property) {
 
-        //if (EditorGUI.DropdownButton(position, new GUIContent("123"), FocusType.Keyboard)) {
-            //PopupWindow.Show(position, )
-            //var bridge = new PopupBridge(callback, types);
-            //bridge.selectedType = selected;
-            //EditorListPopup<Type>.ShowPopup(CalculateRect(rect, types), bridge);
-        //}// .Popup( (0, _selectedTypes.Select(t => t.FullName).ToArray());
+            if (typeAttribute == null) {
+                GUI.Label(position, new GUIContent("No attribute"));
+                return;
+            }
+
+            if (_selectedTypes == null || _selectedTypes.Count == 0) {
+                _selectedTypes = ReflectionUtils.GetSubclassesOf(typeAttribute.baseType);
+            }
+        }
     }
 }
+

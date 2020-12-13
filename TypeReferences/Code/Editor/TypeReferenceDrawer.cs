@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using c1tr00z.AssistLib.TypeReferences;
+using c1tr00z.AssistLib.Utils;
 using UnityEditor;
 using UnityEngine;
 
 namespace AssistLib.TypeReferences.Editor {
     [CustomPropertyDrawer(typeof(BaseTypeAttribute))]
     public class TypeReferenceDrawer : PropertyDrawer {
-        
-        private static readonly string FIELD_TYPE_FULL_NAME = "typeFullName";
+
+        #region Nested Classes
 
         private class PropertyData {
             public string path;
@@ -18,9 +19,23 @@ namespace AssistLib.TypeReferences.Editor {
             public SerializedProperty typeFullNameProperty;
             public Type currentType;
         }
-        
+
+        #endregion
+
+        #region Readonly Fields
+
+        private static readonly string FIELD_TYPE_FULL_NAME = "typeFullName";
+
+        #endregion
+
+        #region Private Fields
+
         private Dictionary<string, PropertyData> _properties = new Dictionary<string, PropertyData>();
-        
+
+        #endregion
+
+        #region PropertyDrawer Implementation
+
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             EditorGUI.BeginProperty(position, label, property);
             
@@ -45,6 +60,14 @@ namespace AssistLib.TypeReferences.Editor {
             
             EditorGUI.EndProperty();
         }
+        
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
+            return 20;
+        }
+
+        #endregion
+
+        #region Class Implementation
 
         private PropertyData GetPropertyData(SerializedProperty property, PropertyAttribute attribute) {
             var path = property.propertyPath;
@@ -91,8 +114,6 @@ namespace AssistLib.TypeReferences.Editor {
             return propertyData;
         }
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-            return 20;
-        }
+        #endregion
     }
 }

@@ -4,11 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using c1tr00z.AssistLib.EditorTools;
+using c1tr00z.AssistLib.Utils;
 using UnityEditor;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.PropertyReferences.Editor {
     public class PropertyReferenceTool : EditorTool {
+
+        #region EditorTool Implementation
 
         protected override void DrawInterface() {
             base.DrawInterface();
@@ -18,8 +21,12 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
             }
         }
 
+        #endregion
+
+        #region Class Implementation
+
         private void Scan() {
-            var allPaths = AssetDatabase.GetAllAssetPaths();
+            var allPaths = AssetDatabase.GetAllAssetPaths().ToList();
             
             var types = new List<Type>();
             allPaths.ForEach(p => {
@@ -80,7 +87,7 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
                         return;
                     }
                     
-                    propRefArray.ForEach(propReference => {
+                    propRefArray.ToList().ForEach(propReference => {
                         if (CachePropertyReference(propReference, referenceTypeAttribute, out List<Type> foundedTypes)) {
                             types.AddRange(foundedTypes);
                         }
@@ -182,5 +189,7 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
             
             AssetDatabase.Refresh();
         }
+
+        #endregion
     }
 }
