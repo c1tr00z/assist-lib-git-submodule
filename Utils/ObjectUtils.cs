@@ -23,6 +23,9 @@ namespace c1tr00z.AssistLib.Utils {
             return Clone(obj, position, Quaternion.identity, parent);
         }
 
+        /**
+         * <summary>Resets local position, rotation and scale</summary>
+         */
         public static void Reset<T>(this T obj) where T : Component {
             obj.Reset(null);
         }
@@ -35,9 +38,7 @@ namespace c1tr00z.AssistLib.Utils {
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localScale = Vector3.one;
 
-            var rot = Quaternion.identity;
-            rot.eulerAngles = Vector3.zero;
-            obj.transform.localRotation = rot;
+            obj.transform.localRotation = Quaternion.identity;
         }
 
         public static bool IsAssigned(this object obj) {

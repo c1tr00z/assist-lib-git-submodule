@@ -8,6 +8,9 @@ namespace c1tr00z.AssistLib.Utils {
 
         #region Class Implementation
 
+        /**
+         * <summary>Tried to get component of type T from comp. If component is exist then returns true.</summary>
+         */
         public static bool TryGetComponent<T>(this Component comp, out T targetComponent) {
             targetComponent = comp.GetComponent<T>();
             if (targetComponent != null) {
@@ -17,6 +20,10 @@ namespace c1tr00z.AssistLib.Utils {
             return false;
         }
 
+        /**
+         * <summary>Checks if cachedComponent not assigned then call GetComponent.
+         * If cached component is assigned then just returns it</summary>
+         */
         public static T GetCachedComponent<T>(this Component comp, ref T cachedComponent) {
             if (cachedComponent == null) {
                 cachedComponent = comp.GetComponent<T>();
@@ -25,6 +32,9 @@ namespace c1tr00z.AssistLib.Utils {
             return cachedComponent;
         }
 
+        /**
+         * <summary><see cref="GetCachedComponent{T}"/> for components in parent</summary>
+         */
         public static T GetCachedComponentInParent<T>(this Component comp, ref T cachedComponent) {
             if (cachedComponent == null) {
                 cachedComponent = comp.GetComponentInParent<T>();
@@ -33,6 +43,9 @@ namespace c1tr00z.AssistLib.Utils {
             return cachedComponent;
         }
 
+        /**
+         * <summary><see cref="GetCachedComponent{T}"/> for components in children</summary>
+         */
         public static T GetCachedComponentInChildren<T>(this Component comp, ref T cachedComponent) {
             if (cachedComponent == null) {
                 cachedComponent = comp.GetComponentInChildren<T>();

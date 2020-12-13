@@ -34,8 +34,7 @@ namespace c1tr00z.AssistLib.Utils {
 
         public static void DestroyAllChildren(this Transform transform) {
             var listDestroy = transform.GetChildren().ToList();
-        
-            listDestroy.ForEach(t => Object.DestroyImmediate(t.gameObject));
+            listDestroy.ForEach(t => t.gameObject.Destroy());
         }
     
         public static Vector3 GetHeading(this Transform transform, Transform to) {

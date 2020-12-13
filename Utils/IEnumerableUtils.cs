@@ -239,8 +239,8 @@ namespace c1tr00z.AssistLib.Utils {
         }
 
         /**
-     * <summary>Iterate from fromTo[0] (Include) to fromTo[1] (Exclude)</summary>
-     */
+         * * <summary>Iterate from fromTo[0] (Include) to fromTo[1] (Exclude)</summary>
+         * */
         public static void Iterate(this int[] fromTo, Action<int> iterator) {
             if (fromTo.Length == 0 || iterator == null) {
                 return;

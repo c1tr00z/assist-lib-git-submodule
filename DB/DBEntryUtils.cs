@@ -50,7 +50,7 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
                 return cachedDBEntry;
             }
 
-            if (key.IsNullOrEmpty()) {
+            if (!key.IsNullOrEmpty()) {
                 cachedDBEntry = DB.Get<T>(key);
             } else {
                 cachedDBEntry = Get<T>();
