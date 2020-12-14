@@ -32,6 +32,10 @@ namespace c1tr00z.AssistLib.Utils {
             return array[randomized];
         }
 
+        public static T RandomItem<T>(this IEnumerable<T> items, Func<T, bool> predicate) {
+            return items.Where(predicate).RandomItem();
+        }
+
         public static void AddOrSet<T, P>(this Dictionary<T, P> dic, T key, P value) {
             if (key == null) {
                 Debug.LogError(string.Format("Key cannot be null (value: {0})", value));
