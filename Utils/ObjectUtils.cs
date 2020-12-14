@@ -30,6 +30,10 @@ namespace c1tr00z.AssistLib.Utils {
             obj.Reset(null);
         }
 
+        /**
+         * <summary>Resets local position, rotation and scale. If parent is not null then puts transform in parent
+         * and then reset parameters</summary>
+         */
         public static void Reset<T>(this T obj, Transform parent) where T : Component {
             if (parent != null) {
                 obj.transform.SetParent(parent, false);
@@ -41,6 +45,10 @@ namespace c1tr00z.AssistLib.Utils {
             obj.transform.localRotation = Quaternion.identity;
         }
 
+        /**
+         * Checks if object is assigned. If obj is Unity Object then checks if gameObject is alive
+         * (avoiding serialized object problem)
+         */
         public static bool IsAssigned(this object obj) {
             if (obj == null) {
                 return false;
