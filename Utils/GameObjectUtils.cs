@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.Utils {
@@ -14,6 +15,14 @@ namespace c1tr00z.AssistLib.Utils {
 #else
             Object.Destroy(gameObject);
 #endif
+        }
+
+        public static void SetLayer(this GameObject gameObject, int layer, bool includeChildren = true) {
+            gameObject.layer = layer;
+            if (includeChildren) {
+                gameObject.transform.GetChildren().SelectNotNull(c => c.gameObject).ToList()
+                    .ForEach(go => go.SetLayer(layer, true));
+            }
         }
 
         #endregion
