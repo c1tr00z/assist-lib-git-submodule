@@ -28,7 +28,7 @@ namespace c1tr00z.AssistLib.DataModels {
         public abstract void UpdateReceiver();
 
         public IEnumerable<IDataModelBase> GetModels() {
-            if (_models == null) {
+            if (_models == null || _models.Count == 0) {
                 _models = new List<IDataModelBase>();
                 var references = GetReferences();
                 while (references.MoveNext()) {
