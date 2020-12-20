@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.Sprites.Editor {
-    [CustomEditor(typeof(Flipbook))]
+    // [CustomEditor(typeof(Flipbook))]
     public class FlipbookInspector : UnityEditor.Editor {
 
         #region Accessors

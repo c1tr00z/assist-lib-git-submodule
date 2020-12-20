@@ -73,7 +73,7 @@ namespace c1tr00z.AssistLib.Sprites {
 
         #region Class Implementation
 
-        private void UpdateSprite() {
+        private void UpdateSprite(bool force = false) {
             if (!flipbook.IsAssigned()) {
                 return;
             }
@@ -86,12 +86,11 @@ namespace c1tr00z.AssistLib.Sprites {
                 throw new UnityException($"Flipbook.fps cannot be less or equal 0: {requiredSeconds}");
             }
 
-            if (Time.time - _lastTime < requiredSeconds) {
+            if (!force && Time.time - _lastTime < requiredSeconds) {
                 return;
             }
 
             if (_frame >= flipbook.length) {
-                // _frame = 0;
                 OnAnimationFinished();
                 return;
             }
@@ -108,6 +107,7 @@ namespace c1tr00z.AssistLib.Sprites {
 
         public void RestartAnimation() {
             _frame = 0;
+            UpdateSprite(true);
         }
         
         private void OnAnimationEvent(FlipbookAnimationEvent flipbookEvent) {
