@@ -16,6 +16,9 @@ namespace c1tr00z.AssistLib.AppModules {
         #region Unity Events
 
         protected virtual void Awake() {
+            if (_modules.Contains(this)) {
+                return;
+            }
             _modules.Add(this);
         }
 
@@ -42,6 +45,9 @@ namespace c1tr00z.AssistLib.AppModules {
         #region Static Methods
 
         public static T Get<T>() where T : IModule {
+            if (_modules.Count == 0) {
+                _modules.AddRange(FindObjectsOfType<Modules>());
+            }
             return _modules.SelectNotNull(m => m.GetModule<T>()).FirstOrDefault();
         }
 
