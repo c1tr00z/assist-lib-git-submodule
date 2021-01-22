@@ -13,14 +13,10 @@ namespace c1tr00z.AssistLib.GameUI {
         #region Private Fields
 
         private RectTransform _rectTransform;
+        
         private Canvas _canvas;
 
-        #endregion
-
-        #region Serialized Fields
-
-        [SerializeField]
-        private UILayerDBEntry _layerDBEntry;
+        private DBEntryResource _dbEntryResource;
 
         #endregion
 
@@ -44,7 +40,7 @@ namespace c1tr00z.AssistLib.GameUI {
             }
         }
 
-        public UILayerDBEntry layerDBEntry => _layerDBEntry;
+        public UILayerDBEntry layerDBEntry => this.GetCachedComponent(ref _dbEntryResource).parent as UILayerDBEntry;
 
         public bool usedByHotkeys => layerDBEntry.usedByHotkeys;
         
@@ -55,7 +51,6 @@ namespace c1tr00z.AssistLib.GameUI {
         #region Class Implementation
 
         public void Init(UILayerDBEntry layerDBEntry) {
-            _layerDBEntry = layerDBEntry;
             name = layerDBEntry.name;
             canvas.sortingOrder = layerDBEntry.sortOrder;
         }

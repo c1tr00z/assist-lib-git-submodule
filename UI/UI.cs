@@ -22,16 +22,13 @@ namespace c1tr00z.AssistLib.GameUI {
 
         #endregion
 
-        #region Accessors
+        #region Serialized Fields
 
-        private UIDefaultsDBEntry uiDefaults {
-            get {
-                if (_uiDefaults == null) {
-                    _uiDefaults = DB.Get<UIDefaultsDBEntry>();
-                }
-                return _uiDefaults;
-            }
-        }
+        [SerializeField] private UILayerBase _defaultLayer;
+
+        #endregion
+
+        #region Accessors
 
         private UILayerBase defaultLayerSrc {
             get {
@@ -56,8 +53,8 @@ namespace c1tr00z.AssistLib.GameUI {
         }
 
         private UILayerBase GetOrCreateLayer(UILayerDBEntry layerDBEntry) {
-            if (layerDBEntry == null) {
-                return GetOrCreateLayer(uiDefaults.mainLayer);
+            if (!layerDBEntry.IsAssigned()) {
+                return _defaultLayer;
             }
             if (_layers.ContainsKey(layerDBEntry)) {
                 return _layers[layerDBEntry];
