@@ -108,7 +108,7 @@ public static class JSONUtuls {
                 var isDeserializable = listItemType.GetInterfaces().Contains(typeof(IJsonDeserializable));
                 if (isDeserializable && listItemValue is Dictionary<string, object>) {
                     valueList.Add(DeserializeValue(listItemValue, listItemType));
-                } else if (!isDeserializable) {
+                } else if (isDeserializable) {
                     valueList.Add(listItemValue);
                 }
             }
@@ -146,11 +146,6 @@ public static class JSONUtuls {
                 returnValue = vector;
             } 
         }
-
-        // if (!targetType.IsInstanceOfType(returnValue)) {
-        //     Debug.LogError("b: " + returnValue + " \\ type : " + returnValue.GetType() + " \\ target: " + targetType);
-        // }
-
 
         return returnValue;
     }
