@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using c1tr00z.AssistLib.Json;
 using c1tr00z.AssistLib.Utils;
 using UnityEditor;
+using UnityEngine;
 
 namespace c1tr00z.AssistLib.Editor {
     public class AssistLibEditorSettings {
@@ -38,9 +40,19 @@ namespace c1tr00z.AssistLib.Editor {
             return _editorSettingsData.ContainsKey(key) ? (Dictionary<string, object>)_editorSettingsData[key] : new Dictionary<string, object>();
         }
 
+        public static T Get<T>(string key) where T : IJsonDeserializable {
+            var node = GetDataNode(key);
+            return JSONUtuls.Deserialize<T>(node);
+        }
+
         public static void SetDataNode(string key, Dictionary<string, object> node) {
             _editorSettingsData.AddOrSet(key, node);
             Save();
+        }
+
+        public static void Set<T>(string key, T jsonObject) where T : IJsonSerializable {
+            var node = jsonObject.ToJson();
+            SetDataNode(key, node);
         }
 
         public static void Save() {
