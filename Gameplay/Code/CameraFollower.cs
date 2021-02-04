@@ -10,6 +10,10 @@ namespace c1tr00z.AssistLib.Gameplay {
         public Vector3 offset;
         public float speed;
 
+        public bool trackForward;
+
+        public float forwardShift;
+
         #endregion
 
         #region Unity Events
@@ -18,9 +22,15 @@ namespace c1tr00z.AssistLib.Gameplay {
 
             if (!target.IsAssigned()) {
                 return;
-            };
+            }
+
+            var targetPosition = target.position + offset;
             
-            transform.position = Vector3.Lerp(transform.position, target.position + offset,
+            if (trackForward) {
+                targetPosition += target.forward.normalized * forwardShift;
+            }
+            
+            transform.position = Vector3.Lerp(transform.position, targetPosition,
                 Time.deltaTime * speed);
         }
 
