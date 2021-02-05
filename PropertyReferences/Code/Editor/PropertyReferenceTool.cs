@@ -13,7 +13,7 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 
         #region EditorTool Implementation
 
-        protected override void DrawInterface() {
+        public override void DrawInterface() {
             base.DrawInterface();
 
             if (Button("Generate class")) {

@@ -1,45 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using c1tr00z.AssistLib.Json;
 using UnityEditor;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.EditorTools {
-    public class EditorTool {
+    public class EditorTool : IJsonSerializableCustom, IJsonDeserializableCustom {
 
         #region Private Fields
-
-        private bool _toggle = false;
 
         private string _toolLabel = "Empty...";
 
         #endregion
 
-        #region Class Implementation
+        #region JSON Fields
 
-        public void Draw() {
-            if (DrawTitle()) {
-                GUILayout.Label(_toolLabel, EditorStyles.boldLabel);
-                DrawInterface();
-            }
+        [JsonSerializableField] public bool drawToggle = true;
+
+        #endregion
+
+        #region IJsonSerializableCustom Implementation
+
+        public virtual void SerializeCustom(Dictionary<string, object> json) {
+            json.Add("editorToolType", GetType().FullName);
         }
 
-        public virtual void Init(Dictionary<string, object> settingsJson) {
+        public virtual void DeserializeCustom(Dictionary<string, object> json) {
             
         }
 
-        public virtual void Save(Dictionary<string, object> settingsJson) {
+        #endregion
 
-        }
+        #region Class Implementation
 
-        protected virtual void DrawInterface() {
+        public virtual void DrawInterface() {
             EditorGUILayout.LabelField("Nothing here...");
-        }
-
-        private bool DrawTitle() {
-            var editorToolName = (EditorToolName)Attribute.GetCustomAttribute(GetType(), typeof(EditorToolName));
-            _toolLabel = editorToolName != null ? editorToolName.toolName : GetType().ToString();
-            _toggle = EditorGUILayout.Foldout(_toggle, _toolLabel);
-            return _toggle;
         }
 
         protected bool Button(string caption, params GUILayoutOption[] options) {

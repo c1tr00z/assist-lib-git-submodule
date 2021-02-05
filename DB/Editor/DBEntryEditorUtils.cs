@@ -109,7 +109,7 @@ namespace c1tr00z.AssistLib.ResourceManagement.Editor {
         }
 
         public static void AutoCollect() {
-            if (DBSettings.autoCollect) {
+            if (true) {
                 CollectItems();
             }
         }

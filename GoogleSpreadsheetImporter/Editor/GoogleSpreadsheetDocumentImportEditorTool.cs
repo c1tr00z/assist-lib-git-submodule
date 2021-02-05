@@ -24,25 +24,20 @@ namespace c1tr00z.AssistLib.GoogleSpreadsheetImporter {
 
         #region Accessors
 
-        protected Settings settings { get; private set; }
-
         protected List<GoogleSpreadsheetDocumentPageDBEntry> pages => settings.pages;
 
         #endregion
 
-        #region EditorTool Implementation
+        #region Public Fields
 
-        public override void Init(Dictionary<string, object> settingsJson) {
-            settings = JSONUtuls.Deserialize<Settings>(settingsJson);
-        }
+        [JsonSerializableField]
+        protected Settings settings;
 
-        public override void Save(Dictionary<string, object> settingsJson) {
-            base.Save(settingsJson);
-            settings.Serialize(settingsJson);
-            // settingsJson.AddOrSet(PAGES_KEY, pages.SelectNotNull().SelectNotNull(p => p.name).ToArray());
-        }
-        
-        protected override void DrawInterface() {
+        #endregion
+
+        #region EditorTool Implementation}
+
+        public override void DrawInterface() {
 
             EditorGUILayout.BeginVertical();
 
