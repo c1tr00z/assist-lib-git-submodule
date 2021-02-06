@@ -6,36 +6,20 @@ using UnityEngine;
 namespace c1tr00z.AssistLib.GoogleSpreadsheetImporter {
     public abstract class GoogleSpreadsheetDocumentImportEditorTool : EditorTools.EditorTool {
 
-        #region Nested Classes
-
-        public class Settings : IJsonSerializable, IJsonDeserializable {
-
-            [JsonSerializableField]
-            public List<GoogleSpreadsheetDocumentPageDBEntry> pages = new List<GoogleSpreadsheetDocumentPageDBEntry>();
-        }
-
-        #endregion
-        
         #region Private Fields
 
         private static string PAGES_KEY = "pages";
 
         #endregion
 
-        #region Accessors
-
-        protected List<GoogleSpreadsheetDocumentPageDBEntry> pages => settings.pages;
-
-        #endregion
-
-        #region Public Fields
+        #region JSON Fields
 
         [JsonSerializableField]
-        protected Settings settings;
+        public List<GoogleSpreadsheetDocumentPageDBEntry> pages = new List<GoogleSpreadsheetDocumentPageDBEntry>();
 
         #endregion
 
-        #region EditorTool Implementation}
+        #region EditorTool Implementation
 
         public override void DrawInterface() {
 
