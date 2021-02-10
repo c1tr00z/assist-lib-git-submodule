@@ -1,7 +1,7 @@
 ﻿using c1tr00z.AssistLib.GoogleSpreadsheetImporter;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Reflection;
 using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.EditorTools;
 using c1tr00z.AssistLib.ResourcesManagement;
@@ -30,6 +30,13 @@ namespace c1tr00z.AssistLib.Localization {
             StoreLocalization(allLocalizations);
         }
 
+        public override void DrawInterface() {
+            base.DrawInterface();
+            if (Button("Print localization fields")) {
+                PrintLocalizationFields();
+            }
+        }
+
         #endregion
 
         #region Class Implementation
@@ -46,6 +53,18 @@ namespace c1tr00z.AssistLib.Localization {
             }
 
             Debug.Log(JSONUtuls.Serialize(localization).DecodeEncodedNonAscii());
+        }
+
+        private void PrintLocalizationFields() {
+            Debug.Log(GetFields().Select(f => f.GetLocalizationKey()).ToPlainString("\r\n"));
+        }
+
+        private List<FieldInfo> GetFields() {
+            var fields = new List<FieldInfo>();
+            ReflectionUtils.GetTypes().Select(t => t.GetFields(BindingFlags.Static | BindingFlags.Public)
+                    .Where(f => f.GetLocalizationAttribute() != null))
+                .ToList().ForEach(f => fields.AddRange(f));
+            return fields;
         }
 
         #endregion

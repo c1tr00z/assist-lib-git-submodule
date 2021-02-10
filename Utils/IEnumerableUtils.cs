@@ -105,17 +105,8 @@ namespace c1tr00z.AssistLib.Utils {
             return sb.ToString();
         }
 
-        public static string ToPlainString<T>(this IEnumerable<T> enumerable) {
-            var sb = new StringBuilder();
-
-            sb.Append(string.Format("[{0}][", enumerable.Count()));
-            foreach (T item in enumerable) {
-                sb.Append(item + ", ");
-            }
-
-            sb.Append("]");
-
-            return sb.ToString();
+        public static string ToPlainString<T>(this IEnumerable<T> enumerable, string separator = ", ") {
+            return $"[{string.Join(separator, enumerable)}]";
         }
 
         public static int Min(this IEnumerable<int> enumerable) {
