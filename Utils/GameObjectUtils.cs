@@ -7,7 +7,7 @@ namespace c1tr00z.AssistLib.Utils {
         #region Class Implementation
 
         public static void Destroy(this GameObject gameObject) {
-            if (!gameObject.IsAssigned()) {
+            if (gameObject.IsNull()) {
                 return;
             }
 #if UNITY_EDITOR

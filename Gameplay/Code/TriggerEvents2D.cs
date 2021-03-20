@@ -26,15 +26,17 @@ namespace c1tr00z.AssistLib.Gameplay {
         #region Unity Events
 
         private void OnTriggerEnter2D(Collider2D other) {
-            if (_onTriggerEnterEvent.IsAssigned()) {
-                _onTriggerEnterEvent.Invoke(other);
+            if (_onTriggerEnterEvent.IsNull()) {
+                return;
             }
+            _onTriggerEnterEvent.Invoke(other);
         }
 
         private void OnTriggerExit2D(Collider2D other) {
-            if (_onTriggerExitEvent.IsAssigned()) {
-                _onTriggerExitEvent.Invoke(other);
+            if (_onTriggerExitEvent.IsNull()) {
+                return;
             }
+            _onTriggerExitEvent.Invoke(other);
         }
 
         #endregion

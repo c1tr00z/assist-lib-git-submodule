@@ -6,8 +6,8 @@ namespace c1tr00z.AssistLib.Utils {
         #region Class Implementation
 
         public static T GetCachedObject<T>(ref T obj, Func<T> getter) {
-            if (!obj.IsAssigned() && getter != null) {
-                obj = getter != null ? getter() : default(T);
+            if (obj.IsNull()) {
+                obj = getter != null ? getter() : default;
             }
 
             return obj;

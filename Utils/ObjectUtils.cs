@@ -49,21 +49,21 @@ namespace c1tr00z.AssistLib.Utils {
          * Checks if object is assigned. If obj is Unity Object then checks if gameObject is alive
          * (avoiding serialized object problem)
          */
-        public static bool IsAssigned(this object obj) {
+        public static bool IsNull(this object obj) {
             if (obj == null) {
-                return false;
+                return true;
             }
 
             if (obj is GameObject gameObject) {
-                return gameObject != null && !"null".Equals(gameObject) && !"Null".Equals(gameObject);
+                return gameObject == null || "null".Equals(gameObject) || "Null".Equals(gameObject);
             }
 
             if (obj is Component component) {
-                return component != null && component.gameObject.IsAssigned() && component.transform != null &&
-                       !"null".Equals(component) && !"Null".Equals(component);
+                return component == null || component.gameObject.IsNull() || component.transform == null ||
+                       "null".Equals(component) || "Null".Equals(component);
             }
 
-            return obj != null;
+            return obj == null;
         }
 
         #endregion

@@ -79,7 +79,7 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
          * <summary>Returns cached (if possible) DBEntry by type and key</summary>
          */
         public static T GetCached<T>(ref T cachedDBEntry, string key = null) where T : DBEntry {
-            if (cachedDBEntry.IsAssigned()) {
+            if (!cachedDBEntry.IsNull()) {
                 return cachedDBEntry;
             }
 

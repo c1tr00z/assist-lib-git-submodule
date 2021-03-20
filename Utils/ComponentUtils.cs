@@ -13,11 +13,7 @@ namespace c1tr00z.AssistLib.Utils {
          */
         public static bool TryGetComponent<T>(this Component comp, out T targetComponent) {
             targetComponent = comp.GetComponent<T>();
-            if (targetComponent.IsAssigned()) {
-                return true;
-            }
-
-            return false;
+            return !targetComponent.IsNull();
         }
 
         /**
@@ -25,7 +21,7 @@ namespace c1tr00z.AssistLib.Utils {
          * If cached component is assigned then just returns it</summary>
          */
         public static T GetCachedComponent<T>(this Component comp, ref T cachedComponent) {
-            if (!cachedComponent.IsAssigned()) {
+            if (cachedComponent.IsNull()) {
                 cachedComponent = comp.GetComponent<T>();
             }
 
@@ -36,7 +32,7 @@ namespace c1tr00z.AssistLib.Utils {
          * <summary><see cref="GetCachedComponent{T}"/> for components in parent</summary>
          */
         public static T GetCachedComponentInParent<T>(this Component comp, ref T cachedComponent) {
-            if (!cachedComponent.IsAssigned()) {
+            if (cachedComponent.IsNull()) {
                 cachedComponent = comp.GetComponentInParent<T>();
             }
 
@@ -47,7 +43,7 @@ namespace c1tr00z.AssistLib.Utils {
          * <summary><see cref="GetCachedComponent{T}"/> for components in children</summary>
          */
         public static T GetCachedComponentInChildren<T>(this Component comp, ref T cachedComponent) {
-            if (!cachedComponent.IsAssigned()) {
+            if (cachedComponent.IsNull()) {
                 cachedComponent = comp.GetComponentInChildren<T>();
             }
 

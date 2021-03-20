@@ -20,7 +20,7 @@ namespace c1tr00z.AssistLib.Gameplay {
 
         private void LateUpdate() {
 
-            if (!target.IsAssigned()) {
+            if (target.IsNull()) {
                 return;
             }
 

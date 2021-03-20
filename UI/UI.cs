@@ -53,7 +53,7 @@ namespace c1tr00z.AssistLib.GameUI {
         }
 
         private UILayerBase GetOrCreateLayer(UILayerDBEntry layerDBEntry) {
-            if (!layerDBEntry.IsAssigned()) {
+            if (layerDBEntry.IsNull()) {
                 return _defaultLayer;
             }
             if (_layers.ContainsKey(layerDBEntry)) {

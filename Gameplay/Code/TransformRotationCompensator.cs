@@ -26,7 +26,7 @@ namespace c1tr00z.AssistLib.Gameplay {
         #region Unity Events
 
         private void LateUpdate() {
-            if (!_transformToCompensate.IsAssigned()) {
+            if (_transformToCompensate.IsNull()) {
                 return;
             }
             myTransform.localRotation = Quaternion.Inverse(_transformToCompensate.rotation);

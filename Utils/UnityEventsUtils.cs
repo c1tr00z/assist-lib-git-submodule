@@ -6,14 +6,14 @@ namespace c1tr00z.AssistLib.Utils {
         #region Class Implementations
 
         public static void SafeInvoke(this UnityEvent unityEvent) {
-            if (!unityEvent.IsAssigned()) {
+            if (unityEvent.IsNull()) {
                 return;
             }
             unityEvent?.Invoke();
         }
         
         public static void SafeInvoke<T>(this UnityEvent<T> unityEvent, T param) {
-            if (!unityEvent.IsAssigned()) {
+            if (unityEvent.IsNull()) {
                 return;
             }
             unityEvent?.Invoke(param);

@@ -27,13 +27,14 @@ namespace c1tr00z.AssistLib.Gameplay {
         #region Unity Events
 
         private void OnCollisionEnter2D(Collision2D other) {
-            if (_onCollisionEnterEvent.IsAssigned()) {
-                _onCollisionEnterEvent?.Invoke(other.collider);
+            if (_onCollisionEnterEvent.IsNull()) {
+                return;
             }
+            _onCollisionEnterEvent?.Invoke(other.collider);
         }
 
         private void OnCollisionExit2D(Collision2D other) {
-            if (_onCollisionExitEvent.IsAssigned()) {
+            if (!_onCollisionExitEvent.IsNull()) {
                 _onCollisionExitEvent?.Invoke(other.collider);
             }
         }

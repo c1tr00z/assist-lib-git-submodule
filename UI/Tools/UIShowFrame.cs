@@ -34,7 +34,7 @@ namespace c1tr00z.AssistLib.GameUI {
         #region Class Implementation
 
         public void Show() {
-            if (!_frameDBEntry.IsAssigned()) {
+            if (_frameDBEntry.IsNull()) {
                 return;
             }
 

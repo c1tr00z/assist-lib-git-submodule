@@ -59,7 +59,7 @@ namespace c1tr00z.AssistLib.Sprites {
             }
         }
 
-        public float requiredSeconds => flipbook.IsAssigned() ? 1f / flipbook.fps : 0;
+        public float requiredSeconds => flipbook.IsNull() ? 0 : 1f / flipbook.fps;
 
         #endregion
 
@@ -74,7 +74,7 @@ namespace c1tr00z.AssistLib.Sprites {
         #region Class Implementation
 
         private void UpdateSprite(bool force = false) {
-            if (!flipbook.IsAssigned()) {
+            if (flipbook.IsNull()) {
                 return;
             }
 
