@@ -63,6 +63,15 @@ namespace c1tr00z.AssistLib.Utils {
             return heading / distance;
         }
 
+        public static void PlaceTo(this Transform transform, Transform other) {
+            if (transform.IsNull() || other.IsNull()) {
+                return;
+            }
+
+            transform.position = other.position;
+            transform.rotation = other.rotation;
+        }
+
         #endregion
     }
 }

@@ -105,6 +105,10 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             return (T)_singletones[type];
         }
 
+        public static T GetDBEntry<T>(this Component component, ref DBEntryResource dbEntryResource) where T : DBEntry {
+            return component.GetCachedComponent(ref dbEntryResource).parent as T;
+        }
+
         #endregion
     }
 }
