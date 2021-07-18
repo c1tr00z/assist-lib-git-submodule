@@ -8,7 +8,6 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace c1tr00z.AssistLib.GameUI {
-[RequireComponent(typeof(LayoutGroup))]
     public class UIList : MonoBehaviour {
 
         #region Nested Classes
@@ -44,7 +43,7 @@ namespace c1tr00z.AssistLib.GameUI {
 
         #region Class Implementation
 
-        public void UpdateList<T>(IEnumerable<T> items, T selectedItem = default(T)) {
+        public void UpdateList<T>(List<T> items, T selectedItem = default(T)) {
             if (_listItems != null) {
                 foreach (var listItem in _listItems) {
                     Destroy(listItem.gameObject);

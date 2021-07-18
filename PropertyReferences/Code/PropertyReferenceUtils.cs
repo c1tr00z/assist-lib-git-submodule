@@ -54,7 +54,7 @@ namespace c1tr00z.AssistLib.PropertyReferences {
         public static List<T> GetList<T>(this PropertyReference propertyReference) {
             var iList = (IList)propertyReference.Get<object>();
             if (iList == null) {
-                return null;
+                return new List<T>();
             }
             var list = new List<T>();
             var listEnum = iList.GetEnumerator();
