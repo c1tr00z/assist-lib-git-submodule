@@ -19,6 +19,9 @@ namespace c1tr00z.AssistLib.EditorTools {
 
         #region JSON Fields
 
+        [JsonSerializableField] 
+        public bool isUtilityWindow = false;
+
         [JsonSerializableField]
         public List<EditorToolData> toolsData = new List<EditorToolData>();
 

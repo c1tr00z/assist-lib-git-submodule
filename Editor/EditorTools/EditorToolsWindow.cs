@@ -11,7 +11,7 @@ namespace c1tr00z.AssistLib.EditorTools {
 
         #region Private Fields
 
-        private EditorToolsController _controller;
+        private static EditorToolsController _controller;
 
         private int _selectedToolTypeIndex = 0;
 
@@ -21,10 +21,10 @@ namespace c1tr00z.AssistLib.EditorTools {
 
         #region Accessors
 
-        private EditorToolsController controller {
+        private static EditorToolsController controller {
             get {
                 if (_controller == null) {
-                    Load();
+                    _controller = new EditorToolsController();
                 }
 
                 return _controller;
@@ -64,6 +64,19 @@ namespace c1tr00z.AssistLib.EditorTools {
             }
         }
 
+        private bool isUtility {
+            get => controller.isUtilityWindow;
+            set {
+                if (controller.isUtilityWindow == value) {
+                    return;
+                }
+
+                controller.isUtilityWindow = value;
+                Close();
+                ShowToolsWindows();
+            }
+        }
+
         #endregion
 
         #region Unity Events
@@ -77,6 +90,7 @@ namespace c1tr00z.AssistLib.EditorTools {
         }
 
         void OnGUI() {
+            isUtility = EditorGUILayout.Toggle("Is utility window", isUtility);
             EditorGUILayout.BeginHorizontal();
             selectedToolTypeIndex = EditorGUILayout.Popup("Tool to add", selectedToolTypeIndex, typesNames);
             if (GUILayout.Button(EditorGUIUtility.IconContent("d_TreeEditor.Refresh"), GUILayout.Width(32))) {
@@ -102,11 +116,10 @@ namespace c1tr00z.AssistLib.EditorTools {
             var title = new GUIContent();
             title.text = "Editor tools";
             titleContent = title;
-
-            _controller = new EditorToolsController();
         }
 
         private void DrawTools(out List<EditorTool> toRemove) {
+            EditorGUI.indentLevel++;
             toRemove = new List<EditorTool>();
             foreach (var tool in controller.tools) {
                 DrawTool(tool, out bool remove);
@@ -114,6 +127,7 @@ namespace c1tr00z.AssistLib.EditorTools {
                     toRemove.Add(tool);
                 }
             }
+            EditorGUI.indentLevel--;
         }
 
         private void DrawTool(EditorTool tool, out bool remove) {
@@ -141,8 +155,8 @@ namespace c1tr00z.AssistLib.EditorTools {
         #region Static Methods
 
         [MenuItem("Assist/Tools")]
-        public static void ShowSettingsWindow() {
-            var toolWindow = (EditorToolsWindow)GetWindow(typeof(EditorToolsWindow), true);
+        public static void ShowToolsWindows() {
+            var toolWindow = (EditorToolsWindow)GetWindow(typeof(EditorToolsWindow), controller.isUtilityWindow);
             toolWindow.Load();
         }
 

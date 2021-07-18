@@ -82,6 +82,22 @@ namespace c1tr00z.AssistLib.Utils {
             return uniqueList;
         }
 
+        public static Dictionary<TKey, TValue> ToUniqueDictionary<T, TKey, TValue>(this IEnumerable<T> enumerable,
+            Func<T, TKey> keySelector, Func<T, TValue> valueSelector) {
+
+            var dictionary = new Dictionary<TKey, TValue>();
+
+            foreach (var item in enumerable) {
+                var key = keySelector.Invoke(item);
+                if (key == null || dictionary.ContainsKey(key)) {
+                    continue;
+                }
+                dictionary.Add(key, valueSelector(item));
+            }
+            
+            return dictionary;
+        } 
+
         public static string ToPlainString(this Dictionary<object, object> dic) {
             var sb = new StringBuilder();
 

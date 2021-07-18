@@ -9,39 +9,54 @@ namespace c1tr00z.AssistLib.Utils {
 
         #region Private Fields
 
-        private static List<Type> _types = new List<Type>();
+        private static Dictionary<string, Type> _types = new Dictionary<string, Type>();
 
+        private static List<Type> _typesList = new List<Type>();
+        
         #endregion
 
         #region Class Implementation
 
-        public static List<Type> GetTypes() {
+        public static Dictionary<string, Type> GetTypes() {
             if (_types == null || _types.Count == 0) {
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-                assemblies.ToList().ForEach(assembly => { _types.AddRange(assembly.GetTypes()); });
+                _types = assemblies.ToList().SelectMany(a => a.GetTypes()).ToUniqueDictionary(t => t.FullName, t => t);
             }
 
             return _types;
         }
 
+        public static List<Type> GetTypesList() {
+            if (_typesList == null || _typesList.Count == 0) {
+                _typesList = GetTypes().Values.ToList();
+            }
+
+            return _typesList;
+        }
+
         public static Type GetTypeByName(string name) {
-            return GetTypes().FirstOrDefault(t => t.FullName == name);
+            var types = GetTypes();
+            if (types.ContainsKey(name)) {
+                return types[name];
+            }
+
+            return null;
         }
 
         public static List<Type> GetSubclassesOf(Type baseClass) {
             if (baseClass == null) {
-                return GetTypes();
+                return GetTypesList();
             }
 
-            return GetTypes().Where(t => t.IsSubclassOf(baseClass)).ToList();
+            return GetTypesList().Where(t => t.IsSubclassOf(baseClass)).ToList();
         }
 
         public static List<Type> GetTypesByInterface(Type interfaceType) {
             if (interfaceType == null) {
-                return GetTypes();
+                return GetTypesList();
             }
 
-            return GetTypes().Where(t => t.GetInterfaces().Contains(interfaceType)).ToList();
+            return GetTypesList().Where(t => t.GetInterfaces().Contains(interfaceType)).ToList();
         }
 
         public static IEnumerable<PropertyInfo> GetPublicProperties(this Type type) {

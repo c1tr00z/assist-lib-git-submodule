@@ -61,7 +61,7 @@ namespace c1tr00z.AssistLib.Localization {
 
         private List<FieldInfo> GetFields() {
             var fields = new List<FieldInfo>();
-            ReflectionUtils.GetTypes().Select(t => t.GetFields(BindingFlags.Static | BindingFlags.Public)
+            ReflectionUtils.GetTypesList().Select(t => t.GetFields(BindingFlags.Static | BindingFlags.Public)
                     .Where(f => f.GetLocalizationAttribute() != null))
                 .ToList().ForEach(f => fields.AddRange(f));
             return fields;

@@ -9,13 +9,12 @@ using UnityEditor;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.PropertyReferences.Editor {
+    [EditorToolName("Property References")]
     public class PropertyReferenceTool : EditorTool {
 
         #region EditorTool Implementation
 
         public override void DrawInterface() {
-            base.DrawInterface();
-
             if (Button("Generate class")) {
                 Scan();
             }

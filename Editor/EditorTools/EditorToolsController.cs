@@ -31,6 +31,18 @@ namespace c1tr00z.AssistLib.EditorTools {
             }
         }
 
+        public bool isUtilityWindow {
+            get => data.isUtilityWindow;
+            set {
+                if (value == data.isUtilityWindow) {
+                    return;
+                }
+
+                data.isUtilityWindow = value;
+                Save();
+            }
+        }
+
         public List<Type> editorToolsTypes {
             get {
                 if (_toolsTypes.Count == 0) {
