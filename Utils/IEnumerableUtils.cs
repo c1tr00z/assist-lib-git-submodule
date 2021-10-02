@@ -96,7 +96,21 @@ namespace c1tr00z.AssistLib.Utils {
             }
             
             return dictionary;
-        } 
+        }
+
+        public static List<T> ToList<T>(this Array array) {
+            var list = new List<T>();
+
+            var enumerator = array.GetEnumerator();
+
+            while (enumerator.MoveNext()) {
+                if (enumerator.Current is T item) {
+                    list.Add(item);
+                }
+            }
+            
+            return list;
+        }
 
         public static string ToPlainString(this Dictionary<object, object> dic) {
             var sb = new StringBuilder();
