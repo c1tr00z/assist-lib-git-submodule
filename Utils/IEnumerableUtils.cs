@@ -293,6 +293,10 @@ namespace c1tr00z.AssistLib.Utils {
             }
         }
 
+        public static T FirstOrDefault<T>(this IEnumerable<object> enumerable) {
+            return enumerable.OfType<T>().FirstOrDefault();
+        }
+
         #endregion
     }
 }

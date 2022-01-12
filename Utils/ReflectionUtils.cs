@@ -43,12 +43,18 @@ namespace c1tr00z.AssistLib.Utils {
             return null;
         }
 
-        public static List<Type> GetSubclassesOf(Type baseClass) {
+        public static List<Type> GetSubclassesOf(Type baseClass, bool includeAbstract = true) {
             if (baseClass == null) {
                 return GetTypesList();
             }
 
-            return GetTypesList().Where(t => t.IsSubclassOf(baseClass)).ToList();
+            var types = GetTypesList().Where(t => t.IsSubclassOf(baseClass));
+
+            if (!includeAbstract) {
+                types = types.Where(t => !t.IsAbstract);
+            }
+
+            return types.ToList();
         }
 
         public static List<Type> GetTypesByInterface(Type interfaceType) {
