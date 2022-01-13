@@ -73,6 +73,16 @@ public static class JSONUtuls {
             returnValue = valueJson;
         } else if (value is DBEntry dbEntry) {
             returnValue = dbEntry.name;
+        } else if (value is Vector4 vector4) {
+            returnValue = vector4.ToInvariantCultureString();
+        } else if (value is Vector3 vector3) {
+            returnValue = vector3.ToInvariantCultureString();
+        } else if (value is Vector2 vector2) {
+            returnValue = vector2.ToInvariantCultureString();
+        } else if (value is Vector3Int vector3Int) {
+            returnValue = vector3Int.ToInvariantCultureString();
+        } else if (value is Vector2Int vector2Int) {
+            returnValue = vector2Int.ToInvariantCultureString();
         }
         
         return returnValue;
@@ -187,6 +197,25 @@ public static class JSONUtuls {
         var deserializable = Activator.CreateInstance<T>();
         deserializable.Deserialize(json);
         return deserializable;
+    }
+
+    public static object Deserialize(Type type, Dictionary<string, object> json) {
+        if (!type.GetInterfaces().Contains(typeof(IJsonDeserializable))) {
+            Debug.LogError($"Type {type} is not inherits IJsonDeserializable type");
+            return Activator.CreateInstance(type);
+        }
+
+        var deserializable = (IJsonDeserializable)Activator.CreateInstance(type);
+        deserializable.Deserialize(json);
+        return deserializable;
+    }
+    
+    public static T Deserialize<T>(string jsonString) where T : IJsonDeserializable {
+        return Deserialize<T>(Deserialize(jsonString));
+    }
+    
+    public static object Deserialize(Type type, string jsonString) {
+        return Deserialize(type, Deserialize(jsonString));
     }
 
     public static Dictionary<string, object> GetChild(this Dictionary<string, object> json, string key) {
