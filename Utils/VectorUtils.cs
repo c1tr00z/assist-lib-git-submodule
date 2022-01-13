@@ -158,6 +158,14 @@ namespace c1tr00z.AssistLib.Utils {
         public static string ToInvariantCultureString(this Vector4 vector) {
             return vector.ToString("G", CultureInfo.InvariantCulture);
         }
+        
+        public static string ToInvariantCultureString(this Vector2Int vector) {
+            return vector.ToString("G", CultureInfo.InvariantCulture);
+        }
+
+        public static string ToInvariantCultureString(this Vector3Int vector) {
+            return vector.ToString("G", CultureInfo.InvariantCulture);
+        }
 
         public static Vector3 GetHeading(this Vector3 from, Vector3 to) {
             return to - from;
