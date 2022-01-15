@@ -43,6 +43,10 @@ namespace c1tr00z.AssistLib.Utils {
             return null;
         }
 
+        public static List<Type> GetSubclassesOf<T>(bool includeAbstract = true) {
+            return GetSubclassesOf(typeof(T), includeAbstract);
+        }
+
         public static List<Type> GetSubclassesOf(Type baseClass, bool includeAbstract = true) {
             if (baseClass == null) {
                 return GetTypesList();
