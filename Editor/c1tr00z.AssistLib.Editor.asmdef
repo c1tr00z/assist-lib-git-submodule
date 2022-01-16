@@ -1,0 +1,18 @@
+{
+    "name": "c1tr00z.AssistLib.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:1a87e266707394558b9e046315a4618f"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
