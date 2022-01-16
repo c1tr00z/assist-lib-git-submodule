@@ -6,7 +6,7 @@ namespace c1tr00z.AssistLib.AppModules {
 
         #region Methods
 
-        void InitializeModule(CoroutineRequest request);
+        CoroutineRequest InitializeModule();
 
         #endregion
 

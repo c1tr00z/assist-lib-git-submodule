@@ -1,7 +1,7 @@
 using c1tr00z.AssistLib.Common;
 
 namespace c1tr00z.AssistLib.PropertyReferences {
-    public class PropertyReferenceCacher : ICacher {
+    public abstract class PropertyReferenceCacher : ICacher {
 
         #region ICacher Implementation
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using c1tr00z.AssistLib.Common.Coroutines;
 using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
@@ -25,6 +26,8 @@ namespace c1tr00z.AssistLib.AppModules {
         #endregion
 
         #region Class Implementation
+
+        public abstract CoroutineRequest InitModules();
 
         protected List<Modules> GetModulesModules() {
             return _modules.ToList();

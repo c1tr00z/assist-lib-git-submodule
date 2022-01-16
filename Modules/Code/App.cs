@@ -1,28 +1,20 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using c1tr00z.AssistLib.Common;
-using c1tr00z.AssistLib.ResourcesManagement;
-using c1tr00z.AssistLib.Utils;
 
 namespace c1tr00z.AssistLib.AppModules {
-    [Obsolete("Logic moved to Modules submodule")]
     public class App : BehaviourSingleton<App> {
 
         #region Events
 
-        public static event Action modulesLoaded;
+        public static event Action Initialized;
 
         #endregion
 
-        #region Private Fields
+        #region Accessors
 
-        private Dictionary<ModuleDBEntry, GameObject> _modules = new Dictionary<ModuleDBEntry, GameObject>();
-
-        private Transform _appModulesContainer;
-        private Transform _gameModulesContainer;
+        public bool isInitialized { get; private set; } = false;
 
         #endregion
 
@@ -32,48 +24,23 @@ namespace c1tr00z.AssistLib.AppModules {
 
             DontDestroyOnLoad(gameObject);
 
-            yield return StartCoroutine(C_Modules());
-
-            modulesLoaded.SafeInvoke();
+            yield return StartCoroutine(C_Initialize());
         }
 
         #endregion
 
         #region Class Implementation
 
-        IEnumerator C_Modules() {
-            var appModules = DB.GetAll<ModuleDBEntry>().Where(m => m.enabled).SelectNotNull().ToList();
-            appModules.Sort(new Comparison<ModuleDBEntry>((m1, m2) => { return m1.priority.CompareTo(m2.priority); }));
-            _modules = new Dictionary<ModuleDBEntry, GameObject>();
-            _appModulesContainer = new GameObject("AppModules").transform;
-            _appModulesContainer.Reset(transform);
-            foreach (var module in appModules) {
-                var moduleGO = module.LoadPrefab<GameObject>().Clone();
-                moduleGO.name = module.name;
-                moduleGO.transform.parent = _appModulesContainer;
-                _modules.Add(module, moduleGO);
-                var moduleComponent = moduleGO.GetComponent<ModuleComponent>();
-                if (moduleComponent != null) {
-                    while (!moduleComponent.inited) {
-                        moduleComponent.inited = true;
-                        yield return null;
-                    }
-                }
-            }
-        }
+        private IEnumerator C_Initialize() {
+            Debug.Log("Init cachers");
+            var mainCacher = gameObject.AddComponent<MainCacher>();
+            yield return mainCacher.Cache();
+            Debug.Log("Cachers initialized");
 
-        public T Get<T>() {
-
-            if (_modules != null) {
-                foreach (var kvp in _modules) {
-                    var module = kvp.Value.GetComponentInChildren<T>();
-                    if (module != null) {
-                        return module;
-                    }
-                }
-            }
-
-            return default(T);
+            Debug.Log("System modules initialization");
+            var systemModules = new GameObject("SystemModules").AddComponent<SystemModules>();
+            yield return systemModules.InitModules();
+            Debug.Log("System modules initialized");
         }
 
         #endregion

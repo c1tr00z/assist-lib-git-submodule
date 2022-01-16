@@ -61,12 +61,18 @@ namespace c1tr00z.AssistLib.Utils {
             return types.ToList();
         }
 
-        public static List<Type> GetTypesByInterface(Type interfaceType) {
+        public static List<Type> GetTypesByInterface(Type interfaceType, bool includeAbstract = true) {
             if (interfaceType == null) {
                 return GetTypesList();
             }
 
-            return GetTypesList().Where(t => t.GetInterfaces().Contains(interfaceType)).ToList();
+            var allTypes = GetTypesList().Where(t => t.GetInterfaces().Contains(interfaceType));
+
+            if (!includeAbstract) {
+                allTypes = allTypes.Where(t => !t.IsAbstract);
+            }
+            
+            return allTypes.ToList();
         }
 
         public static IEnumerable<PropertyInfo> GetPublicProperties(this Type type) {
