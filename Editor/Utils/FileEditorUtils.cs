@@ -35,6 +35,7 @@ namespace AssistLib.Utils.Editor {
         }
 
         public static void SaveTextToFile(string pathToFile, string text) {
+
             var file = new FileInfo(pathToFile);
 
             if (file.Exists) {

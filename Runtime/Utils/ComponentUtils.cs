@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.Utils {
@@ -23,6 +24,14 @@ namespace c1tr00z.AssistLib.Utils {
         public static T GetCachedComponent<T>(this Component comp, ref T cachedComponent) {
             if (cachedComponent.IsNull()) {
                 cachedComponent = comp.GetComponent<T>();
+            }
+
+            return cachedComponent;
+        }
+
+        public static List<T> GetCachedComponents<T>(this Component comp, ref List<T> cachedComponent) {
+            if (cachedComponent == null || cachedComponent.Count == 0) {
+                cachedComponent = comp.GetComponents<T>().ToList();
             }
 
             return cachedComponent;

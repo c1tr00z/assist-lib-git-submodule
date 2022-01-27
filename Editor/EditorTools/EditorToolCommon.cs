@@ -38,7 +38,10 @@ namespace c1tr00z.AssistLib.EditorTools {
         }
 
         private void SaveToFile(string codeText) {
-            var pathToFolder = Path.Combine(Application.dataPath, "Common", "Code");
+            var pathToFolder = Path.Combine(Application.dataPath, "Code", "Runtime", "Common");
+            if (!Directory.Exists(pathToFolder)) {
+                Directory.CreateDirectory(pathToFolder);
+            }
             var pathToFile = Path.Combine(pathToFolder, "GameLayers.cs");
             FileEditorUtils.SaveTextToFile(pathToFile, codeText);
         }
