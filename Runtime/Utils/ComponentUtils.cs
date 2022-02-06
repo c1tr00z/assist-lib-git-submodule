@@ -29,12 +29,16 @@ namespace c1tr00z.AssistLib.Utils {
             return cachedComponent;
         }
 
-        public static List<T> GetCachedComponents<T>(this Component comp, ref List<T> cachedComponent) {
-            if (cachedComponent == null || cachedComponent.Count == 0) {
-                cachedComponent = comp.GetComponents<T>().ToList();
+        /**
+         * <summary>Checks if cachedComponents is null or empty then call GetComponents.
+         * If cachedComponents not empty then just returns it</summary>
+         */
+        public static List<T> GetCachedComponents<T>(this Component comp, ref List<T> cachedComponents) {
+            if (cachedComponents == null || cachedComponents.Count == 0) {
+                cachedComponents = comp.GetComponents<T>().ToList();
             }
 
-            return cachedComponent;
+            return cachedComponents;
         }
 
         /**
@@ -57,6 +61,17 @@ namespace c1tr00z.AssistLib.Utils {
             }
 
             return cachedComponent;
+        }
+
+        /**
+         * <summary><see cref="GetCachedComponents{T}"/> for components in children</summary>
+         */
+        public static List<T> GetCachedComponentsInChildren<T>(this Component comp, ref List<T> cachedComponents) {
+            if (cachedComponents == null || cachedComponents.Count == 0) {
+                cachedComponents = comp.GetComponentsInChildren<T>().ToList();
+            }
+
+            return cachedComponents;
         }
 
         #endregion
