@@ -59,6 +59,11 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             return GetAll<T>().SelectNotNull().First();
         }
 
+        public static DBEntry Get(Type type) {
+            CheckItems();
+            return GetAll<DBEntry>().FirstOrDefault(type.IsInstanceOfType);
+        }
+
         public static List<T> GetAll<T>() where T : DBEntry {
             CheckItems();
             var items = new List<T>();
