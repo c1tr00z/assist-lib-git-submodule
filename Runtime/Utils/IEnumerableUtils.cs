@@ -65,13 +65,6 @@ namespace c1tr00z.AssistLib.Utils {
             return enumerable.Where(item => item != null).ToList();
         }
 
-        // public static Dictionary<T2, T3> ToDictionary<T1, T2, T3>(this IEnumerable<T1> enumerable,
-        //     Func<T1, T2> keySelector, Func<T1, T3> valueSelector) {
-        //     var dic = new Dictionary<T2, T3>();
-        //     enumerable.ForEach(i => { dic.Add(keySelector(i), valueSelector(i)); });
-        //     return dic;
-        // }
-
         public static List<T> ToUniqueList<T>(this List<T> enumerable) {
             var uniqueList = new List<T>();
             enumerable.ForEach(item => {
@@ -96,6 +89,10 @@ namespace c1tr00z.AssistLib.Utils {
             }
             
             return dictionary;
+        }
+
+        public static TValue SafeGet<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key) {
+            return dictionary.ContainsKey(key) ? dictionary[key] : default;
         }
 
         public static List<T> ToList<T>(this Array array) {
