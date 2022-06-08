@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
+using UnityEditorInternal.VersionControl;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
@@ -19,7 +20,11 @@ namespace c1tr00z.AssistLib.GameUI {
         
         #region Private Fields
 
-        private List<UIListItem> _listItems;
+        private List<UIListItem> _listItems = new List<UIListItem>();
+
+        private Transform _pool;
+
+        private List<UIListItem> _pooled = new List<UIListItem>();
 
         #endregion
 
@@ -37,6 +42,18 @@ namespace c1tr00z.AssistLib.GameUI {
 
         #region Accessors
 
+        private Transform pool {
+            get {
+                if (_pool == null) {
+                    _pool = new GameObject("Pool").transform;
+                    _pool.Reset(transform);
+                    _pool.gameObject.SetActive(false);
+                }
+
+                return _pool;
+            }
+        }
+
         public object selectedValue { get; private set; }
 
         #endregion
@@ -44,16 +61,18 @@ namespace c1tr00z.AssistLib.GameUI {
         #region Class Implementation
 
         public void UpdateList<T>(List<T> items, T selectedItem = default(T)) {
-            if (_listItems != null) {
-                foreach (var listItem in _listItems) {
-                    Destroy(listItem.gameObject);
-                }
+
+            if (_listItems.Count > items.Count) {
+                var toReturnToPool = _listItems.SubArray(items.Count).ToList();
+                toReturnToPool.ForEach(ReturnToPool);
             }
-
-            _listItems = new List<UIListItem>();
-
-            foreach (var item in items) {
-                CreateListItem(item);
+            
+            for (var i = 0; i < items.Count; i++) {
+                if (i < _listItems.Count) {
+                    _listItems[i].UpdateItem(items[i]);
+                } else {
+                    CreateListItem(items[i]);
+                }
             }
 
             if (_useSelect && (selectedItem != null && !selectedItem.Equals(default(T))) && _listItems.Count > 0 &&!_listItems.Any(li => li.isSelected)) {
@@ -62,7 +81,13 @@ namespace c1tr00z.AssistLib.GameUI {
         }
 
         private UIListItem CreateListItem(object item) {
-            var listItem = listItemDBEntry.LoadPrefab<UIListItem>().Clone();
+            UIListItem listItem = null;
+            if (_pooled.Count > 0) {
+                listItem = _pooled.FirstOrDefault();
+            } else {
+                listItem = listItemDBEntry.LoadPrefab<UIListItem>().Clone();
+            }
+            
             listItem.transform.SetParent(transform, false);
             listItem.transform.localScale = Vector3.one;
 
@@ -96,6 +121,14 @@ namespace c1tr00z.AssistLib.GameUI {
             selectedValue = item;
             _listItems.ForEach(li => li.SetSelected(li.item == selectedValue));
             _onSelected?.Invoke(selectedValue);
+        }
+
+        private void ReturnToPool(UIListItem listItem) {
+            listItem.transform.Reset(pool);
+            _pooled.Add(listItem);
+            if (_listItems.Contains(listItem)) {
+                _listItems.Remove(listItem);
+            }
         }
 
         #endregion
