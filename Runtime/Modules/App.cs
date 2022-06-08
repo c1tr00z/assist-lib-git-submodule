@@ -14,7 +14,7 @@ namespace c1tr00z.AssistLib.AppModules {
 
         #region Accessors
 
-        public bool isInitialized { get; private set; } = false;
+        public static bool isInitialized { get; private set; } = false;
 
         #endregion
 
@@ -41,6 +41,8 @@ namespace c1tr00z.AssistLib.AppModules {
             var systemModules = new GameObject("SystemModules").AddComponent<SystemModules>();
             yield return systemModules.InitModules();
             Debug.Log("System modules initialized");
+            isInitialized = true;
+            Initialized?.Invoke();
         }
 
         #endregion
