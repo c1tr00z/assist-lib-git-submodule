@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using c1tr00z.AssistLib.Common.Coroutines;
+using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
 using UnityEngine;
@@ -47,11 +47,20 @@ namespace c1tr00z.AssistLib.AppModules {
             
             foreach (var dbEntry in dbEntries) {
                 Debug.Log($"[MODULES] Initialize {dbEntry.name}");
+
+                var prefabRequest = dbEntry.LoadPrefabAsync<Module>();
+
+                yield return prefabRequest;
+
+                var prefab = prefabRequest.asset;
                 
-                var prefab = dbEntry.LoadPrefab<Module>();
                 var module = prefab.Clone(transform);
+
+                var moduleRequest = new CoroutineRequest();
                 
-                yield return module.InitializeModule();
+                module.InitializeModule(moduleRequest);
+
+                yield return moduleRequest;
                     
                 _modules.Add(module);
                 

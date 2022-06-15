@@ -1,12 +1,13 @@
-using System.Collections;
-using c1tr00z.AssistLib.Common.Coroutines;
+using c1tr00z.AssistLib.Common;
 
 namespace c1tr00z.AssistLib.AppModules {
     public interface IModule {
 
         #region Methods
+        
+        bool isInitialized { get; }
 
-        CoroutineRequest InitializeModule();
+        void InitializeModule(CoroutineRequest request);
 
         #endregion
 

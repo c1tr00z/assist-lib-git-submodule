@@ -1,4 +1,7 @@
-﻿using c1tr00z.AssistLib.PropertyReferences;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using c1tr00z.AssistLib.PropertyReferences;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
 using UnityEditor;
@@ -12,6 +15,8 @@ namespace c1tr00z.AssistLib.GameUI {
         #region Private Fields
 
         private UIFrame _currentFrame;
+
+        private List<UIFrame> _pooledFrames = new List<UIFrame>();
 
         #endregion
 
@@ -30,7 +35,7 @@ namespace c1tr00z.AssistLib.GameUI {
 
         #endregion
 
-        #region Unity Fields
+        #region Unity Events
 
         private void Start() {
             RespawnFrame();
@@ -41,29 +46,51 @@ namespace c1tr00z.AssistLib.GameUI {
         #region Class Implementation
 
         private void RespawnFrame() {
-            transform.DestroyAllChildren();
-            var prefab = frameDBEntry.LoadPrefab<UIFrame>();
-            if (prefab == null)
-            {
-                Debug.LogError($"Prefab for UIFrameDBEntry {frameDBEntry} is null. This is {name}.", this);
-                return;
-            }
-            _currentFrame = frameDBEntry.LoadPrefab<UIFrame>().Clone(transform);
 #if UNITY_EDITOR
-            if (EditorApplication.isPlaying) {
+            //TODO: make it work in editor
+            return;
+#endif
+            StartCoroutine(C_RespawnFrame());
+//             transform.DestroyAllChildren();
+//             var prefab = frameDBEntry.LoadPrefab<UIFrame>();
+//             if (prefab == null)
+//             {
+//                 Debug.LogError($"Prefab for UIFrameDBEntry {frameDBEntry} is null. This is {name}.", this);
+//                 return;
+//             }
+//             _currentFrame = frameDBEntry.LoadPrefab<UIFrame>().Clone(transform);
+// #if UNITY_EDITOR
+//             if (EditorApplication.isPlaying) {
+//                 ShowCurrent();
+//             }
+// #else
+//             ShowCurrent();
+// #endif
+//
+//             if (stretch) {
+//                 _currentFrame.rectTransform.Stretch();
+//             }
+//
+// #if UNITY_EDITOR
+//             _currentFrame.gameObject.hideFlags = HideFlags.DontSave | HideFlags.DontSaveInEditor;
+// #endif
+        }
+
+        private IEnumerator C_RespawnFrame() {
+            transform.GetChildren().Where(c => !_currentFrame.IsNull() && c != _currentFrame.transform).ToList()
+                .ForEach(c => Destroy(c.gameObject));
+
+            if (_currentFrame != null) {
                 ShowCurrent();
-            }
-#else
-            ShowCurrent();
-#endif
-
-            if (stretch) {
-                _currentFrame.rectTransform.Stretch();
+                yield break;
             }
 
-#if UNITY_EDITOR
-            _currentFrame.gameObject.hideFlags = HideFlags.DontSave | HideFlags.DontSaveInEditor;
-#endif
+            var request = frameDBEntry.LoadPrefabAsync<UIFrame>();
+
+            yield return request;
+
+            _currentFrame = request.asset.Clone(transform);
+            _currentFrame.rectTransform.Stretch();
         }
 
         private void ShowCurrent() {

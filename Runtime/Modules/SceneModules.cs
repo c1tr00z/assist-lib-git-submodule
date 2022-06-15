@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using c1tr00z.AssistLib.Common.Coroutines;
+using c1tr00z.AssistLib.Common;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.AppModules {
@@ -34,7 +34,11 @@ namespace c1tr00z.AssistLib.AppModules {
         private IEnumerator C_InitModules(CoroutineRequest request) {
             
             foreach (var module in _modules) {
-                yield return module.InitializeModule();
+                var moduleRequest = new CoroutineRequest();
+                
+                module.InitializeModule(moduleRequest);
+
+                yield return moduleRequest;
             }
             
             request.Finish();

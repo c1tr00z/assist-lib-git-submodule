@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using c1tr00z.AssistLib.Common;
-using c1tr00z.AssistLib.ResourceManagement.Editor;
 using c1tr00z.AssistLib.Utils;
 using UnityEditor;
 using UnityEngine;

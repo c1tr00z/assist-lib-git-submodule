@@ -10,8 +10,8 @@ namespace c1tr00z.AssistLib.GameUI {
             Modules.Get<UI>().Show(frameDBEntry, args);
         }
         
-        public static UIFrame LoadFrame(this UIFrameDBEntry frameDBEntry) {
-            return frameDBEntry.LoadPrefab<UIFrame>();
+        public static AssetRequest<UIFrame> LoadFrame(this UIFrameDBEntry frameDBEntry) {
+            return frameDBEntry.LoadPrefabAsync<UIFrame>();
         }
 
         #endregion

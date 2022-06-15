@@ -11,7 +11,7 @@ namespace c1tr00z.AssistLib.Localization {
         #region LocalizedText Implementation
 
         protected override string GetLocalizedText() {
-            return Localization.TranslateRandom(key);
+            return LocalizationUtils.TranslateRandom(key);
         }
 
         #endregion
