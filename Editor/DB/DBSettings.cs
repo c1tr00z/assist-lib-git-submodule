@@ -5,7 +5,7 @@ using c1tr00z.AssistLib.Json;
 using UnityEditor;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.ResourceManagement.Editor {
+namespace c1tr00z.AssistLib.ResourcesManagement.Editor {
     [EditorToolName("DB Settings")]
     public class DBSettings : EditorTool {
 

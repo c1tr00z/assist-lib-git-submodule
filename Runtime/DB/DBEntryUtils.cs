@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -22,57 +24,127 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
         /**
          * <summary>Returns relative path to DBEntry</summary>
          */
-        public static string GetPath(this DBEntry item) {
-            return DB.GetPath(item);
+        public static string GetPath(this DBEntry dbEntry) {
+            return DB.GetPath(dbEntry);
+        }
+
+        private static IEnumerator C_LoadAsync<T>(DBEntry dbEntry, string key, AssetRequest<T> request) where T : Object {
+            var resourceRequest = Resources.LoadAsync<T>($"{GetPath(dbEntry)}@{key}");
+
+            yield return resourceRequest;
+            
+            request.AssetLoaded(resourceRequest.asset as T);
         }
 
         /**
          * <summary>Loads any UnityObjects for DBEntry. Object should be in same folder as DBEntry and have name X@Y
          * where X is DBEntry name and Y is any desirable key (for example Player@Icon or Hammer@Model</summary>
          */
-        public static T Load<T>(this DBEntry item, string key) where T : Object {
-            return (T) Resources.Load(GetPath(item) + "@" + key, typeof(T));
+        public static AssetRequest<T> LoadAsync<T>(this DBEntry dbEntry, string key) where T : Object {
+            var request = new AssetRequest<T>();
+            
+            CoroutineStarter.RequestCoroutine(C_LoadAsync(dbEntry, key, request));
+
+            return request;
+        }
+
+        private static IEnumerator C_LoadAsync<T>(DBEntry dbEntry, string key, Action<T> callback) where T : Object {
+            var request = LoadAsync<T>(dbEntry, key);
+
+            yield return request;
+            
+            callback?.Invoke(request.asset as T);
+        }
+
+        /**
+         * <summary>Loads any UnityObjects for DBEntry. Object should be in same folder as DBEntry and have name X@Y
+         * where X is DBEntry name and Y is any desirable key (for example Player@Icon or Hammer@Model</summary>
+         */
+        public static void LoadAsync<T>(this DBEntry dbEntry, string key, Action<T> callback) where T : Object {
+            CoroutineStarter.RequestCoroutine(C_LoadAsync(dbEntry, key, callback));
         }
 
         /**
          * <summary>Loads prefab associated with DBEntry. Prefab should have name X@Prefab where X is DBEntry name</summary>
          */
-        public static T LoadPrefab<T>(this DBEntry item) {
-            return (T) (object) Resources.Load(GetPath(item) + "@Prefab", typeof(T));
+        public static AssetRequest<T> LoadPrefabAsync<T>(this DBEntry dbEntry) where T : Object {
+            return dbEntry.LoadAsync<T>("Prefab");
         }
 
         /**
-         * <summary>Returns content of TextAsset, associated with DBEntry and with name X@Text where X is DBEntry name</summary>
+         * <summary>Loads prefab associated with DBEntry. Prefab should have name X@Prefab where X is DBEntry name</summary>
          */
-        public static string LoadText(this DBEntry item) {
-            var textAsset = item.Load<TextAsset>("Text");
-            return textAsset.text;
+        public static void LoadPrefabAsync<T>(this DBEntry dbEntry, Action<T> callback) where T : Object {
+            LoadAsync(dbEntry, "Prefab", callback);
+        }
+
+        /**
+         * <summary>Loads content of TextAsset, associated with DBEntry and with name X@Text where X is DBEntry name</summary>
+         */
+        public static AssetRequest<TextAsset> LoadTextAsync(this DBEntry dbEntry) {
+            return dbEntry.LoadAsync<TextAsset>("Text");
+        }
+
+        /**
+         * <summary>Loads content of TextAsset, associated with DBEntry and with name X@Text where X is DBEntry name</summary>
+         */
+        public static void LoadTextAsync(this DBEntry dbEntry, Action<string> callback) {
+            void OnLoad(TextAsset textAsset) {
+                if (textAsset == null) {
+                    return;
+                }
+                callback?.Invoke(textAsset.text);
+            }
+            dbEntry.LoadAsync<TextAsset>("Text", OnLoad);
         }
 
         /**
          * <summary>Loads SpriteRenderer associated with DBEntry and with name X@Y where X is DBEntry name and Y is key</summary>
-         * <param name="item">DBEntry</param>
+         * <param name="dbEntry">DBEntry</param>
          * <param name="key">Key for SpriteRenderer name</param>
          */
-        public static SpriteRenderer LoadSpriteRenderer(this DBEntry item, string key) {
-            return Load<SpriteRenderer>(item, key);
+        public static AssetRequest<SpriteRenderer> LoadSpriteRendererAsync(this DBEntry dbEntry, string key) {
+            return dbEntry.LoadAsync<SpriteRenderer>(key);
+        }
+
+        /**
+         * <summary>Loads SpriteRenderer associated with DBEntry and with name X@Y where X is DBEntry name and Y is key</summary>
+         * <param name="dbEntry">DBEntry</param>
+         * <param name="key">Key for SpriteRenderer name</param>
+         */
+        public static void LoadSpriteRendererAsync(this DBEntry dbEntry, string key, Action<SpriteRenderer> callback) {
+            dbEntry.LoadAsync(key, callback);
         }
 
         /**
          * <summary>Loads Sprite associated with DBEntry and with name X@Y where X is DBEntry name and Y is key</summary>
-         * <param name="item">DBEntry</param>
+         * <param name="dbEntry">DBEntry</param>
          * <param name="key">Key for Sprite name</param>
          */
-        public static Sprite LoadSprite(this DBEntry item, string key) {
-            return item.Load<Sprite>(key);
+        public static AssetRequest<Sprite> LoadSpriteAsync(this DBEntry dbEntry, string key) {
+            return dbEntry.LoadAsync<Sprite>(key);
+        }
+
+        /**
+         * <summary>Loads Sprite associated with DBEntry and with name X@Y where X is DBEntry name and Y is key</summary>
+         * <param name="dbEntry">DBEntry</param>
+         * <param name="key">Key for Sprite name</param>
+         * <param name="callback">Callback</param>
+         */
+        public static void LoadSpriteAsync(this DBEntry dbEntry, string key, Action<Sprite> callback) {
+            dbEntry.LoadAsync(key, callback);
         }
 
         /**
          * <summary>Loads Sprite icon associated with DBEntry and with name X@Icon where X is DBEntry name</summary>
          * <param name="item">DBEntry</param>
          */
-        public static Sprite LoadIcon(this DBEntry item) {
-            return item.LoadSprite("Icon");
+        public static AssetRequest<Sprite> LoadIconAsync(this DBEntry item) {
+            return item.LoadSpriteAsync("Icon");
+        }
+
+        public static void LoadIconAsync(this DBEntry item, Action<Sprite> callback) {
+            item.LoadAsync("Icon", callback);
         }
 
         /**

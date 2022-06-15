@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using c1tr00z.AssistLib.AppModules;
+using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
 using UnityEngine;
@@ -14,34 +16,43 @@ namespace c1tr00z.AssistLib.GameUI {
 
         #region Private Fields
 
-        private Dictionary<UILayerDBEntry, UILayerBase> _layers = new Dictionary<UILayerDBEntry, UILayerBase>();
+        private Dictionary<UILayerDBEntry, UILayer> _layers = new Dictionary<UILayerDBEntry, UILayer>();
 
         private UIDefaultsDBEntry _uiDefaults;
 
-        private UILayerBase _defaultLayerSrc;
+        private UILayer _defaultLayerSrc;
 
         #endregion
 
         #region Serialized Fields
 
-        [SerializeField] private UILayerBase _defaultLayer;
+        [SerializeField] private UILayer _defaultLayer;
 
         #endregion
 
-        #region Accessors
+        #region Module Implementation
 
-        private UILayerBase defaultLayerSrc {
-            get {
-                if (_defaultLayerSrc == null) {
-                    _defaultLayerSrc = DB.Get<UIDefaultsDBEntry>().defaultLayer.LoadPrefab<UILayerBase>();
-                }
-                return _defaultLayerSrc;
-            }
+        public override void InitializeModule(CoroutineRequest request) {
+            StartCoroutine(C_InitializeModule(request));
         }
 
         #endregion
 
         #region Class Implementation
+
+        private IEnumerator C_InitializeModule(CoroutineRequest coroutineRequest) {
+
+            if (_defaultLayer == null) {
+                var defaultLayerSrcRequest = DB.Get<UIDefaultsDBEntry>().defaultLayer.LoadPrefabAsync<UILayer>();
+            
+                yield return defaultLayerSrcRequest;
+
+                _defaultLayerSrc = defaultLayerSrcRequest.asset;
+            }
+
+            
+            base.InitializeModule(coroutineRequest);
+        }
 
         public void Show(UIFrameDBEntry newFrame) {
             Show(newFrame, null);
@@ -52,42 +63,24 @@ namespace c1tr00z.AssistLib.GameUI {
             requiredLayer.Show(newFrame, args);
         }
 
-        private UILayerBase GetOrCreateLayer(UILayerDBEntry layerDBEntry) {
+        private UILayer GetOrCreateLayer(UILayerDBEntry layerDBEntry) {
             if (layerDBEntry.IsNull()) {
                 return _defaultLayer;
             }
             if (_layers.ContainsKey(layerDBEntry)) {
                 return _layers[layerDBEntry];
             }
-            var existedButNotCached = GetComponentsInChildren<UILayerBase>().First(l => l.layerDBEntry == layerDBEntry);
+            var existedButNotCached = GetComponentsInChildren<UILayer>().First(l => l.layerDBEntry == layerDBEntry);
             if (existedButNotCached != null) {
                 _layers.AddOrSet(layerDBEntry, existedButNotCached);
                 return existedButNotCached;
             }
-            return CreateLayer(layerDBEntry);
+
+            return _defaultLayer;
         }
 
-        private UILayerBase CreateLayer(UILayerDBEntry layerDBEntry) {
-            var layerPrefab = layerDBEntry.LoadPrefab<UILayerBase>();
-            if (layerPrefab == null) {
-                layerPrefab = defaultLayerSrc;
-            }
-            var layer = layerPrefab.Clone(transform);
-            layer.Init(layerDBEntry);
-            _layers.Add(layerDBEntry, layer);
-            transform.SetChildrenSiblingIndex(c => {
-                var canvas = c.GetComponent<Canvas>();
-                if (canvas == null) {
-                    return 1000;
-                }
-
-                return c.GetComponent<Canvas>().sortingOrder;
-            });
-            return layer;
-        }
-
-        public IEnumerable<UILayerBase> GetLayersOnTop(UILayerBase layer, bool include) {
-            var layersList = new List<UILayerBase>();
+        public IEnumerable<UILayer> GetLayersOnTop(UILayer layer, bool include) {
+            var layersList = new List<UILayer>();
             if (include) {
                 layersList.Add(layer);
             }
@@ -95,13 +88,13 @@ namespace c1tr00z.AssistLib.GameUI {
             return layersList;
         }
 
-        public bool IsTopFrameInStack(UIFrame frame) {
-            var layers = GetLayersOnTop(frame.layer, false);
-            return layers.Where(l => l.currentFrames.Count > 0).Count() == 0;
-        }
+        // public bool IsTopFrameInStack(UIFrame frame) {
+        //     var layers = GetLayersOnTop(frame.layer, false);
+        //     return layers.Where(l => l.currentFrames.Count > 0).Count() == 0;
+        // }
         
         public void CloseAllFrames() {
-            _layers.Values.ToList().ForEach(l => l.CloseAll());
+            _layers.Values.ToList().ForEach(l => l.CloseCurrent());
         }
 
         #endregion

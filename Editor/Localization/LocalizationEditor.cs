@@ -1,5 +1,5 @@
-﻿using c1tr00z.AssistLib.ResourceManagement.Editor;
-using c1tr00z.AssistLib.GoogleSpreadsheetImporter;
+﻿using c1tr00z.AssistLib.GoogleSpreadsheetImporter;
+using c1tr00z.AssistLib.ResourcesManagement.Editor;
 using UnityEditor;
 
 namespace c1tr00z.AssistLib.Localization.Editor {
@@ -9,12 +9,12 @@ namespace c1tr00z.AssistLib.Localization.Editor {
 
         [MenuItem("Assets/AssistLib/Create Google Spreadsheet Document")]
         public static void CreateSpreadsheetDocument() {
-            DBEntryEditorUtils.CreateItem<GoogleSpreadsheetDocumentDBEntry>();
+            DBEntryEditorActions.CreateItem<GoogleSpreadsheetDocumentDBEntry>();
         }
 
         [MenuItem("Assets/AssistLib/Create Google Spreadsheet Document Page")]
         public static void CreateSpreadsheetDocumentPage() {
-            DBEntryEditorUtils.CreateItem<GoogleSpreadsheetDocumentPageDBEntry>();
+            DBEntryEditorActions.CreateItem<GoogleSpreadsheetDocumentPageDBEntry>();
         }
 
         #endregion

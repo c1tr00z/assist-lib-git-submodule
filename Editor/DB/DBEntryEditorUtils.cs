@@ -1,138 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using c1tr00z.AssistLib.Common;
-using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
-using UnityEditor;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.ResourceManagement.Editor {
-
+namespace c1tr00z.AssistLib.ResourcesManagement {
     public static class DBEntryEditorUtils {
 
-        #region Class Implementation
+        #region Class Implementations
 
-        [MenuItem("Assets/Create DBEntry")]
-        public static void CreateDBEntry() {
-            CreateItem<DBEntry>();
+        /**
+         * <summary>Loads any UnityObjects for DBEntry. Object should be in same folder as DBEntry and have name X@Y
+         * where X is DBEntry name and Y is any desirable key (for example Player@Icon or Hammer@Model</summary>
+         */
+        public static T Load<T>(this DBEntry item, string key) where T : Object {
+            return (T) Resources.Load(item.GetPath() + "@" + key, typeof(T));
         }
 
-        [MenuItem("Assist/Create DB")]
-        public static void CreateDB() {
-            if (DB.Get<DBCollection>() != null) {
-                return;
-            }
-
-            PathUtils.CreatePath("Resources");
-            ScriptableObjectsEditorUtils.Create<DBCollection>(PathUtils.Combine("Assets", "Resources"), "DB");
-            CollectItems();
+        /**
+         * <summary>Loads prefab associated with DBEntry. Prefab should have name X@Prefab where X is DBEntry name</summary>
+         */
+        public static T LoadPrefab<T>(this DBEntry item) {
+            return (T) (object) Resources.Load(item.GetPath() + "@Prefab", typeof(T));
         }
 
-        [MenuItem("Assist/Collect items")]
-        public static void CollectItems() {
-            var itemsObject = Resources.Load<DBCollection>("DB");
-            var dirs = new List<string>();
-            var items = Resources.LoadAll<DBEntry>("");
-            var newItemsPaths = items.Select(i => {
-                Debug.Log($"CollectItems: {i}");
-                var path = AssetDatabase.GetAssetPath(i).Replace(".asset", "");
-                Debug.Log($"CollectItems: {path}");
-                path = (path.Contains("Resources"))
-                    ? path.Replace(path.Substring(0, path.IndexOf("Resources") + "Resources/".Length), "")
-                    : path;
-                return path;
-            }).ToArray();
-            // if (itemsObject.paths.Length != newItemsPaths.Length) {
-            itemsObject.paths = newItemsPaths;
-            // }
-
-            foreach (DBEntry i in items) {
-                var itemPrefab = i.LoadPrefab<GameObject>();
-                if (itemPrefab != null) {
-
-#if UNITY_2018_3_OR_NEWER
-                    var save = false;
-                    var path = AssetDatabase.GetAssetPath(itemPrefab);
-                    var prefabGO = PrefabUtility.LoadPrefabContents(path);
-                    var itemResource = prefabGO.GetComponent<DBEntryResource>();
-                    if (itemResource == null) {
-                        itemResource = prefabGO.AddComponent(typeof(DBEntryResource)) as DBEntryResource;
-                        save = true;
-                    }
-
-                    if (itemResource.parent != i || itemResource.key != "Prefab") {
-                        itemResource.SetParent(i, "Prefab");
-                        save = true;
-                    }
-
-                    if (save) {
-                        try {
-                            PrefabUtility.SaveAsPrefabAsset(prefabGO, path);
-                            EditorUtility.SetDirty(itemPrefab);
-                        }
-                        catch (Exception e) {
-                            Debug.LogError(e);
-                        }
-                    }
-#else
-                var itemResource = itemPrefab.GetComponent<DBEntryResource>();
-                if (itemResource == null) {
-                    itemResource = itemPrefab.AddComponent(typeof(DBEntryResource)) as DBEntryResource;
-                }
-
-                itemResource.SetParent(i, "Prefab");
-                EditorUtility.SetDirty(itemPrefab);
-#endif
-                }
-
-            }
-
-            EditorUtility.SetDirty(itemsObject);
+        /**
+         * <summary>Returns content of TextAsset, associated with DBEntry and with name X@Text where X is DBEntry name</summary>
+         */
+        public static string LoadText(this DBEntry item) {
+            var textAsset = item.Load<TextAsset>("Text");
+            return textAsset.text;
         }
 
-        public static void GetDirectories(string startPath, string path, List<string> directories) {
-            var info = new DirectoryInfo(path);
-            var dirs = info.GetDirectories();
-            foreach (DirectoryInfo d in dirs) {
-                var dir = d.ToString();
-                var newDir = dir.Replace(path, "");
-                newDir = newDir.StartsWith("Resources") ? newDir.Substring("Resources".Length) : newDir;
-                newDir = newDir.StartsWith("\\") ? newDir.Substring("\\".Length) : newDir;
-                if (!string.IsNullOrEmpty(newDir)) {
-                    directories.Add(newDir);
-                }
-
-                GetDirectories(startPath, dir, directories);
-            }
+        /**
+         * <summary>Loads SpriteRenderer associated with DBEntry and with name X@Y where X is DBEntry name and Y is key</summary>
+         * <param name="item">DBEntry</param>
+         * <param name="key">Key for SpriteRenderer name</param>
+         */
+        public static SpriteRenderer LoadSpriteRenderer(this DBEntry item, string key) {
+            return Load<SpriteRenderer>(item, key);
         }
 
-        public static void AutoCollect() {
-            if (true) {
-                CollectItems();
-            }
+        /**
+         * <summary>Loads Sprite associated with DBEntry and with name X@Y where X is DBEntry name and Y is key</summary>
+         * <param name="item">DBEntry</param>
+         * <param name="key">Key for Sprite name</param>
+         */
+        public static Sprite LoadSprite(this DBEntry item, string key) {
+            return item.Load<Sprite>(key);
         }
 
-        public static T CreateItem<T>() where T : DBEntry {
-
-            var item = ScriptableObjectsEditorUtils.Create<T>();
-            
-            CollectItems();
-
-            return item;
-        }
-        
-        public static T CreateItem<T>(string path, string name) where T : DBEntry {
-
-            var item = ScriptableObjectsEditorUtils.Create<T>(path, name);
-            
-            CollectItems();
-
-            return item;
+        /**
+         * <summary>Loads Sprite icon associated with DBEntry and with name X@Icon where X is DBEntry name</summary>
+         * <param name="item">DBEntry</param>
+         */
+        public static Sprite LoadIcon(this DBEntry item) {
+            return item.LoadSprite("Icon");
         }
 
         #endregion
     }
 }
-

@@ -1,4 +1,4 @@
-﻿using c1tr00z.AssistLib.ResourceManagement.Editor;
+﻿using c1tr00z.AssistLib.ResourcesManagement.Editor;
 using UnityEditor;
 
 namespace c1tr00z.AssistLib.GameUI.Editor {
@@ -8,7 +8,7 @@ namespace c1tr00z.AssistLib.GameUI.Editor {
 
         [MenuItem("Assets/AssistLib/Create UI Frame DBEntry")]
         public static void CreateUIFrameDBEntry() {
-            DBEntryEditorUtils.CreateItem<UIFrameDBEntry>();
+            DBEntryEditorActions.CreateItem<UIFrameDBEntry>();
         }
 
         #endregion

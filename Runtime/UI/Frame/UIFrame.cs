@@ -10,19 +10,23 @@ namespace c1tr00z.AssistLib.GameUI {
 
         #region Private Fields
 
-        private UILayerBase _layer;
+        private UILayer _layer;
 
         private RectTransform _rectTransform;
+
+        private DBEntryResource _dbEntryResource;
 
         #endregion
 
         #region Accessors
 
-        public UILayerBase layer => this.GetCachedComponentInParent(ref _layer);
+        public UILayer layer => this.GetCachedComponentInParent(ref _layer);
 
         public RectTransform rectTransform => this.GetCachedComponent(ref _rectTransform);
 
-        public bool isTopFrame => Modules.Get<UI>().IsTopFrameInStack(this);
+        public bool isTopFrame => true;// Modules.Get<UI>().IsTopFrameInStack(this);
+
+        public UIFrameDBEntry dbEntry => this.GetDBEntry<UIFrameDBEntry>(ref _dbEntryResource);
 
         #endregion
 
