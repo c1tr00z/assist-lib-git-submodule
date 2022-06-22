@@ -181,6 +181,14 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             return component.GetCachedComponent(ref dbEntryResource).parent as T;
         }
 
+        public static T GetDBEntry<T>(this Component component, ref T dbEntry) where T : DBEntry {
+            if (dbEntry == null) {
+                dbEntry = component.GetComponent<DBEntryResource>().parent as T;
+            }
+
+            return dbEntry;
+        }
+
         #endregion
     }
 }

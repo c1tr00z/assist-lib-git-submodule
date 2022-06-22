@@ -3,7 +3,7 @@
 namespace c1tr00z.AssistLib.DataModels {
     public interface IValueReceiver {
         
-        bool isRecieverEnabled { get; }
+        bool isReceiverEnabled { get; }
         
         void UpdateReceiver();
 

@@ -6,7 +6,7 @@ namespace c1tr00z.AssistLib.TypeReferences {
 
         #region Class Implementation
 
-        public static Type GetTypeFromReference(this TypeReference typeReference) {
+        public static Type GetRefType(this TypeReference typeReference) {
             return ReflectionUtils.GetTypeByName(typeReference.typeFullName);
         }
 

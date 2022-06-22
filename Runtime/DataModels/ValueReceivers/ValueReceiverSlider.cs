@@ -21,7 +21,7 @@ namespace c1tr00z.AssistLib.DataModels {
 
         #region ValueReceiverBase Implementation
 
-        public override bool isRecieverEnabled => base.isRecieverEnabled && slider != null;
+        public override bool isReceiverEnabled => base.isReceiverEnabled && slider != null;
 
         public override void UpdateReceiver() {
             slider.value = valueSrc.Get<float>();

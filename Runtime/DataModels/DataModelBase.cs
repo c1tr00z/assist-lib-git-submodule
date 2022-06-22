@@ -46,7 +46,7 @@ namespace c1tr00z.AssistLib.DataModels {
             if (_valueReceivers.Count == 0) {
                 return;
             }
-            _valueReceivers.Where(r => r.isRecieverEnabled).ToList().ForEach(r => r.UpdateReceiver());
+            _valueReceivers.Where(r => r.isReceiverEnabled).ToList().ForEach(r => r.UpdateReceiver());
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿using c1tr00z.AssistLib.PropertyReferences;
+﻿using System;
+using c1tr00z.AssistLib.PropertyReferences;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace c1tr00z.AssistLib.DataModels {
 
         #region Accessors
 
-        public virtual bool isRecieverEnabled {
+        public virtual bool isReceiverEnabled {
             get { return GetModels().All(m => m.isDataModelEnabled); }
         }
 
@@ -24,6 +25,16 @@ namespace c1tr00z.AssistLib.DataModels {
 
         protected virtual void Awake() {
             GetModels().ToList().ForEach(m => m.AddReceiver(this));
+        }
+
+        protected virtual void OnEnable() {
+            if (!isReceiverEnabled) {
+                return;
+            }
+            UpdateReceiver();
+        }
+
+        protected virtual void OnDisable() {
         }
 
         #endregion

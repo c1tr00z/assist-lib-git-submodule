@@ -1,10 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Linq;
+using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
 
 namespace c1tr00z.AssistLib.GameUI {
     public class UIListItem : MonoBehaviour {
+
+        #region Private Fields
+
+        private UIListItemDBEntry _dbEntry;
+
+        #endregion
 
         #region Accessors
 
@@ -13,6 +20,8 @@ namespace c1tr00z.AssistLib.GameUI {
         public UIList list { get; private set; }
         
         public bool isSelected { get; private set; }
+
+        public UIListItemDBEntry dbEntry => this.GetDBEntry(ref _dbEntry);
 
         #endregion
 

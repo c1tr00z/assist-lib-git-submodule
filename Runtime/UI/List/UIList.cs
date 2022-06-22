@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using c1tr00z.AssistLib.ResourcesManagement;
+using c1tr00z.AssistLib.TypeReferences;
 using c1tr00z.AssistLib.Utils;
 using UnityEditorInternal.VersionControl;
 using UnityEngine.Events;
@@ -28,7 +29,9 @@ namespace c1tr00z.AssistLib.GameUI {
 
         private List<UIListItem> _listItems = new List<UIListItem>();
 
-        private UIListItem _listItemPrefab = null;
+        private Dictionary<Type, UIListItem> _listItemPrefabs = new Dictionary<Type, UIListItem>();
+
+        private List<Type> _allAvailableTypes = new List<Type>();
 
         private Transform _pool;
 
@@ -42,7 +45,7 @@ namespace c1tr00z.AssistLib.GameUI {
 
         #region Serialized Fields
 
-        [SerializeField] private UIListItemDBEntry listItemDBEntry;
+        [SerializeField] private List<UIListItemDBEntry> _listItemDBEntries = new List<UIListItemDBEntry>();
         
         [SerializeField] private bool _useSelect;
 
@@ -93,30 +96,44 @@ namespace c1tr00z.AssistLib.GameUI {
 
                 var request = _requestQueue.Dequeue();
                 
-                if (_listItemPrefab == null) {
-                    var listItemRequest = listItemDBEntry.LoadPrefabAsync<UIListItem>();
+                if (_listItemPrefabs.Count == 0) {
+                    foreach (var listItemDBEntry in _listItemDBEntries) {
+                        var listItemRequest = listItemDBEntry.LoadPrefabAsync<UIListItem>();
+                        
+                        yield return listItemRequest;
+                        
+                        _listItemPrefabs.Add(listItemDBEntry.typeRef.GetRefType(), listItemRequest.asset);
+                    }
 
-                    yield return listItemRequest;
-
-                    _listItemPrefab = listItemRequest.asset;
-                }
-
-                var items = request.items;
-
-                var selectedItem = request.selectedItem;
-                
-                if (_listItems.Count > items.Count) {
-                    var toReturnToPool = _listItems.SubArray(items.Count).ToList();
-                    toReturnToPool.ForEach(ReturnToPool);
-                }
-            
-                for (var i = 0; i < items.Count; i++) {
-                    if (i < _listItems.Count) {
-                        _listItems[i].UpdateItem(items[i]);
-                    } else {
-                        CreateListItem(items[i]);
+                    if (_listItemPrefabs.Count > 0) {
+                        _allAvailableTypes.AddRange(_listItemPrefabs.Keys);
                     }
                 }
+
+                var vacant = _listItems.ToList();
+                var order = 0;
+                var items = request.items;
+                items.ForEach(item => {
+                    var listItem = vacant.FirstOrDefault(li => item.GetType() == li.dbEntry.typeRef.GetRefType());
+
+                    if (listItem == null) {
+                        listItem = vacant.FirstOrDefault(li => li.dbEntry.typeRef.GetRefType().IsInstanceOfType(item));
+                    }
+
+                    if (listItem != null && vacant.Contains(listItem)) {
+                        vacant.Remove(listItem);
+                    } else {
+                        listItem = CreateListItem(item.GetType());
+                    }
+                    
+                    listItem.UpdateItem(item);
+                    listItem.transform.SetSiblingIndex(order);
+                    order++;
+                });
+
+                vacant.ForEach(ReturnToPool);
+                
+                var selectedItem = request.selectedItem;
 
                 if (_useSelect && (selectedItem != null && !selectedItem.Equals(default)) && _listItems.Count > 0 &&
                     !_listItems.Any(li => li.isSelected)) {
@@ -128,12 +145,16 @@ namespace c1tr00z.AssistLib.GameUI {
             _isUpdateCoroutineOn = false;
         }
 
-        private UIListItem CreateListItem(object item) {
-            UIListItem listItem = null;
-            if (_pooled.Count > 0) {
-                listItem = _pooled.FirstOrDefault();
-            } else {
-                listItem = _listItemPrefab.Clone();
+        private UIListItem CreateListItem(Type itemType) {
+            
+            UIListItem listItem = GetFromPool(itemType);
+
+            if (listItem == null) {
+                listItem = GetPrefabByType(itemType)?.Clone();
+            }
+
+            if (listItem == null) {
+                return null;
             }
             
             listItem.transform.SetParent(transform, false);
@@ -142,9 +163,38 @@ namespace c1tr00z.AssistLib.GameUI {
             var rectTransform = listItem.transform as RectTransform;
 
             listItem.Init(this);
-            listItem.UpdateItem(item);
             _listItems.Add(listItem);
             return listItem;
+        }
+
+        private UIListItem GetFromPool(Type type) {
+            var workingType = _allAvailableTypes.Contains(type)
+                ? type
+                : _allAvailableTypes.FirstOrDefault(t => t.IsAssignableFrom(type));
+            
+            if (workingType == null) {
+                return null;
+            }
+
+            var candidate = _pooled.FirstOrDefault(li => li.dbEntry.typeRef.GetRefType() == workingType);
+
+            if (candidate != null) {
+                _pooled.Remove(candidate);
+            }
+
+            return candidate;
+        }
+
+        private UIListItem GetPrefabByType(Type type) {
+            var workingType = _allAvailableTypes.Contains(type)
+                ? type
+                : _allAvailableTypes.FirstOrDefault(t => t.IsAssignableFrom(type));
+
+            if (workingType == null) {
+                return null;
+            }
+
+            return _listItemPrefabs[workingType];
         }
 
         public void Select(UIListItem item) {

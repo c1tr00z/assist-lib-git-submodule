@@ -290,6 +290,16 @@ namespace c1tr00z.AssistLib.Utils {
             }
         }
 
+        public static void Shuffle<T>(this List<T> list) {
+            var copy = list.ToList();
+            list.Clear();
+            while (copy.Count > 0) {
+                var item = copy.RandomItem();
+                list.Add(copy.RandomItem());
+                copy.Remove(item);
+            }
+        }
+
         public static T FirstOrDefault<T>(this IEnumerable<object> enumerable) {
             return enumerable.OfType<T>().FirstOrDefault();
         }

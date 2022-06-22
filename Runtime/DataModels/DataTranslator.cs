@@ -21,7 +21,7 @@ namespace c1tr00z.AssistLib.DataModels {
         
         #region IValueReceiver Implementation
 
-        public virtual bool isRecieverEnabled {
+        public virtual bool isReceiverEnabled {
             get { return GetModels().All(m => m.isDataModelEnabled); }
         }
         
