@@ -295,7 +295,7 @@ namespace c1tr00z.AssistLib.Utils {
             list.Clear();
             while (copy.Count > 0) {
                 var item = copy.RandomItem();
-                list.Add(copy.RandomItem());
+                list.Add(item);
                 copy.Remove(item);
             }
         }
