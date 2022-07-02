@@ -24,6 +24,12 @@ namespace c1tr00z.AssistLib.GameUI {
         }
 
         #endregion
+
+        #region Events
+
+        public event Action ItemsUpdated;
+
+        #endregion
         
         #region Private Fields
 
@@ -132,14 +138,8 @@ namespace c1tr00z.AssistLib.GameUI {
                 });
 
                 vacant.ForEach(ReturnToPool);
-                
-                var selectedItem = request.selectedItem;
 
-                if (_useSelect && (selectedItem != null && !selectedItem.Equals(default)) && _listItems.Count > 0 &&
-                    !_listItems.Any(li => li.isSelected)) {
-                    
-                    Select(_listItems.FirstOrDefault());
-                }
+                ItemsUpdated?.Invoke();
             }
             
             _isUpdateCoroutineOn = false;
@@ -214,6 +214,7 @@ namespace c1tr00z.AssistLib.GameUI {
                 selectedValue = null;
                 _listItems.ForEach(li => li.SetSelected(li.item == null));
                 _onSelected?.Invoke(null);
+                return;
             }
             
             selectedValue = item;

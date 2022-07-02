@@ -16,6 +16,26 @@ namespace c1tr00z.AssistLib.DataModels {
 
         #endregion
 
+        #region Private Fields
+
+        private object _selectedItem;
+
+        #endregion
+
+        #region Unity Events
+
+        protected override void OnEnable() {
+            base.OnEnable();
+            _list.ItemsUpdated += ListOnItemsUpdated;
+        }
+
+        protected override void OnDisable() {
+            base.OnDisable();
+            _list.ItemsUpdated -= ListOnItemsUpdated;
+        }
+
+        #endregion
+
         #region ValueReceiverBase
 
         public override IEnumerator<PropertyReference> GetReferences() {
@@ -23,7 +43,16 @@ namespace c1tr00z.AssistLib.DataModels {
         }
 
         public override void UpdateReceiver() {
-            _list.SelectValue(_selectedSource.Get<object>());
+            _selectedItem = _selectedSource.Get<object>();
+            _list.SelectValue(_selectedItem);
+        }
+
+        private void ListOnItemsUpdated() {
+            if (_selectedItem == null) {
+                return;
+            }
+            
+            _list.SelectValue(_selectedItem);
         }
 
         #endregion
