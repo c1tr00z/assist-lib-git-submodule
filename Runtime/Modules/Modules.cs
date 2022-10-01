@@ -10,13 +10,13 @@ namespace c1tr00z.AssistLib.AppModules {
 
         #region Private Fields
 
-        private static List<Modules> _modules = new List<Modules>();
+        private static List<Modules> _modulesContainers = new List<Modules>();
 
         #endregion
 
         #region Accessors
         
-        protected bool amIAddedAlready => _modules.Contains(this);
+        protected bool amIAddedAlready => _modulesContainers.Contains(this);
 
         #endregion
 
@@ -26,7 +26,7 @@ namespace c1tr00z.AssistLib.AppModules {
             if (amIAddedAlready) {
                 return;
             }
-            _modules.Add(this);
+            _modulesContainers.Add(this);
         }
 
         #endregion
@@ -36,7 +36,7 @@ namespace c1tr00z.AssistLib.AppModules {
         public abstract CoroutineRequest InitModules();
 
         protected List<Modules> GetModulesModules() {
-            return _modules.ToList();
+            return _modulesContainers.ToList();
         }
 
         public abstract List<IModule> GetModules();
@@ -54,15 +54,15 @@ namespace c1tr00z.AssistLib.AppModules {
         #region Static Methods
 
         public static T Get<T>() where T : IModule {
-            if (_modules.Count == 0) {
-                _modules.AddRange(FindObjectsOfType<Modules>());
+            if (_modulesContainers.Count == 0) {
+                _modulesContainers.AddRange(FindObjectsOfType<Modules>());
             }
-            return _modules.SelectNotNull(m => m.GetModule<T>()).FirstOrDefault();
+            return _modulesContainers.SelectNotNull(m => m.GetModule<T>()).FirstOrDefault();
         }
 
         private void OnDestroy() {
-            if (_modules.Contains(this)) {
-                _modules.Remove(this);
+            if (_modulesContainers.Contains(this)) {
+                _modulesContainers.Remove(this);
             }
         }
 

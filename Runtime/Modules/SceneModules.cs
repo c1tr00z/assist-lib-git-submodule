@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using c1tr00z.AssistLib.Common;
+using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.AppModules {
@@ -44,10 +45,10 @@ namespace c1tr00z.AssistLib.AppModules {
         #region Class Implementation
 
         private IEnumerator C_InitSceneModules() {
+            base.Awake();
             var request = new CoroutineRequest();
             StartCoroutine(C_InitModules(request));
             yield return request;
-            base.Awake();
         }
 
         private IEnumerator C_InitModules(CoroutineRequest request) {
