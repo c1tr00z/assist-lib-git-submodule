@@ -14,10 +14,16 @@ namespace c1tr00z.AssistLib.AppModules {
 
         #endregion
 
+        #region Accessors
+        
+        protected bool amIAddedAlready => _modules.Contains(this);
+
+        #endregion
+
         #region Unity Events
 
         protected virtual void Awake() {
-            if (_modules.Contains(this)) {
+            if (amIAddedAlready) {
                 return;
             }
             _modules.Add(this);

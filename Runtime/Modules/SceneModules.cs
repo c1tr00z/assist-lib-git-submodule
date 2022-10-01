@@ -12,6 +12,18 @@ namespace c1tr00z.AssistLib.AppModules {
         [SerializeField] private List<Module> _modules = new List<Module>();
 
         #endregion
+
+        #region Unity Events
+
+        protected override void Awake() {
+            if (amIAddedAlready) {
+                base.Awake();
+                return;
+            }
+            StartCoroutine(C_InitSceneModules());
+        }
+
+        #endregion
         
         #region Modules Implementation
 
@@ -30,6 +42,13 @@ namespace c1tr00z.AssistLib.AppModules {
         #endregion
 
         #region Class Implementation
+
+        private IEnumerator C_InitSceneModules() {
+            var request = new CoroutineRequest();
+            StartCoroutine(C_InitModules(request));
+            yield return request;
+            base.Awake();
+        }
 
         private IEnumerator C_InitModules(CoroutineRequest request) {
             
