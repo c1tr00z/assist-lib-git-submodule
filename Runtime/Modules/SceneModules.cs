@@ -4,6 +4,7 @@ using System.Linq;
 using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.Utils;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace c1tr00z.AssistLib.AppModules {
     public class SceneModules : Modules {
@@ -11,6 +12,8 @@ namespace c1tr00z.AssistLib.AppModules {
         #region Serialized Fields
 
         [SerializeField] private List<Module> _modules = new List<Module>();
+
+        [SerializeField] private UnityEvent onInitialized;
 
         #endregion
 
@@ -49,6 +52,12 @@ namespace c1tr00z.AssistLib.AppModules {
             var request = new CoroutineRequest();
             StartCoroutine(C_InitModules(request));
             yield return request;
+
+            while (!App.isInitialized) {
+                yield return null;
+            }
+            
+            onInitialized.SafeInvoke();
         }
 
         private IEnumerator C_InitModules(CoroutineRequest request) {
