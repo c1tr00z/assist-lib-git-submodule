@@ -11,7 +11,7 @@ namespace c1tr00z.AssistLib.Utils {
 
         public static void DoTimes(this int times, Action<int> action) {
             for (int i = 0; i < times; i++) {
-                action.SafeInvoke(i);
+                action?.Invoke(i);
             }
         }
 

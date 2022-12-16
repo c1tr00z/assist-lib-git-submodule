@@ -45,7 +45,7 @@ namespace c1tr00z.AssistLib.Common {
             if (component == null) {
                 component = prefabGO.AddComponent<T>();
             }
-            onAdding.SafeInvoke(component);
+            onAdding?.Invoke(component);
             PrefabUtility.SaveAsPrefabAsset(prefabGO, path);
 #else
         var component = originalPrefab.GetComponent<ComponentType>();
