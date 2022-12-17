@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using c1tr00z.AssistLib.Common;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -70,6 +71,16 @@ namespace c1tr00z.AssistLib.Utils {
 
             transform.position = other.position;
             transform.rotation = other.rotation;
+        }
+
+        public static void PlaceTo(this Transform transform, TransformData transformData) {
+            if (transform.IsNull()) {
+                return;
+            }
+
+            transform.position = transformData.position;
+            transform.rotation = transformData.rotation;
+            transform.localScale = transformData.scale;
         }
 
         #endregion
