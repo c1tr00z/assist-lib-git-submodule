@@ -37,6 +37,8 @@ namespace c1tr00z.AssistLib.AppModules {
             yield return mainCacher.Cache();
             Debug.Log("Cachers initialized");
 
+            new GameObject("SceneModulesHelper").AddComponent<SceneModulesHelper>();
+            
             Debug.Log("System modules initialization");
             var systemModules = new GameObject("SystemModules").AddComponent<SystemModules>();
             yield return systemModules.InitModules();

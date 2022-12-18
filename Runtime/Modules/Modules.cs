@@ -17,23 +17,21 @@ namespace c1tr00z.AssistLib.AppModules {
         #region Accessors
         
         protected bool amIAddedAlready => _modulesContainers.Contains(this);
-
-        #endregion
-
-        #region Unity Events
-
-        protected virtual void Awake() {
-            if (amIAddedAlready) {
-                return;
-            }
-            _modulesContainers.Add(this);
-        }
+        
+        public bool isInitialized { get; private set; }
 
         #endregion
 
         #region Class Implementation
 
         public abstract CoroutineRequest InitModules();
+
+        protected void AddMe() {
+            if (amIAddedAlready) {
+                return;
+            }
+            _modulesContainers.Add(this);
+        }
 
         protected List<Modules> GetModulesModules() {
             return _modulesContainers.ToList();
@@ -49,13 +47,17 @@ namespace c1tr00z.AssistLib.AppModules {
             return GetModules<T>().FirstOrDefault();
         }
 
+        protected virtual void OnInitialized() {
+            isInitialized = true;
+        }
+
         #endregion
 
         #region Static Methods
 
         public static T Get<T>() where T : IModule {
             if (_modulesContainers.Count == 0) {
-                _modulesContainers.AddRange(FindObjectsOfType<Modules>());
+                return default;
             }
             return _modulesContainers.SelectNotNull(m => m.GetModule<T>()).FirstOrDefault();
         }

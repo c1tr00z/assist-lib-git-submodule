@@ -17,13 +17,8 @@ namespace c1tr00z.AssistLib.AppModules {
 
         #region Modules
 
-        protected override void Awake() {
-            if (GetModulesModules().Any(mm => mm.GetType() == GetType() && mm != this)) {    
-                Destroy(gameObject);
-                return;
-            }
+        private void Awake() {
             DontDestroyOnLoad(this);
-            base.Awake();
         }
 
         public override List<IModule> GetModules() {
@@ -43,7 +38,7 @@ namespace c1tr00z.AssistLib.AppModules {
         #region Class Implementation
 
         private IEnumerator C_InitModules(CoroutineRequest request) {
-            var dbEntries = DB.GetAll<ModuleDBEntry>();
+            var dbEntries = DB.GetAll<SystemModuleDBEntry>();
             
             foreach (var dbEntry in dbEntries) {
                 Debug.Log($"[MODULES] Initialize {dbEntry.name}");
@@ -67,6 +62,7 @@ namespace c1tr00z.AssistLib.AppModules {
                 Debug.Log($"[MODULES] {dbEntry.name} is initialized");
             }
             
+            AddMe();
             request.Finish();
         }
 

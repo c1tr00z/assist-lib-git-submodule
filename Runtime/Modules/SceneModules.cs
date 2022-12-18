@@ -1,79 +1,73 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using c1tr00z.AssistLib.Common;
+using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace c1tr00z.AssistLib.AppModules {
-    public class SceneModules : Modules {
+    public class SceneModules : SceneModulesBase {
+
+        #region Private Fields
+
+        private SceneModulesCollectionMain _mainCollection;
+
+        private List<IModule> _modules = new();
+
+        #endregion
 
         #region Serialized Fields
 
-        [SerializeField] private List<Module> _modules = new List<Module>();
-
-        [SerializeField] private UnityEvent onInitialized;
+        [SerializeField] private SceneModulesCollection _modulesCollection;
 
         #endregion
 
-        #region Unity Events
+        #region Accessors
 
-        protected override void Awake() {
-            if (amIAddedAlready) {
-                base.Awake();
-                return;
-            }
-            StartCoroutine(C_InitSceneModules());
-        }
+        private ISceneModuleCollection modulesCollection => !_modulesCollection.IsNull() ? _modulesCollection : DBEntryUtils.GetCached(ref _mainCollection);
 
         #endregion
         
-        #region Modules Implementation
+        #region SceneModulesBase Implementation
+        
+        public override List<IModule> GetModules() {
+            return _modules;
+        }
 
-        public override CoroutineRequest InitModules() {
-            var request = new CoroutineRequest();
+        protected override AssetRequest<Module> LoadSceneModule(int index) {
+            if (!modulesCollection.Has(index)) {
+                var request = new AssetRequest<Module>();
+                request.Finish();
+                return request;
+            }
 
-            StartCoroutine(C_InitModules(request));
+            return LoadAndInstantiateModule(modulesCollection.Get(index));
+        }
+
+        private AssetRequest<Module> LoadAndInstantiateModule(SceneModuleDBEntry moduleDBEntry) {
+            var request = new AssetRequest<Module>();
+
+            StartCoroutine(C_LoadAndInstantiateModule(moduleDBEntry, request));
             
             return request;
         }
 
-        public override List<IModule> GetModules() {
-            return _modules.Select(m => m as IModule).ToList();
-        }
+        private IEnumerator C_LoadAndInstantiateModule(SceneModuleDBEntry moduleDBEntry, AssetRequest<Module> moduleRequest) {
+            var request = moduleDBEntry.LoadPrefabAsync<Module>();
 
-        #endregion
-
-        #region Class Implementation
-
-        private IEnumerator C_InitSceneModules() {
-            base.Awake();
-            var request = new CoroutineRequest();
-            StartCoroutine(C_InitModules(request));
             yield return request;
 
-            while (!App.isInitialized) {
-                yield return null;
-            }
+            var module = request.asset.Clone();
+            module.name = moduleDBEntry.name;
             
-            onInitialized.SafeInvoke();
+            moduleRequest.AssetLoaded(module);
         }
 
-        private IEnumerator C_InitModules(CoroutineRequest request) {
-            
-            foreach (var module in _modules) {
-                var moduleRequest = new CoroutineRequest();
-                
-                module.InitializeModule(moduleRequest);
-
-                yield return moduleRequest;
-            }
-            
-            request.Finish();
+        protected override void OnModuleInitialized(Module module) {
+            module.transform.Reset(transform);
+            _modules.Add(module);
         }
-
-        #endregion
         
+        #endregion
     }
 }
