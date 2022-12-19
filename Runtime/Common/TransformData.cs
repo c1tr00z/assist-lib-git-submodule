@@ -25,5 +25,24 @@ namespace c1tr00z.AssistLib.Common {
 
         #endregion
 
+        #region Class Implementation
+
+        public static TransformData MakeFromPosition(Vector3 position) {
+            return new TransformData {
+                position = position,
+                rotation = Quaternion.identity,
+                scale = Vector3.one,
+            };
+        }
+        
+        public static TransformData MakeFromPositionAndRotation(Vector3 position, Quaternion rotation) {
+            return new TransformData {
+                position = position,
+                rotation = rotation,
+                scale = Vector3.one,
+            };
+        }
+
+        #endregion
     }
 }
