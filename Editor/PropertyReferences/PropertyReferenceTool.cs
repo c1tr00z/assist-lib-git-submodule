@@ -168,7 +168,7 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
         }
 
         private void SaveToFile(string text) {
-            var directoryPath = Path.Combine(Application.dataPath, "Common", "Code");
+            var directoryPath = Path.Combine(Application.dataPath, "Code", "Runtime", "Common");
             var directory = new DirectoryInfo(directoryPath);
             if (!directory.Exists) {
                 directory.Create();

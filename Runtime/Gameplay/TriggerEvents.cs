@@ -26,17 +26,11 @@ namespace c1tr00z.AssistLib.Gameplay {
         #region Unity Events
 
         private void OnTriggerEnter(Collider other) {
-            if (_onTriggerEnterEvent.IsNull()) {
-                return;
-            }
-            _onTriggerEnterEvent.Invoke(other);
+            _onTriggerEnterEvent.SafeInvoke(other);
         }
 
         private void OnTriggerExit(Collider other) {
-            if (_onTriggerExitEvent.IsNull()) {
-                return;
-            }
-            _onTriggerExitEvent.Invoke(other);
+            _onTriggerExitEvent.SafeInvoke(other);
         }
 
         #endregion
