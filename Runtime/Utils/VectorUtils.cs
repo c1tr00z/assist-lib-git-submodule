@@ -184,6 +184,10 @@ namespace c1tr00z.AssistLib.Utils {
             return new Vector3(vector2Int.x, vector2Int.y);
         }
 
+        public static bool Approximately(Vector3 a, Vector3 b, float threshold) {
+            return (b - a).magnitude <= threshold;
+        }
+
         #endregion
     }
 }
