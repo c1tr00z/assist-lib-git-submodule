@@ -75,6 +75,10 @@ namespace c1tr00z.AssistLib.Utils {
             return allTypes.ToList();
         }
 
+        public static List<Type> GetTypesByInterface<T>(bool includeAbstract = true) {
+            return GetTypesByInterface(typeof(T), includeAbstract);
+        }
+
         public static IEnumerable<PropertyInfo> GetPublicProperties(this Type type) {
             return type.GetProperties(BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public);
         }
