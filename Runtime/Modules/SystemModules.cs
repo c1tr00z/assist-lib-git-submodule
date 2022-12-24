@@ -56,6 +56,8 @@ namespace c1tr00z.AssistLib.AppModules {
                 module.InitializeModule(moduleRequest);
 
                 yield return moduleRequest;
+                
+                OnModuleInitialized(module);
                     
                 _modules.Add(module);
                 

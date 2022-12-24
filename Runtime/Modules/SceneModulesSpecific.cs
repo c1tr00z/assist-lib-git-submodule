@@ -27,7 +27,7 @@ namespace c1tr00z.AssistLib.AppModules {
             return request;
         }
 
-        protected override void OnModuleInitialized(Module module) { }
+        protected override void OnSceneModuleInitialized(Module module) { }
 
         #endregion
     }

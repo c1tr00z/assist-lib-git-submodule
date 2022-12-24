@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using c1tr00z.AssistLib.Common;
@@ -7,6 +8,12 @@ using UnityEngine;
 namespace c1tr00z.AssistLib.AppModules {
     
     public abstract class Modules : MonoBehaviour {
+
+        #region Events
+
+        public static event Action<Module> ModuleInitialized; 
+
+        #endregion
 
         #region Private Fields
 
@@ -49,6 +56,10 @@ namespace c1tr00z.AssistLib.AppModules {
 
         protected virtual void OnInitialized() {
             isInitialized = true;
+        }
+
+        protected void OnModuleInitialized(Module module) {
+            ModuleInitialized?.Invoke(module);
         }
 
         #endregion

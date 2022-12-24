@@ -66,10 +66,12 @@ namespace c1tr00z.AssistLib.AppModules {
                 var moduleRequest = new CoroutineRequest();
             
                 module.InitializeModule(moduleRequest);
+                
+                OnModuleInitialized(module);
 
                 yield return moduleRequest;
                 
-                OnModuleInitialized(module);
+                OnSceneModuleInitialized(module);
             }
             
             OnInitialized();
@@ -78,7 +80,7 @@ namespace c1tr00z.AssistLib.AppModules {
 
         protected abstract AssetRequest<Module> LoadSceneModule(int index);
 
-        protected abstract void OnModuleInitialized(Module module);
+        protected abstract void OnSceneModuleInitialized(Module module);
 
         #endregion
 

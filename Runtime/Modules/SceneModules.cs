@@ -63,7 +63,7 @@ namespace c1tr00z.AssistLib.AppModules {
             moduleRequest.AssetLoaded(module);
         }
 
-        protected override void OnModuleInitialized(Module module) {
+        protected override void OnSceneModuleInitialized(Module module) {
             module.transform.Reset(transform);
             _modules.Add(module);
         }
