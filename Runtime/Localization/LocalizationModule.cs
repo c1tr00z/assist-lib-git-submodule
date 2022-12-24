@@ -88,7 +88,7 @@ namespace c1tr00z.AssistLib.Localization {
                     continue;
                 }
                 
-                var langHash = JSONUtuls.Deserialize(textRequest.asset.text);
+                var langHash = JSONUtils.Deserialize(textRequest.asset.text);
                 _translations.Add(languageItem, langHash.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString()));
             }
             
@@ -98,7 +98,7 @@ namespace c1tr00z.AssistLib.Localization {
 
             var localizationSettingsData = PlayerPrefsLocalData.GetDataNode(LOCALIZATION_SETTINGS_KEY);
 
-            _settings = JSONUtuls.Deserialize<Settings>(localizationSettingsData);
+            _settings = JSONUtils.Deserialize<Settings>(localizationSettingsData);
 
             if (_settings == null) {
                 _settings = new Settings();

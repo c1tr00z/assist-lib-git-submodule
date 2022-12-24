@@ -24,7 +24,7 @@ public class PlayerPrefsLocalData : MonoBehaviour {
             if (string.IsNullOrEmpty(settingsJson)) {
                 _playerPrefsLocalData = new Dictionary<string, object>();
             } else {
-                _playerPrefsLocalData = JSONUtuls.Deserialize(settingsJson);
+                _playerPrefsLocalData = JSONUtils.Deserialize(settingsJson);
             }
         }
     }
@@ -33,7 +33,7 @@ public class PlayerPrefsLocalData : MonoBehaviour {
         CheckLoading();
         return _playerPrefsLocalData.ContainsKey(key) 
             ? _playerPrefsLocalData[key] is string 
-                ? JSONUtuls.Deserialize(_playerPrefsLocalData[key].ToString()) 
+                ? JSONUtils.Deserialize(_playerPrefsLocalData[key].ToString()) 
                 : (Dictionary<string, object>)_playerPrefsLocalData[key] 
             : new Dictionary<string, object>();
     }
@@ -44,7 +44,7 @@ public class PlayerPrefsLocalData : MonoBehaviour {
     }
 
     public static void Save() {
-        PlayerPrefs.SetString(editorSettingsKey, JSONUtuls.Serialize(_playerPrefsLocalData));
+        PlayerPrefs.SetString(editorSettingsKey, JSONUtils.Serialize(_playerPrefsLocalData));
     }
 
     #endregion

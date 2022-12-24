@@ -27,7 +27,7 @@ namespace c1tr00z.AssistLib.Editor {
                 if (string.IsNullOrEmpty(settingsJson)) {
                     _editorSettingsData = new Dictionary<string, object>();
                 } else {
-                    var deserialized = JSONUtuls.Deserialize(settingsJson);
+                    var deserialized = JSONUtils.Deserialize(settingsJson);
                     if (deserialized != null) {
                         _editorSettingsData.AddOrSetRange(deserialized);
                     }
@@ -42,7 +42,7 @@ namespace c1tr00z.AssistLib.Editor {
 
         public static T Get<T>(string key) where T : IJsonDeserializable {
             var node = GetDataNode(key);
-            return JSONUtuls.Deserialize<T>(node);
+            return JSONUtils.Deserialize<T>(node);
         }
 
         public static void SetDataNode(string key, Dictionary<string, object> node) {
@@ -56,7 +56,7 @@ namespace c1tr00z.AssistLib.Editor {
         }
 
         public static void Save() {
-            EditorPrefs.SetString(editorSettingsKey, JSONUtuls.Serialize(_editorSettingsData));
+            EditorPrefs.SetString(editorSettingsKey, JSONUtils.Serialize(_editorSettingsData));
         }
 
         #endregion

@@ -65,7 +65,7 @@ namespace c1tr00z.AssistLib.GoogleSpreadsheetImporter {
 
             ServicePointManager.ServerCertificateValidationCallback -= allowCertificate;
 
-            Debug.Log(JSONUtuls.Serialize(parsedPage));
+            Debug.Log(JSONUtils.Serialize(parsedPage));
             return parsedPage;
         }
 

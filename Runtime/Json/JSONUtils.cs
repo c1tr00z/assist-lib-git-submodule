@@ -8,7 +8,7 @@ using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
-public static class JSONUtuls {
+public static class JSONUtils {
 
     #region Class Implementation
 

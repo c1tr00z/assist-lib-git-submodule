@@ -47,12 +47,12 @@ namespace c1tr00z.AssistLib.Localization {
                 if (lang == null) {
                     lang = ScriptableObjectsEditorUtils.Create<LanguageItem>(PathUtils.Combine("Assets", "Localization", "Resources", "Languages"), kvp.Key);
                 }
-                var json = JSONUtuls.Serialize(kvp.Value).DecodeEncodedNonAscii();
+                var json = JSONUtils.Serialize(kvp.Value).DecodeEncodedNonAscii();
                 FileUtils.SaveTextToFile(PathUtils.Combine(Application.dataPath, "Localization", "Resources", "Languages", kvp.Key + "@text.txt"), json);
                 AssetDatabase.Refresh();
             }
 
-            Debug.Log(JSONUtuls.Serialize(localization).DecodeEncodedNonAscii());
+            Debug.Log(JSONUtils.Serialize(localization).DecodeEncodedNonAscii());
         }
 
         private void PrintLocalizationFields() {
