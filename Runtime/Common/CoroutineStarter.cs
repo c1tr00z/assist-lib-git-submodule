@@ -27,8 +27,8 @@ namespace c1tr00z.AssistLib.Common {
 
         #region Class Implementation
 
-        public static void RequestCoroutine(IEnumerator coroutine) {
-            instance.StartCoroutine(coroutine);
+        public static Coroutine RequestCoroutine(IEnumerator coroutine) {
+            return instance.StartCoroutine(coroutine);
         }
 
         #endregion
