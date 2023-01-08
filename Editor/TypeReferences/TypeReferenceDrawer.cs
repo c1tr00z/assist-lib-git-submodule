@@ -83,10 +83,15 @@ namespace AssistLib.TypeReferences.Editor {
                 : typeof(object);
 
             var typesList = new List<Type>();
-            if (baseTypeAttribute.includeBaseClass && baseClass != typeof(object) && !baseClass.IsAbstract) {
+            if (baseTypeAttribute.includeBaseClass && baseClass != typeof(object) && !baseClass.IsAbstract && !baseClass.IsInterface) {
                 typesList.Add(baseClass);
             }
-            typesList.AddRange(ReflectionUtils.GetSubclassesOf(baseClass));
+
+            if (baseClass.IsInterface) {
+                typesList.AddRange(ReflectionUtils.GetTypesByInterface(baseClass));
+            } else {
+                typesList.AddRange(ReflectionUtils.GetSubclassesOf(baseClass));
+            }
             if (typesList.Count == 0) {
                 if (!baseClass.IsAbstract) {
                     typesList.Add(baseClass);
