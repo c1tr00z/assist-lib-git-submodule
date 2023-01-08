@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using c1tr00z.AssistLib.Common;
 
 namespace c1tr00z.AssistLib.Utils {
     public static class ObjectUtils {
@@ -21,6 +22,10 @@ namespace c1tr00z.AssistLib.Utils {
 
         public static T Clone<T>(this T obj, Vector3 position, Transform parent) where T : Object {
             return Clone(obj, position, Quaternion.identity, parent);
+        }
+
+        public static T Clone<T>(this T obj, TransformData transformData) where T : Object {
+            return Clone(obj, transformData.position, transformData.rotation, null);
         }
 
         /**
