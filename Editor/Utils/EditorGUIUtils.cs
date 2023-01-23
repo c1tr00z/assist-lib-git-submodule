@@ -82,7 +82,7 @@ namespace c1tr00z.AssistLib.Utils {
                 return EditorGUI.Vector2IntField(rect, label, currentVector);
             }
             
-            if (type == typeof(Object)) {
+            if (typeof(Object).IsAssignableFrom(type)) {
                 var currentObject = (Object)currentValue;
                 return EditorGUI.ObjectField(rect, label, currentObject, type, false);
             }
