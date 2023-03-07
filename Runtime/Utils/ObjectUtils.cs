@@ -40,9 +40,7 @@ namespace c1tr00z.AssistLib.Utils {
          * and then reset parameters</summary>
          */
         public static void Reset<T>(this T obj, Transform parent) where T : Component {
-            if (parent != null) {
-                obj.transform.SetParent(parent, false);
-            }
+            obj.transform.SetParent(parent, false);
 
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localScale = Vector3.one;
