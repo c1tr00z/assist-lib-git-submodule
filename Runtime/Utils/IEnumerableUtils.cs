@@ -91,6 +91,29 @@ namespace c1tr00z.AssistLib.Utils {
             return dictionary;
         }
 
+        public static Dictionary<TKey, List<TValue>> ToDictionaryOfLists<T, TKey, TValue>(
+            this IEnumerable<T> enumerable,
+            Func<T, TKey> keySelector, Func<T, TValue> valueSelector) {
+            
+            var dictionary = new Dictionary<TKey, List<TValue>>();
+            
+            foreach (var item in enumerable) {
+                var key = keySelector.Invoke(item);
+                if (key == null) {
+                    continue;
+                }
+
+                if (!dictionary.ContainsKey(key)) {
+                    var list = new List<TValue>();
+                    dictionary.Add(key, list);
+                }
+                var value = valueSelector.Invoke(item);
+                dictionary[key].Add(value);
+            }
+
+            return dictionary;
+        }
+
         public static TValue SafeGet<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key) {
             return dictionary.ContainsKey(key) ? dictionary[key] : default;
         }
