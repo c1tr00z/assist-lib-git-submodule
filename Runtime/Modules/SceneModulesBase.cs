@@ -25,7 +25,6 @@ namespace c1tr00z.AssistLib.AppModules {
 
         protected override void OnInitialized() {
             base.OnInitialized();
-            AddMe();
             onInitialized.SafeInvoke();
         }
 
@@ -37,6 +36,9 @@ namespace c1tr00z.AssistLib.AppModules {
             if (amIAddedAlready) {
                 return CoroutineRequest.MakeFinishedRequest();
             }
+            
+            AddMe();
+            
             _loadModuleIndex = 0;
             
             var request = new CoroutineRequest();
@@ -67,9 +69,9 @@ namespace c1tr00z.AssistLib.AppModules {
             
                 module.InitializeModule(moduleRequest);
                 
-                OnModuleInitialized(module);
-
                 yield return moduleRequest;
+                
+                OnModuleInitialized(module);
                 
                 OnSceneModuleInitialized(module);
             }

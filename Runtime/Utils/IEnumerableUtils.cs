@@ -327,6 +327,11 @@ namespace c1tr00z.AssistLib.Utils {
             return enumerable.OfType<T>().FirstOrDefault();
         }
 
+        public static void EnqueueRange<T>(this Queue<T> queue, IEnumerable<T> toEnqueue) {
+            var list = toEnqueue is List<T> ? (List<T>)toEnqueue : toEnqueue.ToList();
+            list.ForEach(queue.Enqueue);
+        }
+
         #endregion
     }
 }
