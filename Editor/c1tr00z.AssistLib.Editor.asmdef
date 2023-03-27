@@ -2,7 +2,8 @@
     "name": "c1tr00z.AssistLib.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:1a87e266707394558b9e046315a4618f"
+        "GUID:1a87e266707394558b9e046315a4618f",
+        "GUID:69448af7b92c7f342b298e06a37122aa"
     ],
     "includePlatforms": [
         "Editor"
