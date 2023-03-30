@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
@@ -10,7 +11,7 @@ namespace AssistLib.Editor.DB {
 
         #region Class Implementation
 
-        public abstract void Check(DBEntry dbEntry, AddressableAssetSettings addressableSettings);
+        public abstract void Check(DBEntry dbEntry, AddressableAssetSettings addressableSettings, string groupName);
 
         #endregion
 
@@ -20,22 +21,22 @@ namespace AssistLib.Editor.DB {
 
         #region DBEntryChecker Implementation
 
-        public override void Check(DBEntry dbEntry, AddressableAssetSettings addressableSettings) {
+        public override void Check(DBEntry dbEntry, AddressableAssetSettings addressableSettings, string groupName) {
             if (!(dbEntry is T requiredItem)) {
                 return;
             }
             
-            CheckEntry(requiredItem, addressableSettings);
+            CheckEntry(requiredItem, addressableSettings, groupName);
         }
 
         #endregion
 
         #region Class Implementation
 
-        protected abstract void CheckEntry(T dbEntry, AddressableAssetSettings addressableSettings);
+        protected abstract void CheckEntry(T dbEntry, AddressableAssetSettings addressableSettings, string groupName);
 
         protected AddressableAssetEntry FindEntry<TAsset>(DBEntry dbEntry, string key,
-            AddressableAssetSettings addressableSettings) where TAsset : Object {
+            AddressableAssetSettings addressableSettings, string groupName) where TAsset : Object {
 
             var assetName = $"{dbEntry.name}@{key}";
             
@@ -44,9 +45,18 @@ namespace AssistLib.Editor.DB {
                 return null;
             }
 
+            var group = !groupName.IsNullOrEmpty()
+                ? addressableSettings.FindGroup(groupName)
+                : addressableSettings.DefaultGroup;
+
+            if (group == null) {
+                group = addressableSettings.CreateGroup(groupName, false, false, false,
+                    new List<AddressableAssetGroupSchema>());
+            }
+
             var entry = addressableSettings.FindAssetEntry(guid);
             if (entry == null) {
-                entry = addressableSettings.CreateOrMoveEntry(guid, addressableSettings.DefaultGroup);
+                entry = addressableSettings.CreateOrMoveEntry(guid, group);
             }
 
             entry.address = assetName;

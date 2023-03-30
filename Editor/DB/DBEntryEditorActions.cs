@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using AssistLib.Editor.DB;
 using c1tr00z.AssistLib.Common;
+using c1tr00z.AssistLib.TypeReferences;
 using c1tr00z.AssistLib.Utils;
 using UnityEditor;
 using UnityEngine;
@@ -54,10 +55,19 @@ namespace c1tr00z.AssistLib.ResourcesManagement.Editor {
                 .ToDictionary(t => t.BaseType.GetGenericArguments().FirstOrDefault(),
                     t => (DBEntryChecker)Activator.CreateInstance(t));
 
+            var dbEntrySettings = DBEntryEditorUtils.LoadFromAssetDatabase<DBEntrySettings>("DBEntrySettings");
+            var dbEntriesSettings =
+                dbEntrySettings != null
+                    ? dbEntrySettings.settings.ToDictionary(s => s.dbEntryType.GetRefType(), s => s.addressableGroupName)
+                    : new Dictionary<Type, string>();
+
             foreach (DBEntry i in items) {
 
-                if (checkers.ContainsKey(i.GetType())) {
-                    checkers[i.GetType()].Check(i, addressableSettings);
+                var itemType = i.GetType();
+                
+                if (checkers.ContainsKey(itemType)) {
+                    var groupName = dbEntriesSettings.ContainsKey(itemType) ? dbEntriesSettings[itemType] : null;
+                    checkers[i.GetType()].Check(i, addressableSettings, groupName);
                 }
                 
                 var itemPrefab = i.LoadPrefab<GameObject>();

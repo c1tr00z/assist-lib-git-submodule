@@ -26,7 +26,6 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
         private static T LoadAddressable<T>(DBEntry dbEntry, string key) where T : Object {
             var address = $"{dbEntry.name}@{key}";
             foreach (var group in addressableSettings.groups) {
-                group.entries.ToList().ForEach(e => Debug.LogError(e.address));
                 var entry = group.entries.FirstOrDefault(e => e.address.Contains(address));
                 if (entry == null) {
                     continue;
@@ -37,17 +36,24 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
 
             return null;
         }
+        
+        /**
+         * 
+         */
+        public static T LoadFromAssetDatabase<T>(string assetName) where T : Object {
+            var assetGUID = AssetDatabase.FindAssets($"t:{(typeof(T).Name)} {assetName}").FirstOrDefault();
+            if (assetGUID.IsNullOrEmpty()) {
+                return default;
+            }
+            return AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(assetGUID));
+        }
 
         /**
          * 
          */
         private static T LoadFromAssetDatabase<T>(DBEntry dbEntry, string key) where T : Object {
             var assetName = $"{dbEntry.name}@{key}";
-            var assetGUID = AssetDatabase.FindAssets($"t:{(typeof(T).Name)} {assetName}").FirstOrDefault();
-            if (assetGUID.IsNullOrEmpty()) {
-                return default;
-            }
-            return AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(assetGUID));
+            return LoadFromAssetDatabase<T>(assetName);
         }
 
         /**
