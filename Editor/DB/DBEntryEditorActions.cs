@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using AssistLib.Editor.DB;
 using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.Utils;
 using UnityEditor;
@@ -47,11 +48,38 @@ namespace c1tr00z.AssistLib.ResourcesManagement.Editor {
             itemsObject.paths = newItemsPaths;
             // }
 
+            var addressableSettings = DBEntryEditorUtils.addressableSettings;
+
+            var checkers = ReflectionUtils.GetSubclassesOf<DBEntryChecker>(false)
+                .ToDictionary(t => t.BaseType.GetGenericArguments().FirstOrDefault(),
+                    t => (DBEntryChecker)Activator.CreateInstance(t));
+
             foreach (DBEntry i in items) {
+
+                if (checkers.ContainsKey(i.GetType())) {
+                    checkers[i.GetType()].Check(i, addressableSettings);
+                }
+                
                 var itemPrefab = i.LoadPrefab<GameObject>();
+                if (i.name.ToLower().Contains("witch")) {
+                    Debug.LogError(itemPrefab);
+                }
                 if (itemPrefab != null) {
 
 #if UNITY_2018_3_OR_NEWER
+
+                    var prefabGUID = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(itemPrefab));
+                    var entry = addressableSettings.FindAssetEntry(prefabGUID);
+                    if (entry == null) {
+                        entry = addressableSettings.CreateOrMoveEntry(prefabGUID, addressableSettings.DefaultGroup);
+                    }
+
+                    if (entry.ReadOnly) {
+                        entry.ReadOnly = false;
+                    }
+
+                    entry.address = $"{i.name}@Prefab";
+                    
                     var save = false;
                     var path = AssetDatabase.GetAssetPath(itemPrefab);
                     var prefabGO = PrefabUtility.LoadPrefabContents(path);

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using c1tr00z.AssistLib.Addressables;
 using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.Utils;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.ResourceLocations;
 using Object = UnityEngine.Object;
 
 namespace c1tr00z.AssistLib.ResourcesManagement {
@@ -28,12 +31,41 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             return DB.GetPath(dbEntry);
         }
 
-        private static IEnumerator C_LoadAsync<T>(DBEntry dbEntry, string key, AssetRequest<T> request) where T : Object {
-            var resourceRequest = Resources.LoadAsync<T>($"{GetPath(dbEntry)}@{key}");
-
-            yield return resourceRequest;
+        public static IEnumerator C_LoadAsync<T>(AddressableReference reference, AssetRequest<T> request)
+            where T : Object {
             
-            request.AssetLoaded(resourceRequest.asset as T);
+            var wait = true;
+
+            IResourceLocation location = default;
+            void callback(IResourceLocation foundLocation) {
+                location = foundLocation;
+                wait = false;
+            };
+            
+            reference.LoadIResourceLocation(callback);
+
+            while (wait) {
+                yield return null;
+            }
+
+            if (location == default) {
+                request.AssetLoaded(null);
+                yield break;
+            }
+
+            var handle = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<T>(location);
+
+            yield return handle;
+            
+            request.AssetLoaded(handle.Result);
+        }
+        
+        public static AssetRequest<T> LoadAsync<T>(this AddressableReference reference) where T : Object {
+            var request = new AssetRequest<T>();
+            
+            CoroutineStarter.RequestCoroutine(C_LoadAsync(reference, request));
+
+            return request;
         }
 
         /**
@@ -41,11 +73,9 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
          * where X is DBEntry name and Y is any desirable key (for example Player@Icon or Hammer@Model</summary>
          */
         public static AssetRequest<T> LoadAsync<T>(this DBEntry dbEntry, string key) where T : Object {
-            var request = new AssetRequest<T>();
-            
-            CoroutineStarter.RequestCoroutine(C_LoadAsync(dbEntry, key, request));
+            var reference = AddressableUtils.MakeFromAddress($"{GetPath(dbEntry)}@{key}");
 
-            return request;
+            return LoadAsync<T>(reference);
         }
 
         private static IEnumerator C_LoadAsync<T>(DBEntry dbEntry, string key, Action<T> callback) where T : Object {
