@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using c1tr00z.AssistLib.Addressables;
 using c1tr00z.AssistLib.TypeReferences;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             [BaseType(typeof(DBEntry))]
             public TypeReference dbEntryType;
 
-            public string addressableGroupName;
+            public AddressableGroupRef groupRef;
         }
 
         #endregion

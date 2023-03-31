@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using c1tr00z.AssistLib.GameUI;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
 using UnityEngine;
@@ -53,11 +54,12 @@ namespace c1tr00z.AssistLib.AppModules {
         }
 
         private IEnumerator C_LoadAndInstantiateModule(SceneModuleDBEntry moduleDBEntry, AssetRequest<Module> moduleRequest) {
-            var request = moduleDBEntry.LoadPrefabAsync<Module>();
 
-            yield return request;
+            var cloneRequest = moduleDBEntry.InstantiatePrefabAsync<Module>();
 
-            var module = request.asset.Clone();
+            yield return cloneRequest;
+
+            var module = cloneRequest.asset;
             module.name = moduleDBEntry.name;
             
             moduleRequest.AssetLoaded(module);

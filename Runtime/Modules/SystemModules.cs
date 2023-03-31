@@ -43,13 +43,18 @@ namespace c1tr00z.AssistLib.AppModules {
             foreach (var dbEntry in dbEntries) {
                 Debug.Log($"[MODULES] Initialize {dbEntry.name}");
 
-                var prefabRequest = dbEntry.LoadPrefabAsync<Module>();
-
-                yield return prefabRequest;
-
-                var prefab = prefabRequest.asset;
+                Module module = null;
+                var wait = true;
                 
-                var module = prefab.Clone(transform);
+                dbEntry.InstantiatePrefabAsync<Module>(instantiatedPrefab => {
+                    module = instantiatedPrefab;
+                    module.transform.Reset(transform);
+                    wait = false;
+                });
+
+                while (wait) {
+                    yield return null;
+                }
 
                 var moduleRequest = new CoroutineRequest();
                 

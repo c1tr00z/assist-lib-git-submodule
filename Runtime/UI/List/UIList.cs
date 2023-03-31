@@ -104,11 +104,14 @@ namespace c1tr00z.AssistLib.GameUI {
                 
                 if (_listItemPrefabs.Count == 0) {
                     foreach (var listItemDBEntry in _listItemDBEntries) {
-                        var listItemRequest = listItemDBEntry.LoadPrefabAsync<UIListItem>();
+                        var listItemRequest = listItemDBEntry.InstantiatePrefabAsync<UIListItem>();
                         
                         yield return listItemRequest;
+
+                        var listItemInstance = listItemRequest.asset;
+                        listItemInstance.Reset(pool);
                         
-                        _listItemPrefabs.Add(listItemDBEntry.typeRef.GetRefType(), listItemRequest.asset);
+                        _listItemPrefabs.Add(listItemDBEntry.typeRef.GetRefType(), listItemInstance);
                     }
 
                     if (_listItemPrefabs.Count > 0) {

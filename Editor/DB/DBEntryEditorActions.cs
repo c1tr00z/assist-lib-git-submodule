@@ -7,6 +7,7 @@ using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.TypeReferences;
 using c1tr00z.AssistLib.Utils;
 using UnityEditor;
+using UnityEditor.AddressableAssets.Settings;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.ResourcesManagement.Editor {
@@ -58,30 +59,37 @@ namespace c1tr00z.AssistLib.ResourcesManagement.Editor {
             var dbEntrySettings = DBEntryEditorUtils.LoadFromAssetDatabase<DBEntrySettings>("DBEntrySettings");
             var dbEntriesSettings =
                 dbEntrySettings != null
-                    ? dbEntrySettings.settings.ToDictionary(s => s.dbEntryType.GetRefType(), s => s.addressableGroupName)
+                    ? dbEntrySettings.settings.ToDictionary(s => s.dbEntryType.GetRefType(), s => s.groupRef.groupName)
                     : new Dictionary<Type, string>();
 
             foreach (DBEntry i in items) {
 
                 var itemType = i.GetType();
                 
+                var groupName = dbEntriesSettings.ContainsKey(itemType) ? dbEntriesSettings[itemType] : null;
+                
                 if (checkers.ContainsKey(itemType)) {
-                    var groupName = dbEntriesSettings.ContainsKey(itemType) ? dbEntriesSettings[itemType] : null;
                     checkers[i.GetType()].Check(i, addressableSettings, groupName);
                 }
                 
                 var itemPrefab = i.LoadPrefab<GameObject>();
-                if (i.name.ToLower().Contains("witch")) {
-                    Debug.LogError(itemPrefab);
-                }
                 if (itemPrefab != null) {
 
 #if UNITY_2018_3_OR_NEWER
 
                     var prefabGUID = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(itemPrefab));
+                    var group = !groupName.IsNullOrEmpty()
+                        ? addressableSettings.FindGroup(groupName)
+                        : addressableSettings.DefaultGroup;
+                    if (group == null) {
+                        group = addressableSettings.CreateGroup(groupName, false, false, false,
+                            new List<AddressableAssetGroupSchema>());
+                    }
                     var entry = addressableSettings.FindAssetEntry(prefabGUID);
                     if (entry == null) {
-                        entry = addressableSettings.CreateOrMoveEntry(prefabGUID, addressableSettings.DefaultGroup);
+                        entry = addressableSettings.CreateOrMoveEntry(prefabGUID, group);
+                    } else if (entry.parentGroup != group) {
+                        addressableSettings.MoveEntry(entry, group, false, false);
                     }
 
                     if (entry.ReadOnly) {

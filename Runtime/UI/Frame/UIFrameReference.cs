@@ -85,11 +85,11 @@ namespace c1tr00z.AssistLib.GameUI {
                 yield break;
             }
 
-            var request = frameDBEntry.LoadPrefabAsync<UIFrame>();
-
+            var request = frameDBEntry.InstantiatePrefabAsync<UIFrame>();
             yield return request;
 
-            _currentFrame = request.asset.Clone(transform);
+            _currentFrame = request.asset;
+            _currentFrame.Reset(transform);
             _currentFrame.rectTransform.Stretch();
         }
 

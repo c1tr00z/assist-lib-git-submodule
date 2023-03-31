@@ -133,11 +133,12 @@ namespace c1tr00z.AssistLib.GameUI {
                 var frame = GetFrameFromPool(request.frameDBEntry);
 
                 if (frame == null) {
-                    var frameRequest = request.frameDBEntry.LoadPrefabAsync<UIFrame>();
 
-                    yield return frameRequest;
+                    var instantRequest = request.frameDBEntry.InstantiatePrefabAsync<UIFrame>();
 
-                    frame = frameRequest.asset.Clone();
+                    yield return instantRequest;
+
+                    frame = instantRequest.asset;
                 }
 
                 if (frame == null) {

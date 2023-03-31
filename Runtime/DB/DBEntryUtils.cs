@@ -73,7 +73,7 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
          * where X is DBEntry name and Y is any desirable key (for example Player@Icon or Hammer@Model</summary>
          */
         public static AssetRequest<T> LoadAsync<T>(this DBEntry dbEntry, string key) where T : Object {
-            var reference = AddressableUtils.MakeFromAddress($"{GetPath(dbEntry)}@{key}");
+            var reference = AddressableUtils.MakeFromAddress($"{dbEntry.name}@{key}");
 
             return LoadAsync<T>(reference);
         }
@@ -106,6 +106,46 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
          */
         public static void LoadPrefabAsync<T>(this DBEntry dbEntry, Action<T> callback) where T : Object {
             LoadAsync(dbEntry, "Prefab", callback);
+        }
+
+        public static void InstantiateAsync<T>(this DBEntry dbEntry, string key, Action<T> callback) where T : Object {
+            CoroutineStarter.RequestCoroutine(C_InstantiateAsync(dbEntry, key, callback));
+        }
+        
+        public static void InstantiatePrefabAsync<T>(this DBEntry dbEntry, Action<T> callback) where T : Object {
+            dbEntry.InstantiateAsync("Prefab", callback);
+        }
+        
+        public static AssetRequest<T> InstantiatePrefabAsync<T>(this DBEntry dbEntry) where T : Object {
+            AssetRequest<T> assetRequest = new AssetRequest<T>();
+            dbEntry.InstantiateAsync<T>("Prefab", instantiated => assetRequest.AssetLoaded(instantiated));
+            return assetRequest;
+        }
+
+        private static IEnumerator C_InstantiateAsync<T>(DBEntry dbEntry, string key, Action<T> callback) where T : Object {
+            var wait = true;
+            IResourceLocation location = default;
+            void locationCallback(IResourceLocation foundLocation) {
+                location = foundLocation;
+                wait = false;
+            };
+            
+            AddressableUtils.MakeFromAddress($"{dbEntry.name}@{key}").LoadIResourceLocation(locationCallback);
+
+            while (wait) {
+                yield return null;
+            }
+            
+            var handle = UnityEngine.AddressableAssets.Addressables.InstantiateAsync(location);
+
+            yield return handle;
+
+            if (typeof(GameObject).IsAssignableFrom(typeof(T))) {
+                callback?.Invoke(handle.Result as T);
+                yield break;
+            }
+
+            callback?.Invoke(handle.Result.GetComponent<T>());
         }
 
         /**
@@ -152,7 +192,9 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
          * <param name="key">Key for Sprite name</param>
          */
         public static AssetRequest<Sprite> LoadSpriteAsync(this DBEntry dbEntry, string key) {
-            return dbEntry.LoadAsync<Sprite>(key);
+            var assetName = $"{dbEntry.name}@{key}[{dbEntry.name}@{key}]";
+            return LoadAsync<Sprite>(AddressableUtils.MakeFromAddress(assetName));
+            // return dbEntry.LoadAsync<Sprite>(key);
         }
 
         /**
