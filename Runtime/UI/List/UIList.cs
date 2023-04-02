@@ -6,9 +6,7 @@ using System.Linq;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.TypeReferences;
 using c1tr00z.AssistLib.Utils;
-using UnityEditorInternal.VersionControl;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 namespace c1tr00z.AssistLib.GameUI {
     public class UIList : MonoBehaviour {

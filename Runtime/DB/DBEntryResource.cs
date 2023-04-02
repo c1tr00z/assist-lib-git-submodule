@@ -11,7 +11,7 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
 
         #region Serialized Fields
 
-        [SerializeField] private DBEntry _dbEntry;
+        [SerializeField] private DBEntryReference _dbEntryRef;
 
         [SerializeField] private string _key;
 
@@ -19,7 +19,7 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
 
         #region Accessors
 
-        public DBEntry parent => _dbEntry;
+        public DBEntry parent => _dbEntryRef.GetDBEntry<DBEntry>();
 
         public string key => _key;
 
@@ -28,7 +28,7 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
         #region Class Implementation
 
         public void SetParent(DBEntry newParent, string newKey) {
-            _dbEntry = newParent;
+            _dbEntryRef.dbEntryName = newParent != null ? newParent.name : null;
             _key = newKey;
         }
 

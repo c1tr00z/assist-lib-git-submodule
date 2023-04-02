@@ -97,7 +97,7 @@ namespace c1tr00z.AssistLib.SceneManagement {
                 sceneLoaded?.Invoke(currentSceneItem);
             };
             sceneStartedToLoad?.Invoke(newScene);
-            SceneManager.LoadSceneAsync(newScene.name);
+            _sceneLoadOperation = SceneManager.LoadSceneAsync(newScene.name);
         }
 
         #endregion

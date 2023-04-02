@@ -261,6 +261,10 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             return dbEntry;
         }
 
+        public static T GetDBEntry<T>(this DBEntryReference dbEntryRef) where T : DBEntry {
+            return DB.Get<T>(dbEntryRef.dbEntryName);
+        }
+
         #endregion
     }
 }
