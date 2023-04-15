@@ -60,6 +60,10 @@ namespace c1tr00z.AssistLib.AppModules {
             _submodules.Add(moduleType, submodule);
         }
 
+        public T Get<T>() where T : SubmoduleBase {
+            return _submodules.Values.OfType<T>().FirstOrDefault();
+        }
+
         #endregion
     }
 }
