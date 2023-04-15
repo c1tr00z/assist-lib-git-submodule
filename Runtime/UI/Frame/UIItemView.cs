@@ -14,8 +14,8 @@ namespace c1tr00z.AssistLib.GameUI {
         #region UIView Implementation
 
         protected override void OnShow(params object[] args) {
-            base.OnShow(args);
             item = args.OfType<T>().FirstOrDefault();
+            base.OnShow(args);
         }
 
         #endregion
