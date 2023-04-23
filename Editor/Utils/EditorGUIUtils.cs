@@ -1,4 +1,5 @@
 ﻿using System;
+using AssistLib.Utils.Editor;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -89,6 +90,14 @@ namespace c1tr00z.AssistLib.Utils {
             
             Debug.LogError($"No editor fields for type {type}");
             return null;
+        }
+        
+        public static void PingObject(this Object obj) {
+            EditorGUIUtility.PingObject(obj);
+        }
+        
+        public static void PingObjectByName(string name) {
+            PingObject(ObjectEditorUtils.LoadByName<Object>(name));
         }
 
         #endregion

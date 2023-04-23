@@ -11,6 +11,7 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
 
         #region Serialized Fields
 
+        [DBEntryType(typeof(DBEntry))]
         [SerializeField] private DBEntryReference _dbEntryRef;
 
         [SerializeField] private string _key;
