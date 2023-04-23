@@ -44,6 +44,7 @@ namespace c1tr00z.AssistLib.AppModules {
             var moduleType = module.GetType();
             if (_submodules.ContainsKey(moduleType)) {
                 _submodules[moduleType].Init(module);
+                return;
             }
             if (!_submodulesTypes.ContainsKey(moduleType)) {
                 return;
