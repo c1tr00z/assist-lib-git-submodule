@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using c1tr00z.AssistLib.PropertyReferences;
+using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
@@ -9,7 +10,8 @@ namespace c1tr00z.AssistLib.GameUI {
         #region Serialized Fields
 
         [SerializeField]
-        private UIFrameDBEntry _frameDBEntry;
+        [DBEntryType(typeof(UIFrameDBEntry))]
+        private DBEntryReference _frameDBEntryRef;
 
         [SerializeField]
         private bool _showOnStart = false;
@@ -34,14 +36,16 @@ namespace c1tr00z.AssistLib.GameUI {
         #region Class Implementation
 
         public void Show() {
-            if (_frameDBEntry.IsNull()) {
+            if (!_frameDBEntryRef.IsValid()) {
                 return;
             }
+
+            var frameDBEntry = _frameDBEntryRef.GetDBEntry<UIFrameDBEntry>();
 
             var args = _argsSources == null
                 ? new object[0]
                 : _argsSources.SelectNotNull(s => s.Get<object>()).ToArray();
-            _frameDBEntry.Show(args);
+            frameDBEntry.Show(args);
         }
 
         #endregion

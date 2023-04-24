@@ -265,6 +265,10 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             return DB.Get<T>(dbEntryRef.dbEntryName);
         }
 
+        public static bool IsValid(this DBEntryReference dbEntryRef) {
+            return !dbEntryRef.dbEntryName.IsNullOrEmpty();
+        }
+
         #endregion
     }
 }
