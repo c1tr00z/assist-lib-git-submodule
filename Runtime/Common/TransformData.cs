@@ -43,6 +43,14 @@ namespace c1tr00z.AssistLib.Common {
             };
         }
 
+        public static TransformData MakeFromTransform(Transform transform) {
+            return new TransformData {
+                position = transform.position,
+                rotation = transform.rotation,
+                scale = transform.localScale
+            };
+        }
+
         #endregion
     }
 }
