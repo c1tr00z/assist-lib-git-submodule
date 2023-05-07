@@ -122,18 +122,47 @@ namespace c1tr00z.AssistLib.EditorTools {
             EditorGUI.indentLevel++;
             toRemove = new List<EditorTool>();
             foreach (var tool in controller.tools) {
-                DrawTool(tool, out bool remove);
+                // DrawTool(tool, out bool remove);
+                DrawToolGUI(tool, out bool remove);
                 if (remove) {
                     toRemove.Add(tool);
                 }
             }
             EditorGUI.indentLevel--;
         }
-
-        private void DrawTool(EditorTool tool, out bool remove) {
-            if (DrawTitle(tool, out remove)) {
+        
+        private void DrawToolGUI(EditorTool tool, out bool markedToRemove) {
+            markedToRemove = false;
+            GUILayout.Space(EditorGUI.indentLevel);
+            EditorGUILayout.BeginVertical(EditorToolUtils.editorToolStyle);
+            EditorGUILayout.BeginHorizontal();
+            var isShow = EditorGUILayout.BeginFoldoutHeaderGroup(tool.drawToggle, tool.title);
+            if (isShow != tool.drawToggle) {
+                tool.drawToggle = isShow;
+                if (tool.drawToggle) {
+                    // tool.OnToolEnable();
+                } else {
+                    // tool.OnToolDisable();
+                }
+            }
+            if (EditorGUIUtils.ConsoleButton()) {
+                EditorToolsController.OpenToolCode(tool);
+            }
+            if (GUILayout.Button("X", GUILayout.Width(24))) {
+                markedToRemove = true;
+            }
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndFoldoutHeaderGroup();
+            EditorGUIUtils.BeginIndentedBox();
+            if (tool.drawToggle) {
                 tool.DrawInterface();
             }
+            EditorGUIUtils.EndIndentedBox();
+            EditorGUILayout.EndVertical();
+            
+            //Hotfix
+            EditorGUIUtils.BalanceIndentLevel();
+            GUI.enabled = true;
         }
         
         private bool DrawTitle(EditorTool tool, out bool remove) {

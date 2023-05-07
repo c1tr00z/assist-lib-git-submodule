@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.Editor;
+using UnityEditor;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.EditorTools {
@@ -134,6 +136,11 @@ namespace c1tr00z.AssistLib.EditorTools {
             }
 
             toolsToRemove.ForEach(RemoveTool);
+        }
+        
+        public static void OpenToolCode(EditorTool editorTool) {
+            var codeAsset = AssetsUtilsEditor.FindAssetByName<TextAsset>($"{editorTool.GetType().Name}");
+            AssetDatabase.OpenAsset(codeAsset);
         }
 
         #endregion

@@ -6,7 +6,7 @@ using System.Text;
 using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.GoogleSpreadsheetImporter {
+namespace c1tr00z.AssistLib.Localization.GoogleSpreadsheetImporter {
     public class GoogleSpreadsheetDocumentImpoter {
 
         #region Accessors
@@ -17,11 +17,11 @@ namespace c1tr00z.AssistLib.GoogleSpreadsheetImporter {
 
         #region Class Implementation
 
-        public static Dictionary<string, Dictionary<string, string>> Import(GoogleSpreadsheetDocumentPageDBEntry page) {
+        public static Dictionary<string, Dictionary<string, string>> Import(string docId, long pageId) {
             ServicePointManager.ServerCertificateValidationCallback += allowCertificate;
             string docFormat = "csv";
             string gDocsDownloadURL = "http://spreadsheets.google.com/feeds/download/spreadsheets/Export?key={0}&gid={1}&exportFormat={2}";
-            string downloadUrl = string.Format(gDocsDownloadURL, page.document.documentId, page.pageId, docFormat);
+            string downloadUrl = string.Format(gDocsDownloadURL, docId, pageId, docFormat);
 
             Debug.Log(downloadUrl);
 

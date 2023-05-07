@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using c1tr00z.AssistLib.Json;
+using c1tr00z.AssistLib.Utils;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,13 +10,32 @@ namespace c1tr00z.AssistLib.EditorTools {
 
         #region Private Fields
 
-        private string _toolLabel = "Empty...";
+        private string _toolLabel;
 
         #endregion
 
         #region JSON Fields
 
         [JsonSerializableField] public bool drawToggle = true;
+
+        #endregion
+
+        #region Accessors
+
+        public string title {
+            get {
+                if (_toolLabel.IsNullOrEmpty()) {
+                    var editorToolName = (EditorToolName)Attribute.GetCustomAttribute(GetType(), typeof(EditorToolName));
+                    if (editorToolName != null) {
+                        _toolLabel = editorToolName.toolName;
+                    } else {
+                        _toolLabel = "Empty...";
+                    }
+                }
+
+                return _toolLabel;
+            }
+        }
 
         #endregion
 
