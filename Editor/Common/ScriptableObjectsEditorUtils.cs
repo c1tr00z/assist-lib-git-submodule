@@ -25,7 +25,7 @@ namespace c1tr00z.AssistLib.Common {
 
             string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath($"{path}/{name}.asset");
 
-            Debug.LogError($"{path}/{name} =  {assetPathAndName}");
+            Debug.Log($"{path}/{name} =  {assetPathAndName}");
             AssetDatabase.CreateAsset(item, assetPathAndName);
 
             AssetDatabase.SaveAssets();
