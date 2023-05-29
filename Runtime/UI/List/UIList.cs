@@ -132,6 +132,10 @@ namespace c1tr00z.AssistLib.GameUI {
                     } else {
                         listItem = CreateListItem(item.GetType());
                     }
+
+                    if (listItem == null) {
+                        return;
+                    }
                     
                     listItem.UpdateItem(item);
                     listItem.transform.SetSiblingIndex(order);
