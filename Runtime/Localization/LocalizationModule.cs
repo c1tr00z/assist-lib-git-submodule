@@ -44,8 +44,8 @@ namespace c1tr00z.AssistLib.Localization {
 
         private Dictionary<LanguageItem, Dictionary<string, string>> _translations =
             new Dictionary<LanguageItem, Dictionary<string, string>>();
-        
-        private SystemLanguage _currentSystemLanguage = Application.systemLanguage;
+
+        private SystemLanguage _currentSystemLanguage;
         
         private LanguageItem _defaultLanguage;
 
@@ -62,6 +62,14 @@ namespace c1tr00z.AssistLib.Localization {
         public LanguageItem currentLanguage { get; private set; }
 
         private bool isMultipleTranslationsSupported => settingsDBEntry.supportMultipleTranslations;
+
+        #endregion
+
+        #region Unity Events
+
+        private void Awake() {
+            _currentSystemLanguage = Application.systemLanguage;
+        }
 
         #endregion
 
