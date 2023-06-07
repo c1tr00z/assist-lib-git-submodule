@@ -68,6 +68,18 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             return request;
         }
 
+        public static AssetRequest<T> InstantiateAsync<T>(this AddressableReference reference) where T : Object {
+            var request = new AssetRequest<T>();
+
+            void onFinished(T cloned) {
+                request.AssetLoaded(cloned);
+            }
+
+            CoroutineStarter.RequestCoroutine(C_InstantiateAsync<T>(reference, onFinished));
+            
+            return request;
+        }
+
         /**
          * <summary>Loads any UnityObjects for DBEntry. Object should be in same folder as DBEntry and have name X@Y
          * where X is DBEntry name and Y is any desirable key (for example Player@Icon or Hammer@Model</summary>
@@ -109,7 +121,7 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
         }
 
         public static void InstantiateAsync<T>(this DBEntry dbEntry, string key, Action<T> callback) where T : Object {
-            CoroutineStarter.RequestCoroutine(C_InstantiateAsync(dbEntry, key, callback));
+            CoroutineStarter.RequestCoroutine(C_InstantiateAsync(AddressableUtils.MakeFromAddress($"{dbEntry.name}@{key}"), callback));
         }
         
         public static void InstantiatePrefabAsync<T>(this DBEntry dbEntry, Action<T> callback) where T : Object {
@@ -121,8 +133,8 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             dbEntry.InstantiateAsync<T>("Prefab", instantiated => assetRequest.AssetLoaded(instantiated));
             return assetRequest;
         }
-
-        private static IEnumerator C_InstantiateAsync<T>(DBEntry dbEntry, string key, Action<T> callback) where T : Object {
+        
+        private static IEnumerator C_InstantiateAsync<T>(AddressableReference reference, Action<T> callback) where T : Object {
             var wait = true;
             IResourceLocation location = default;
             void locationCallback(IResourceLocation foundLocation) {
@@ -130,7 +142,7 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
                 wait = false;
             };
             
-            AddressableUtils.MakeFromAddress($"{dbEntry.name}@{key}").LoadIResourceLocation(locationCallback);
+            reference.LoadIResourceLocation(locationCallback);
 
             while (wait) {
                 yield return null;

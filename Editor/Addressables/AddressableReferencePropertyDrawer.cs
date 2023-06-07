@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using c1tr00z.AssistLib.Utils;
 using UnityEditor;
@@ -8,6 +7,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace c1tr00z.AssistLib.Addressables {
+    [CustomPropertyDrawer(typeof(AddressableTypeAttribute))]
     public class AddressableReferencePropertyDrawer : PropertyDrawer {
 
         #region Readonly Fields
@@ -38,7 +38,7 @@ namespace c1tr00z.AssistLib.Addressables {
             position = EditorGUI.PrefixLabel(position, label);
 
             var guidProperty = property.FindPropertyRelative(PROPERTY_GUID);
-            var addressProperty = property.FindPropertyRelative(PROPERTY_GUID);
+            var addressProperty = property.FindPropertyRelative(PROPERTY_ADDRESS);
 
             var addressableAttribute = attribute as AddressableTypeAttribute;
 
