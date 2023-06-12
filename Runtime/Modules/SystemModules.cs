@@ -40,6 +40,8 @@ namespace c1tr00z.AssistLib.AppModules {
         private IEnumerator C_InitModules(CoroutineRequest request) {
             var dbEntries = DB.GetAll<SystemModuleDBEntry>();
             
+            dbEntries.Sort(e => e.priority);
+            
             foreach (var dbEntry in dbEntries) {
                 Debug.Log($"[MODULES] Initialize {dbEntry.name}");
 
