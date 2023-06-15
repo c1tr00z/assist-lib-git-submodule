@@ -14,7 +14,7 @@ namespace c1tr00z.AssistLib.GameUI {
 
         private RectTransform _rectTransform;
 
-        private DBEntryResource _dbEntryResource;
+        private UIFrameDBEntry _dbEntry;
 
         #endregion
 
@@ -26,7 +26,7 @@ namespace c1tr00z.AssistLib.GameUI {
 
         public bool isTopFrame => true;// Modules.Get<UI>().IsTopFrameInStack(this);
 
-        public UIFrameDBEntry dbEntry => this.GetDBEntry<UIFrameDBEntry>(ref _dbEntryResource);
+        public UIFrameDBEntry dbEntry => this.GetDBEntry(ref _dbEntry);
 
         #endregion
 
