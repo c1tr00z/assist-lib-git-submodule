@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Linq;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.Utils {
@@ -186,6 +187,15 @@ namespace c1tr00z.AssistLib.Utils {
 
         public static bool Approximately(Vector3 a, Vector3 b, float threshold) {
             return (b - a).magnitude <= threshold;
+        }
+
+        public static Vector3 Average(params Vector3[] args) {
+            var sum = Vector3.zero;
+            foreach (var v in args) {
+                sum += v;
+            }
+
+            return sum / args.Length;
         }
 
         #endregion

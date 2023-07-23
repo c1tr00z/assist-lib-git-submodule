@@ -25,6 +25,14 @@ namespace c1tr00z.AssistLib.Common {
 
         #endregion
 
+        #region Object Implementation
+
+        public override string ToString() {
+            return $"P:{position}, R:{rotation}, S:{scale}";
+        }
+
+        #endregion
+
         #region Class Implementation
 
         public static TransformData MakeFromPosition(Vector3 position) {
