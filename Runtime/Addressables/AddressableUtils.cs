@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Linq;
 using c1tr00z.AssistLib.Common;
-using c1tr00z.AssistLib.Utils;
-using UnityEngine;
 using UnityEngine.ResourceManagement.ResourceLocations;
 
 namespace c1tr00z.AssistLib.Addressables {
@@ -31,6 +29,14 @@ namespace c1tr00z.AssistLib.Addressables {
             return new AddressableReference {
                 address = address
             };
+        }
+
+        public static bool TryGetLoadedAsset<T>(this AddressableReference reference, out T asset) {
+            return ResourceManager.instance.TryGet(reference, out asset);
+        }
+
+        public static void SaveLoadedAsset(this AddressableReference reference, UnityEngine.Object asset) {
+            ResourceManager.instance.SetAsset(reference, asset);
         }
 
         #endregion

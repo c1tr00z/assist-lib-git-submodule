@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace c1tr00z.AssistLib.DataModels {
     public class ValueReceiverImage : ValueReceiverBase {
+        
         #region Serialized Fields
 
         [ReferenceType(typeof(Sprite))]

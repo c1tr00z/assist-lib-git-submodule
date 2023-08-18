@@ -45,22 +45,35 @@ namespace c1tr00z.AssistLib.DataModels {
 
             _hashCode = Guid.NewGuid().ToString();
             _currentDBEntry = newDBEntry;
-            StartCoroutine(C_Load(_currentDBEntry));
+            if (!enabled || !gameObject.activeSelf || !gameObject.activeInHierarchy) {
+                return;
+            }
+            
+            Load();
         }
 
         #endregion
 
         #region Class Implementation
 
+        private void Load() {
+            if (_currentDBEntry.TryDownloadedAsset(key, out Sprite sprite)) {
+                image.sprite = sprite;
+            }
+            StartCoroutine(C_Load(_currentDBEntry));
+        }
+
         private IEnumerator C_Load(DBEntry dbEntry) {
             var request = dbEntry.LoadSpriteAsync(key);
             
-            yield return request;
+            if (!request.isDone) {
+                yield return request;
+            }
             
             if (dbEntry != _currentDBEntry) {
                 yield break; 
             }
-
+            
             image.sprite = request.asset;
         }
 

@@ -57,13 +57,19 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
 
             yield return handle;
             
+            reference.SaveLoadedAsset(handle.Result);
             request.AssetLoaded(handle.Result);
         }
         
         public static AssetRequest<T> LoadAsync<T>(this AddressableReference reference) where T : Object {
             var request = new AssetRequest<T>();
+
+            if (reference.TryGetLoadedAsset(out T exist)) {
+                request.AssetLoaded(exist);
+            } else {
+                CoroutineStarter.RequestCoroutine(C_LoadAsync(reference, request));
+            }
             
-            CoroutineStarter.RequestCoroutine(C_LoadAsync(reference, request));
 
             return request;
         }
@@ -275,6 +281,11 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
 
         public static bool IsValid(this DBEntryReference dbEntryRef) {
             return !dbEntryRef.dbEntryName.IsNullOrEmpty();
+        }
+
+        public static bool TryDownloadedAsset<T>(this DBEntry dbEntry, string key, out T asset) where T : Object {
+            var reference = AddressableUtils.MakeFromAddress($"{dbEntry.name}@{key}");
+            return reference.TryGetLoadedAsset(out asset);
         }
 
         #endregion

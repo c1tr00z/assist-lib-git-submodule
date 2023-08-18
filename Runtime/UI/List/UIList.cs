@@ -90,7 +90,9 @@ namespace c1tr00z.AssistLib.GameUI {
                 return;
             }
 
-            StartCoroutine(C_UpdateList());
+            if (enabled) {
+                StartCoroutine(C_UpdateList());
+            }
         }
 
         private IEnumerator C_UpdateList() {
