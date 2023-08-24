@@ -9,6 +9,10 @@ namespace c1tr00z.AssistLib.GameUI {
             Modules.Get<UI>().Show(frameDBEntry, args);
         }
 
+        public static void Hide(this UIFrameDBEntry frameDBEntry) {
+            Modules.Get<UI>().Hide(frameDBEntry);
+        }
+
         #endregion
     }
 }

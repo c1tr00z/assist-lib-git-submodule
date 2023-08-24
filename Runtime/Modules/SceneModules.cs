@@ -30,7 +30,9 @@ namespace c1tr00z.AssistLib.AppModules {
         #endregion
         
         #region SceneModulesBase Implementation
-        
+
+        public override int modulesCount => modulesCollection.count;
+
         public override List<IModule> GetModules() {
             return _modules;
         }

@@ -63,6 +63,11 @@ namespace c1tr00z.AssistLib.GameUI {
             requiredLayer.Show(newFrame, args);
         }
 
+        public void Hide(UIFrameDBEntry frame) {
+            var requiredLayer = GetOrCreateLayer(frame.layer);
+            requiredLayer.Hide(frame);
+        }
+
         private UILayer GetOrCreateLayer(UILayerDBEntry layerDBEntry) {
             if (layerDBEntry.IsNull()) {
                 return _defaultLayer;
@@ -93,8 +98,8 @@ namespace c1tr00z.AssistLib.GameUI {
         //     return layers.Where(l => l.currentFrames.Count > 0).Count() == 0;
         // }
         
-        public void CloseAllFrames() {
-            _layers.Values.ToList().ForEach(l => l.CloseCurrent());
+        public void HideAllFrames() {
+            _layers.Values.ToList().ForEach(l => l.HideCurrent());
         }
 
         #endregion

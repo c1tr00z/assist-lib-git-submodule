@@ -6,11 +6,13 @@ namespace c1tr00z.AssistLib.AppModules {
 
         #region Public Fields
         
-        public List<SceneModuleDBEntry> modules = new List<SceneModuleDBEntry>();
+        public List<SceneModuleDBEntry> modules = new();
 
         #endregion
 
         #region ISceneModuleCollection Implementation
+
+        public int count => modules.Count;
 
         public List<SceneModuleDBEntry> GetModuleDBEntries() {
             return modules;

@@ -101,7 +101,7 @@ namespace c1tr00z.AssistLib.GameUI {
             StartCoroutine(nameof(C_Show));
         }
 
-        public void Close(UIFrameDBEntry frameDBEntry) {
+        public void Hide(UIFrameDBEntry frameDBEntry) {
             if (currentFrameDBEntry != frameDBEntry) {
                 return;
             }
@@ -154,8 +154,8 @@ namespace c1tr00z.AssistLib.GameUI {
             _isShowingCoroutineOn = false;
         }
 
-        public void CloseCurrent() {
-            Close(currentFrameDBEntry);
+        public void HideCurrent() {
+            Hide(currentFrameDBEntry);
         }
 
         protected UIFrame GetFrameFromPool(UIFrameDBEntry frameDBEntry) {

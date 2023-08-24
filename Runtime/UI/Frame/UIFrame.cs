@@ -38,7 +38,7 @@ namespace c1tr00z.AssistLib.GameUI {
         }
 
         public void Close() {
-            layer.Close(GetComponent<DBEntryResource>().parent as UIFrameDBEntry);
+            layer.Hide(GetComponent<DBEntryResource>().parent as UIFrameDBEntry);
         }
 
         #endregion

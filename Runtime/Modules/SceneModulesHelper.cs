@@ -42,6 +42,7 @@ namespace c1tr00z.AssistLib.AppModules {
             var notInitialized = sceneModules.Where(ms => !ms.isInitialized).ToList();
 
             if (notInitialized.Count == 0) {
+                SceneModulesBase.OnSceneModulesInitialized();
                 return;
             }
 
@@ -59,6 +60,8 @@ namespace c1tr00z.AssistLib.AppModules {
             foreach (var modulesContainer in specific) {
                 yield return modulesContainer.InitModules();
             }
+            
+            SceneModulesBase.OnSceneModulesInitialized();
         }
 
         #endregion

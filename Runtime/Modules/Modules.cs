@@ -11,7 +11,7 @@ namespace c1tr00z.AssistLib.AppModules {
 
         #region Events
 
-        public static event Action<Module> ModuleInitialized; 
+        public static event Action<Module> ModuleInitialized;
 
         #endregion
 

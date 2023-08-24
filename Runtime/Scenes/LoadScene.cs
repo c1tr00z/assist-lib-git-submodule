@@ -1,5 +1,6 @@
 using System;
 using c1tr00z.AssistLib.AppModules;
+using c1tr00z.AssistLib.ResourcesManagement;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.SceneManagement {
@@ -7,7 +8,8 @@ namespace c1tr00z.AssistLib.SceneManagement {
 
         #region Serialized Fields
 
-        [SerializeField] private SceneItem _sceneItem;
+        [DBEntryType(typeof(SceneItem))]
+        [SerializeField] private DBEntryReference _sceneItemRef;
 
         [SerializeField] private bool _loadOnStart;
 
@@ -28,7 +30,7 @@ namespace c1tr00z.AssistLib.SceneManagement {
         #region Class Implementation
 
         public void Load() {
-            Modules.Get<Scenes>().LoadSceneAsync(_sceneItem, null, _force);
+            Modules.Get<Scenes>().LoadSceneAsync(_sceneItemRef.GetDBEntry<SceneItem>(), null, _force);
         }
 
         #endregion

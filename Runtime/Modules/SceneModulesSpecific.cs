@@ -14,6 +14,8 @@ namespace c1tr00z.AssistLib.AppModules {
 
         #region SceneModulesBase Implementation
 
+        public override int modulesCount => _modules.Count;
+
         public override List<IModule> GetModules() {
             return _modules.OfType<IModule>().ToList();
         }

@@ -10,6 +10,12 @@ using UnityEngine.Events;
 namespace c1tr00z.AssistLib.AppModules {
     public abstract class SceneModulesBase : Modules {
 
+        #region Events
+
+        public static event Action SceneModulesInitialized;
+
+        #endregion
+
         #region Private Fields
 
         private int _loadModuleIndex = 0;
@@ -19,6 +25,12 @@ namespace c1tr00z.AssistLib.AppModules {
         #region Serialized Fields
 
         [SerializeField] private UnityEvent onInitialized;
+
+        #endregion
+
+        #region Accessors
+        
+        public abstract int modulesCount { get; }
 
         #endregion
 
@@ -84,6 +96,10 @@ namespace c1tr00z.AssistLib.AppModules {
         protected abstract AssetRequest<Module> LoadSceneModule(int index);
 
         protected abstract void OnSceneModuleInitialized(Module module);
+
+        public static void OnSceneModulesInitialized() {
+            SceneModulesInitialized?.Invoke();
+        }
 
         #endregion
 
