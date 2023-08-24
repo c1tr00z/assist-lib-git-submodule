@@ -1,9 +1,6 @@
 using System.Collections;
-using System.Linq;
 using c1tr00z.AssistLib.AppModules;
 using c1tr00z.AssistLib.SceneManagement;
-using Codice.Client.BaseCommands;
-using UnityEngine;
 
 namespace c1tr00z.AssistLib.LoadingScreen {
     public class LoadingScreenSubmodule : Submodule<LoadingScreenController> {

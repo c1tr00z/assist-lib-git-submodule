@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Linq;
 using c1tr00z.AssistLib.AppModules;
 using c1tr00z.AssistLib.GameUI;
 using c1tr00z.AssistLib.ResourcesManagement;

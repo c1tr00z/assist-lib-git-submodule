@@ -1,5 +1,4 @@
 using c1tr00z.AssistLib.GameUI;
-using c1tr00z.AssistLib.SceneManagement;
 
 namespace c1tr00z.AssistLib.LoadingScreen {
     public class UIViewLoadingScreen : UIView {
