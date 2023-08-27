@@ -45,6 +45,10 @@ namespace c1tr00z.AssistLib.Utils {
             return new Vector3(Random.Range(minValue.x, maxValue.x), Random.Range(minValue.y, maxValue.y),
                 Random.Range(minValue.z, maxValue.z));
         }
+        
+        public static Vector2 RandomV2(Vector2 minValue, Vector2 maxValue) {
+            return new Vector2(Random.Range(minValue.x, maxValue.x), Random.Range(minValue.y, maxValue.y));
+        }
 
         public static Vector3 ToVector3XZ(this Vector2 v) {
             return new Vector3(v.x, 0, v.y);
