@@ -50,6 +50,7 @@ namespace c1tr00z.AssistLib.AppModules {
                 
                 dbEntry.InstantiatePrefabAsync<Module>(instantiatedPrefab => {
                     module = instantiatedPrefab;
+                    module.name = dbEntry.name;
                     module.transform.Reset(transform);
                     wait = false;
                 });
