@@ -73,7 +73,7 @@ namespace c1tr00z.AssistLib.Sprites {
 
         private void SetPrefix() {
 
-            var rigidbodyVelocity = rigidbody.velocity;
+            var rigidbodyVelocity = rigidbody.linearVelocity;
             
             var direction = _lastDirection;
 
