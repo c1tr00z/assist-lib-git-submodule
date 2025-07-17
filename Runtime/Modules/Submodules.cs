@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.Utils;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.AppModules {
@@ -30,10 +31,10 @@ namespace c1tr00z.AssistLib.AppModules {
 
         #region Module Implementation
 
-        public override void InitializeModule(CoroutineRequest request) {
+        public override UniTask InitializeModule() {
             _submodulesTypes = ReflectionUtils.GetSubclassesOf<SubmoduleBase>(false)
                 .ToUniqueDictionary(t => t.BaseType.GenericTypeArguments.FirstOrDefault(), t => t);
-            base.InitializeModule(request);
+            return base.InitializeModule();
         }
 
         #endregion

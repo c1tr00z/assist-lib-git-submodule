@@ -20,6 +20,10 @@ namespace c1tr00z.AssistLib.ResourcesManagement.Editor {
 
         public override void DrawInterface() {
             autoCollect = EditorGUILayout.Toggle("Use autocollect", autoCollect);
+
+            if (Button("Collect DB entries")) {
+                DBEntryEditorActions.CollectItems();
+            }
         }
 
         #endregion

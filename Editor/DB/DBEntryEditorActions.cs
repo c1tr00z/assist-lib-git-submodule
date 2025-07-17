@@ -34,9 +34,14 @@ namespace c1tr00z.AssistLib.ResourcesManagement.Editor {
 
         [MenuItem("Assist/Collect items")]
         public static void CollectItems() {
+            EditorUtility.DisplayProgressBar("Collecting DB entries", "Initializing", 0);
+            
             var itemsObject = Resources.Load<DBCollection>("DB");
             var dirs = new List<string>();
             var items = Resources.LoadAll<DBEntry>("");
+            
+            EditorUtility.DisplayProgressBar("Collecting DB entries", "Searching for db entries", 0);
+            
             var newItemsPaths = items.Select(i => {
                 Debug.Log($"CollectItems: {i}");
                 var path = AssetDatabase.GetAssetPath(i).Replace(".asset", "");
@@ -49,6 +54,8 @@ namespace c1tr00z.AssistLib.ResourcesManagement.Editor {
             // if (itemsObject.paths.Length != newItemsPaths.Length) {
             itemsObject.paths = newItemsPaths;
             // }
+            
+            EditorUtility.DisplayProgressBar("Collecting DB entries", $"Found {newItemsPaths.Length} items", 0);
 
             var addressableSettings = DBEntryEditorUtils.addressableSettings;
 
@@ -62,7 +69,13 @@ namespace c1tr00z.AssistLib.ResourcesManagement.Editor {
                     ? dbEntrySettings.settings.ToDictionary(s => s.dbEntryType.GetRefType(), s => s.groupRef.groupName)
                     : new Dictionary<Type, string>();
 
+            var progress = 0f;
+            var progressStep = 1f / items.Length;
+            EditorUtility.DisplayProgressBar("Collecting DB entries", "...", progress);
+
             foreach (DBEntry i in items) {
+                progress += progressStep;
+                EditorUtility.DisplayProgressBar("Collecting DB entries", i.name, progress);
 
                 var itemType = i.GetType();
                 
@@ -78,19 +91,40 @@ namespace c1tr00z.AssistLib.ResourcesManagement.Editor {
 #if UNITY_2018_3_OR_NEWER
 
                     var prefabGUID = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(itemPrefab));
-                    var group = !groupName.IsNullOrEmpty()
+
+                    var defaultGroup = !groupName.IsNullOrEmpty()
                         ? addressableSettings.FindGroup(groupName)
                         : addressableSettings.DefaultGroup;
-                    if (group == null) {
-                        group = addressableSettings.CreateGroup(groupName, false, false, false,
+
+                    if (defaultGroup == null) {
+                        defaultGroup = addressableSettings.CreateGroup(groupName, false, false, false,
                             new List<AddressableAssetGroupSchema>());
                     }
+
                     var entry = addressableSettings.FindAssetEntry(prefabGUID);
                     if (entry == null) {
-                        entry = addressableSettings.CreateOrMoveEntry(prefabGUID, group);
-                    } else if (entry.parentGroup != group) {
-                        addressableSettings.MoveEntry(entry, group, false, false);
+                        entry = addressableSettings.CreateOrMoveEntry(prefabGUID, defaultGroup);
+                    } else {
+                        var group = entry.parentGroup;
+
+                        if (group != defaultGroup && defaultGroup != addressableSettings.DefaultGroup) {
+                            addressableSettings.MoveEntry(entry, defaultGroup, false, false);
+                        }
                     }
+
+                    // var group = !groupName.IsNullOrEmpty()
+                    //     ? addressableSettings.FindGroup(groupName)
+                    //     : addressableSettings.DefaultGroup;
+                    // if (group == null) {
+                    //     group = addressableSettings.CreateGroup(groupName, false, false, false,
+                    //         new List<AddressableAssetGroupSchema>());
+                    // }
+                    // var entry = addressableSettings.FindAssetEntry(prefabGUID);
+                    // if (entry == null) {
+                    //     entry = addressableSettings.CreateOrMoveEntry(prefabGUID, group);
+                    // } else if (entry.parentGroup != group) {
+                    //     addressableSettings.MoveEntry(entry, group, false, false);
+                    // }
 
                     if (entry.ReadOnly) {
                         entry.ReadOnly = false;
@@ -133,8 +167,11 @@ namespace c1tr00z.AssistLib.ResourcesManagement.Editor {
                 }
 
             }
+            EditorUtility.DisplayProgressBar("Collecting DB entries", "Finishing...", 1);
 
             EditorUtility.SetDirty(itemsObject);
+            
+            EditorUtility.ClearProgressBar();
         }
 
         public static void GetDirectories(string startPath, string path, List<string> directories) {

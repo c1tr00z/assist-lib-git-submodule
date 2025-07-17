@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -45,44 +45,32 @@ namespace c1tr00z.AssistLib.AppModules {
 
         #region Class Implementation
 
-        public override CoroutineRequest InitModules() {
+        public override async UniTask InitModules() {
             if (amIAddedAlready) {
-                return CoroutineRequest.MakeFinishedRequest();
+                return;
             }
             
             AddMe();
             
             _loadModuleIndex = 0;
-            
-            var request = new CoroutineRequest();
 
-            StartCoroutine(C_InitializeModules(request));
-            
-            return request;
+            await InitializeModules();
         }
 
-        private IEnumerator C_InitializeModules(CoroutineRequest request) {
+        private async UniTask InitializeModules() {
 
             var inProgress = true;
 
             while (inProgress) {
-                var moduleLoadRequest = LoadSceneModule(_loadModuleIndex);
+                var module = await LoadSceneModule(_loadModuleIndex);
                 _loadModuleIndex++;
-
-                yield return moduleLoadRequest;
-
-                var module = moduleLoadRequest.asset;
 
                 if (module == null) {
                     inProgress = false;
                     continue;
                 }
-
-                var moduleRequest = new CoroutineRequest();
             
-                module.InitializeModule(moduleRequest);
-                
-                yield return moduleRequest;
+                await module.InitializeModule();
                 
                 OnModuleInitialized(module);
                 
@@ -90,10 +78,9 @@ namespace c1tr00z.AssistLib.AppModules {
             }
             
             OnInitialized();
-            request.Finish();
         }
 
-        protected abstract AssetRequest<Module> LoadSceneModule(int index);
+        protected abstract UniTask<Module> LoadSceneModule(int index);
 
         protected abstract void OnSceneModuleInitialized(Module module);
 

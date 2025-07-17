@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using c1tr00z.AssistLib.ResourcesManagement;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.AppModules {
@@ -20,13 +20,12 @@ namespace c1tr00z.AssistLib.AppModules {
             return _modules.OfType<IModule>().ToList();
         }
 
-        protected override AssetRequest<Module> LoadSceneModule(int index) {
-            var request = new AssetRequest<Module>();
+        protected override UniTask<Module> LoadSceneModule(int index) {
             if (_modules.Count > index) {
-                request.AssetLoaded(_modules[index]);
+                return new UniTask<Module>(_modules[index]);
             }
-            request.Finish();
-            return request;
+
+            return new UniTask<Module>(null);
         }
 
         protected override void OnSceneModuleInitialized(Module module) { }

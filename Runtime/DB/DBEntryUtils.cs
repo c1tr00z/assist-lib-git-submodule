@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using c1tr00z.AssistLib.Addressables;
-using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.Utils;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using Object = UnityEngine.Object;
 
@@ -31,9 +29,13 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             return DB.GetPath(dbEntry);
         }
 
-        public static IEnumerator C_LoadAsync<T>(AddressableReference reference, AssetRequest<T> request)
+        private static async UniTask<T> LoadAsync<T>(AddressableReference reference)
             where T : Object {
-            
+
+            if (reference.TryGetLoadedAsset(out T exist)) {
+                return exist;
+            }
+
             var wait = true;
 
             IResourceLocation location = default;
@@ -45,102 +47,53 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             reference.LoadIResourceLocation(callback);
 
             while (wait) {
-                yield return null;
+                await UniTask.DelayFrame(1);
             }
-
+            
             if (location == default) {
-                request.AssetLoaded(null);
-                yield break;
+                return null;
             }
-
+            
             var handle = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<T>(location);
 
-            yield return handle;
+            await handle;
             
             reference.SaveLoadedAsset(handle.Result);
-            request.AssetLoaded(handle.Result);
-        }
-        
-        public static AssetRequest<T> LoadAsync<T>(this AddressableReference reference) where T : Object {
-            var request = new AssetRequest<T>();
 
-            if (reference.TryGetLoadedAsset(out T exist)) {
-                request.AssetLoaded(exist);
-            } else {
-                CoroutineStarter.RequestCoroutine(C_LoadAsync(reference, request));
-            }
-            
-
-            return request;
-        }
-
-        public static AssetRequest<T> InstantiateAsync<T>(this AddressableReference reference) where T : Object {
-            var request = new AssetRequest<T>();
-
-            void onFinished(T cloned) {
-                request.AssetLoaded(cloned);
-            }
-
-            CoroutineStarter.RequestCoroutine(C_InstantiateAsync<T>(reference, onFinished));
-            
-            return request;
+            return handle.Result;
         }
 
         /**
          * <summary>Loads any UnityObjects for DBEntry. Object should be in same folder as DBEntry and have name X@Y
          * where X is DBEntry name and Y is any desirable key (for example Player@Icon or Hammer@Model</summary>
          */
-        public static AssetRequest<T> LoadAsync<T>(this DBEntry dbEntry, string key) where T : Object {
+        public async static UniTask<T> LoadAsync<T>(this DBEntry dbEntry, string key) where T : Object {
+            var reference = AddressableUtils.MakeFromAddress($"{dbEntry.name}@{key}");
+            
+            var result = await LoadAsync<T>(reference);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Loads prefab associated with DBEntry. Prefab should have name X@Prefab where X is DBEntry name
+        /// </summary>
+        /// <param name="dbEntry"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static async UniTask<T> LoadPrefabAsync<T>(this DBEntry dbEntry) where T : Object{
+            return await LoadAsync<T>(dbEntry, "Prefab");
+        }
+
+        public static async UniTask<T> InstantiateAsync<T>(this DBEntry dbEntry, string key) where T : Object {
             var reference = AddressableUtils.MakeFromAddress($"{dbEntry.name}@{key}");
 
-            return LoadAsync<T>(reference);
+            var instance = await InstantiateAsync<T>(reference);
+
+            return instance;
         }
 
-        private static IEnumerator C_LoadAsync<T>(DBEntry dbEntry, string key, Action<T> callback) where T : Object {
-            var request = LoadAsync<T>(dbEntry, key);
-
-            yield return request;
-            
-            callback?.Invoke(request.asset as T);
-        }
-
-        /**
-         * <summary>Loads any UnityObjects for DBEntry. Object should be in same folder as DBEntry and have name X@Y
-         * where X is DBEntry name and Y is any desirable key (for example Player@Icon or Hammer@Model</summary>
-         */
-        public static void LoadAsync<T>(this DBEntry dbEntry, string key, Action<T> callback) where T : Object {
-            CoroutineStarter.RequestCoroutine(C_LoadAsync(dbEntry, key, callback));
-        }
-
-        /**
-         * <summary>Loads prefab associated with DBEntry. Prefab should have name X@Prefab where X is DBEntry name</summary>
-         */
-        public static AssetRequest<T> LoadPrefabAsync<T>(this DBEntry dbEntry) where T : Object {
-            return dbEntry.LoadAsync<T>("Prefab");
-        }
-
-        /**
-         * <summary>Loads prefab associated with DBEntry. Prefab should have name X@Prefab where X is DBEntry name</summary>
-         */
-        public static void LoadPrefabAsync<T>(this DBEntry dbEntry, Action<T> callback) where T : Object {
-            LoadAsync(dbEntry, "Prefab", callback);
-        }
-
-        public static void InstantiateAsync<T>(this DBEntry dbEntry, string key, Action<T> callback) where T : Object {
-            CoroutineStarter.RequestCoroutine(C_InstantiateAsync(AddressableUtils.MakeFromAddress($"{dbEntry.name}@{key}"), callback));
-        }
-        
-        public static void InstantiatePrefabAsync<T>(this DBEntry dbEntry, Action<T> callback) where T : Object {
-            dbEntry.InstantiateAsync("Prefab", callback);
-        }
-        
-        public static AssetRequest<T> InstantiatePrefabAsync<T>(this DBEntry dbEntry) where T : Object {
-            AssetRequest<T> assetRequest = new AssetRequest<T>();
-            dbEntry.InstantiateAsync<T>("Prefab", instantiated => assetRequest.AssetLoaded(instantiated));
-            return assetRequest;
-        }
-        
-        private static IEnumerator C_InstantiateAsync<T>(AddressableReference reference, Action<T> callback) where T : Object {
+        public static async UniTask<T> InstantiateAsync<T>(AddressableReference reference) where T : Object {
             var wait = true;
             IResourceLocation location = default;
             void locationCallback(IResourceLocation foundLocation) {
@@ -151,91 +104,70 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             reference.LoadIResourceLocation(locationCallback);
 
             while (wait) {
-                yield return null;
+                await UniTask.DelayFrame(1);
             }
             
-            var handle = UnityEngine.AddressableAssets.Addressables.InstantiateAsync(location);
-
-            yield return handle;
+            var handledObject = await UnityEngine.AddressableAssets.Addressables.InstantiateAsync(location);
 
             if (typeof(GameObject).IsAssignableFrom(typeof(T))) {
-                callback?.Invoke(handle.Result as T);
-                yield break;
+                return handledObject as T;
             }
 
-            callback?.Invoke(handle.Result.GetComponent<T>());
+            return handledObject.GetComponent<T>();
         }
-
-        /**
-         * <summary>Loads content of TextAsset, associated with DBEntry and with name X@Text where X is DBEntry name</summary>
-         */
-        public static AssetRequest<TextAsset> LoadTextAsync(this DBEntry dbEntry) {
+        
+        public static async UniTask<T> InstantiatePrefabAsync<T>(this DBEntry dbEntry) where T : Object {
+            var prefab = await dbEntry.InstantiateAsync<T>("Prefab");
+            return prefab;
+        }
+        
+        /// <summary>
+        /// Loads content of TextAsset, associated with DBEntry and with name X@Text where X is DBEntry name
+        /// </summary>
+        /// <param name="dbEntry"></param>
+        /// <returns></returns>
+        public static UniTask<TextAsset> LoadTextAsync(this DBEntry dbEntry) {
             return dbEntry.LoadAsync<TextAsset>("Text");
         }
 
         /**
-         * <summary>Loads content of TextAsset, associated with DBEntry and with name X@Text where X is DBEntry name</summary>
-         */
-        public static void LoadTextAsync(this DBEntry dbEntry, Action<string> callback) {
-            void OnLoad(TextAsset textAsset) {
-                if (textAsset == null) {
-                    return;
-                }
-                callback?.Invoke(textAsset.text);
-            }
-            dbEntry.LoadAsync<TextAsset>("Text", OnLoad);
-        }
-
-        /**
          * <summary>Loads SpriteRenderer associated with DBEntry and with name X@Y where X is DBEntry name and Y is key</summary>
          * <param name="dbEntry">DBEntry</param>
          * <param name="key">Key for SpriteRenderer name</param>
          */
-        public static AssetRequest<SpriteRenderer> LoadSpriteRendererAsync(this DBEntry dbEntry, string key) {
-            return dbEntry.LoadAsync<SpriteRenderer>(key);
+        // public static AssetRequest<SpriteRenderer> LoadSpriteRendererAsync(this DBEntry dbEntry, string key) {
+        //     return dbEntry.LoadAsync<SpriteRenderer>(key);
+        // }
+
+        public static async UniTask<SpriteRenderer> LoadSpriteRendererAsync(this DBEntry dbEntry, string key) {
+            var spriteRenderer = await dbEntry.LoadAsync<SpriteRenderer>(key);
+            return spriteRenderer;
         }
 
-        /**
-         * <summary>Loads SpriteRenderer associated with DBEntry and with name X@Y where X is DBEntry name and Y is key</summary>
-         * <param name="dbEntry">DBEntry</param>
-         * <param name="key">Key for SpriteRenderer name</param>
-         */
-        public static void LoadSpriteRendererAsync(this DBEntry dbEntry, string key, Action<SpriteRenderer> callback) {
-            dbEntry.LoadAsync(key, callback);
-        }
-
-        /**
-         * <summary>Loads Sprite associated with DBEntry and with name X@Y where X is DBEntry name and Y is key</summary>
-         * <param name="dbEntry">DBEntry</param>
-         * <param name="key">Key for Sprite name</param>
-         */
-        public static AssetRequest<Sprite> LoadSpriteAsync(this DBEntry dbEntry, string key) {
+        /// <summary>
+        /// * <summary>Loads Sprite associated with DBEntry and with name X@Y where X is DBEntry name and Y is key</summary>
+        /// </summary>
+        /// <param name="dbEntry">DBEntry</param>
+        /// <param name="key">Key for Sprite name</param>
+        /// <returns></returns>
+        public static async UniTask<Sprite> LoadSpriteAsync(this DBEntry dbEntry, string key) {
             var assetName = $"{dbEntry.name}@{key}[{dbEntry.name}@{key}]";
-            return LoadAsync<Sprite>(AddressableUtils.MakeFromAddress(assetName));
-            // return dbEntry.LoadAsync<Sprite>(key);
-        }
-
-        /**
-         * <summary>Loads Sprite associated with DBEntry and with name X@Y where X is DBEntry name and Y is key</summary>
-         * <param name="dbEntry">DBEntry</param>
-         * <param name="key">Key for Sprite name</param>
-         * <param name="callback">Callback</param>
-         */
-        public static void LoadSpriteAsync(this DBEntry dbEntry, string key, Action<Sprite> callback) {
-            dbEntry.LoadAsync(key, callback);
+            var sprite = await LoadAsync<Sprite>(AddressableUtils.MakeFromAddress(assetName));
+            return sprite;
         }
 
         /**
          * <summary>Loads Sprite icon associated with DBEntry and with name X@Icon where X is DBEntry name</summary>
          * <param name="item">DBEntry</param>
          */
-        public static AssetRequest<Sprite> LoadIconAsync(this DBEntry item) {
-            return item.LoadSpriteAsync("Icon");
+        public static async UniTask<Sprite> LoadIconAsync(this DBEntry item) {
+            var icon = await item.LoadSpriteAsync("Icon");
+            return icon;
         }
 
-        public static void LoadIconAsync(this DBEntry item, Action<Sprite> callback) {
-            item.LoadAsync("Icon", callback);
-        }
+        // public static void LoadIconAsync(this DBEntry item, Action<Sprite> callback) {
+        //     item.LoadAsync("Icon", callback);
+        // }
 
         /**
          * <summary>Returns cached (if possible) DBEntry by type and key</summary>
@@ -287,6 +219,7 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             var reference = AddressableUtils.MakeFromAddress($"{dbEntry.name}@{key}");
             return reference.TryGetLoadedAsset(out asset);
         }
+
 
         #endregion
     }

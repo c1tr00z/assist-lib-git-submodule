@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.Utils;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.AppModules {
@@ -31,7 +32,7 @@ namespace c1tr00z.AssistLib.AppModules {
 
         #region Class Implementation
 
-        public abstract CoroutineRequest InitModules();
+        public abstract UniTask InitModules();
 
         protected void AddMe() {
             if (amIAddedAlready) {

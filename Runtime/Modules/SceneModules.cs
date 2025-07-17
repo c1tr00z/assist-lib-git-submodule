@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using c1tr00z.AssistLib.GameUI;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.AppModules {
@@ -37,34 +38,19 @@ namespace c1tr00z.AssistLib.AppModules {
             return _modules;
         }
 
-        protected override AssetRequest<Module> LoadSceneModule(int index) {
+        protected override UniTask<Module> LoadSceneModule(int index) {
             if (!modulesCollection.Has(index)) {
-                var request = new AssetRequest<Module>();
-                request.Finish();
-                return request;
+                return new UniTask<Module>();
             }
 
             return LoadAndInstantiateModule(modulesCollection.Get(index));
         }
 
-        private AssetRequest<Module> LoadAndInstantiateModule(SceneModuleDBEntry moduleDBEntry) {
-            var request = new AssetRequest<Module>();
-
-            StartCoroutine(C_LoadAndInstantiateModule(moduleDBEntry, request));
-            
-            return request;
-        }
-
-        private IEnumerator C_LoadAndInstantiateModule(SceneModuleDBEntry moduleDBEntry, AssetRequest<Module> moduleRequest) {
-
-            var cloneRequest = moduleDBEntry.InstantiatePrefabAsync<Module>();
-
-            yield return cloneRequest;
-
-            var module = cloneRequest.asset;
+        private async UniTask<Module> LoadAndInstantiateModule(SceneModuleDBEntry moduleDBEntry) {
+            var module =  await moduleDBEntry.InstantiatePrefabAsync<Module>();
             module.name = moduleDBEntry.name;
             
-            moduleRequest.AssetLoaded(module);
+            return module;
         }
 
         protected override void OnSceneModuleInitialized(Module module) {

@@ -6,6 +6,7 @@ using System.Linq;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.TypeReferences;
 using c1tr00z.AssistLib.Utils;
+using Cysharp.Threading.Tasks;
 using UnityEngine.Events;
 
 namespace c1tr00z.AssistLib.GameUI {
@@ -91,11 +92,11 @@ namespace c1tr00z.AssistLib.GameUI {
             }
 
             if (enabled) {
-                StartCoroutine(C_UpdateList());
+                DoUpdateList();
             }
         }
 
-        private IEnumerator C_UpdateList() {
+        private async UniTask DoUpdateList() {
             _isUpdateCoroutineOn = true;
 
             while (_requestQueue.Count > 0) {
@@ -104,11 +105,8 @@ namespace c1tr00z.AssistLib.GameUI {
                 
                 if (_listItemPrefabs.Count == 0) {
                     foreach (var listItemDBEntry in _listItemDBEntries) {
-                        var listItemRequest = listItemDBEntry.InstantiatePrefabAsync<UIListItem>();
+                        var listItemInstance = await listItemDBEntry.InstantiatePrefabAsync<UIListItem>();
                         
-                        yield return listItemRequest;
-
-                        var listItemInstance = listItemRequest.asset;
                         listItemInstance.Reset(pool);
                         
                         _listItemPrefabs.Add(listItemDBEntry.typeRef.GetRefType(), listItemInstance);

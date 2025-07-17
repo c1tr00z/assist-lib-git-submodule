@@ -1,4 +1,4 @@
-using c1tr00z.AssistLib.Common;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.AppModules {
@@ -12,9 +12,9 @@ namespace c1tr00z.AssistLib.AppModules {
 
         #region Class Implementation
 
-        public virtual void InitializeModule(CoroutineRequest request) {
+        public virtual UniTask InitializeModule() {
             isInitialized = true;
-            request.Finish();
+            return UniTask.CompletedTask;
         }
 
         #endregion

@@ -4,6 +4,7 @@ using System.Linq;
 using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.AppModules {
@@ -25,19 +26,7 @@ namespace c1tr00z.AssistLib.AppModules {
             return _modules.OfType<IModule>().ToList();
         }
 
-        public override CoroutineRequest InitModules() {
-            var request = new CoroutineRequest();
-
-            StartCoroutine(C_InitModules(request));
-            
-            return request;
-        }
-
-        #endregion
-
-        #region Class Implementation
-
-        private IEnumerator C_InitModules(CoroutineRequest request) {
+        public override async UniTask InitModules() {
             var dbEntries = DB.GetAll<SystemModuleDBEntry>();
             
             dbEntries.Sort(e => e.priority);
@@ -45,25 +34,11 @@ namespace c1tr00z.AssistLib.AppModules {
             foreach (var dbEntry in dbEntries) {
                 Debug.Log($"[MODULES] Initialize {dbEntry.name}");
 
-                Module module = null;
-                var wait = true;
+                var module = await dbEntry.InstantiatePrefabAsync<Module>();
+                module.name = dbEntry.name;
+                module.transform.Reset(transform);
                 
-                dbEntry.InstantiatePrefabAsync<Module>(instantiatedPrefab => {
-                    module = instantiatedPrefab;
-                    module.name = dbEntry.name;
-                    module.transform.Reset(transform);
-                    wait = false;
-                });
-
-                while (wait) {
-                    yield return null;
-                }
-
-                var moduleRequest = new CoroutineRequest();
-                
-                module.InitializeModule(moduleRequest);
-
-                yield return moduleRequest;
+                await module.InitializeModule();
                 
                 OnModuleInitialized(module);
                     
@@ -73,7 +48,6 @@ namespace c1tr00z.AssistLib.AppModules {
             }
             
             AddMe();
-            request.Finish();
         }
 
         #endregion

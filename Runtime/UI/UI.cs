@@ -5,6 +5,7 @@ using c1tr00z.AssistLib.AppModules;
 using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.GameUI {
@@ -32,27 +33,21 @@ namespace c1tr00z.AssistLib.GameUI {
 
         #region Module Implementation
 
-        public override void InitializeModule(CoroutineRequest request) {
-            StartCoroutine(C_InitializeModule(request));
+        public override async UniTask InitializeModule() {
+            if (_defaultLayer is null) {
+                _defaultLayerSrc = await DB.Get<UIDefaultsDBEntry>().defaultLayer.LoadPrefabAsync<UILayer>();
+            }
+            
+            await base.InitializeModule();
         }
+
+        // public override void InitializeModule(CoroutineRequest request) {
+        //     StartCoroutine(C_InitializeModule(request));
+        // }
 
         #endregion
 
         #region Class Implementation
-
-        private IEnumerator C_InitializeModule(CoroutineRequest coroutineRequest) {
-
-            if (_defaultLayer == null) {
-                var defaultLayerSrcRequest = DB.Get<UIDefaultsDBEntry>().defaultLayer.LoadPrefabAsync<UILayer>();
-            
-                yield return defaultLayerSrcRequest;
-
-                _defaultLayerSrc = defaultLayerSrcRequest.asset;
-            }
-
-            
-            base.InitializeModule(coroutineRequest);
-        }
 
         public void Show(UIFrameDBEntry newFrame) {
             Show(newFrame, null);

@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using c1tr00z.AssistLib.Common;
+using Cysharp.Threading.Tasks;
 
 namespace c1tr00z.AssistLib.AppModules {
     public class App : BehaviourSingleton<App> {
@@ -20,28 +21,28 @@ namespace c1tr00z.AssistLib.AppModules {
 
         #region Unity Events
 
-        IEnumerator Start() {
+        void Start() {
 
             DontDestroyOnLoad(gameObject);
-
-            yield return StartCoroutine(C_Initialize());
+            
+            Initialize().Forget();
         }
 
         #endregion
 
         #region Class Implementation
 
-        private IEnumerator C_Initialize() {
+        private async UniTask Initialize() {
             Debug.Log("Init cachers");
             var mainCacher = gameObject.AddComponent<MainCacher>();
-            yield return mainCacher.Cache();
+            await mainCacher.Cache();
             Debug.Log("Cachers initialized");
 
             new GameObject("SceneModulesHelper").AddComponent<SceneModulesHelper>();
             
             Debug.Log("System modules initialization");
             var systemModules = new GameObject("SystemModules").AddComponent<SystemModules>();
-            yield return systemModules.InitModules();
+            await systemModules.InitModules();
             Debug.Log("System modules initialized");
             isInitialized = true;
             Initialized?.Invoke();

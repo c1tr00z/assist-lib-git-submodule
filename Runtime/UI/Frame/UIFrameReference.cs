@@ -4,6 +4,7 @@ using System.Linq;
 using c1tr00z.AssistLib.PropertyReferences;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
+using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -50,45 +51,21 @@ namespace c1tr00z.AssistLib.GameUI {
             //TODO: make it work in editor
             return;
 #endif
-            StartCoroutine(C_RespawnFrame());
-//             transform.DestroyAllChildren();
-//             var prefab = frameDBEntry.LoadPrefab<UIFrame>();
-//             if (prefab == null)
-//             {
-//                 Debug.LogError($"Prefab for UIFrameDBEntry {frameDBEntry} is null. This is {name}.", this);
-//                 return;
-//             }
-//             _currentFrame = frameDBEntry.LoadPrefab<UIFrame>().Clone(transform);
-// #if UNITY_EDITOR
-//             if (EditorApplication.isPlaying) {
-//                 ShowCurrent();
-//             }
-// #else
-//             ShowCurrent();
-// #endif
-//
-//             if (stretch) {
-//                 _currentFrame.rectTransform.Stretch();
-//             }
-//
-// #if UNITY_EDITOR
-//             _currentFrame.gameObject.hideFlags = HideFlags.DontSave | HideFlags.DontSaveInEditor;
-// #endif
+            DoRespawnFrame();
         }
 
-        private IEnumerator C_RespawnFrame() {
+        private async UniTask DoRespawnFrame() {
             transform.GetChildren().Where(c => !_currentFrame.IsNull() && c != _currentFrame.transform).ToList()
                 .ForEach(c => Destroy(c.gameObject));
 
             if (_currentFrame != null) {
                 ShowCurrent();
-                yield break;
+                return;
             }
 
-            var request = frameDBEntry.InstantiatePrefabAsync<UIFrame>();
-            yield return request;
+            var newFrame = await frameDBEntry.InstantiatePrefabAsync<UIFrame>(); ;
 
-            _currentFrame = request.asset;
+            _currentFrame = newFrame;
             _currentFrame.Reset(transform);
             _currentFrame.rectTransform.Stretch();
         }

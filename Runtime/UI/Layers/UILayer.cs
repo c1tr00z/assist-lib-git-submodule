@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -98,7 +98,7 @@ namespace c1tr00z.AssistLib.GameUI {
                 frameDBEntry = frame,
                 args = args,
             });
-            StartCoroutine(nameof(C_Show));
+            StartCoroutine(nameof(DoShow));
         }
 
         public void Hide(UIFrameDBEntry frameDBEntry) {
@@ -120,7 +120,7 @@ namespace c1tr00z.AssistLib.GameUI {
             frame.Show(args);
         }
 
-        private IEnumerator C_Show() {
+        private async UniTask DoShow() {
             _isShowingCoroutineOn = true;
             while (_requestsQueue.Count > 0) {
                 var request = _requestsQueue.Dequeue();
@@ -133,12 +133,7 @@ namespace c1tr00z.AssistLib.GameUI {
                 var frame = GetFrameFromPool(request.frameDBEntry);
 
                 if (frame == null) {
-
-                    var instantRequest = request.frameDBEntry.InstantiatePrefabAsync<UIFrame>();
-
-                    yield return instantRequest;
-
-                    frame = instantRequest.asset;
+                    frame = await request.frameDBEntry.InstantiatePrefabAsync<UIFrame>();
                 }
 
                 if (frame == null) {

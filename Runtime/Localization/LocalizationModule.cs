@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using c1tr00z.AssistLib.AppModules;
-using c1tr00z.AssistLib.Common;
+using Cysharp.Threading.Tasks;
 using c1tr00z.AssistLib.Json;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
@@ -75,28 +75,17 @@ namespace c1tr00z.AssistLib.Localization {
 
         #region Module Implementation
 
-        public override void InitializeModule(CoroutineRequest request) {
-            StartCoroutine(C_InitializeModule(request));
-        }
-
-        #endregion
-
-        #region Class Implementation
-
-        private IEnumerator C_InitializeModule(CoroutineRequest request) {
-
+        public override async UniTask InitializeModule() {
             var allLanguageItems = DB.GetAll<LanguageItem>();
 
             foreach (var languageItem in allLanguageItems) {
-                var textRequest = languageItem.LoadTextAsync();
-                yield return textRequest;
-                var textAsset = textRequest.asset;
+                var textAsset = await languageItem.LoadTextAsync();
 
-                if (textAsset == null) {
+                if (textAsset is null) {
                     continue;
                 }
                 
-                var langHash = JSONUtils.Deserialize(textRequest.asset.text);
+                var langHash = JSONUtils.Deserialize(textAsset.text);
                 _translations.Add(languageItem, langHash.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString()));
             }
             
@@ -122,9 +111,11 @@ namespace c1tr00z.AssistLib.Localization {
                     Debug.LogWarning(string.Format("Language not found: {0}", _settings.savedLanguage));
                 }
             }
-            
-            base.InitializeModule(request);
         }
+
+        #endregion
+
+        #region Class Implementation
 
         public string GetTranslationString(string key) {
             if (!isInitialized) {

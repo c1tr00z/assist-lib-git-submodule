@@ -1,11 +1,14 @@
 using c1tr00z.AssistLib.Common;
+using Cysharp.Threading.Tasks;
 
 namespace c1tr00z.AssistLib.PropertyReferences {
     public abstract class PropertyReferenceCacher : ICacher {
 
         #region ICacher Implementation
 
-        public virtual void Cache() { }
+        public virtual UniTask Cache() {
+            return UniTask.CompletedTask;
+        }
 
         #endregion
 

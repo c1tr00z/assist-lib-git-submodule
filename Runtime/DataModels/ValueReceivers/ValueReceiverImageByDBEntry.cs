@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using c1tr00z.AssistLib.PropertyReferences;
 using c1tr00z.AssistLib.ResourcesManagement;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -56,25 +57,22 @@ namespace c1tr00z.AssistLib.DataModels {
 
         #region Class Implementation
 
-        private void Load() {
+        private async UniTask Load() {
             if (_currentDBEntry.TryDownloadedAsset(key, out Sprite sprite)) {
                 image.sprite = sprite;
             }
-            StartCoroutine(C_Load(_currentDBEntry));
+
+            await LoadSprite(_currentDBEntry);
         }
 
-        private IEnumerator C_Load(DBEntry dbEntry) {
-            var request = dbEntry.LoadSpriteAsync(key);
-            
-            if (!request.isDone) {
-                yield return request;
-            }
+        private async UniTask LoadSprite(DBEntry dbEntry) {
+            var newSprite = await dbEntry.LoadSpriteAsync(key);
             
             if (dbEntry != _currentDBEntry) {
-                yield break; 
+                return; 
             }
             
-            image.sprite = request.asset;
+            image.sprite = newSprite;
         }
 
         #endregion
