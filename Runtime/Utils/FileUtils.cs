@@ -16,6 +16,10 @@ namespace c1tr00z.AssistLib.Utils {
                 file.Create().Close();
             }
 
+            if (!text.EndsWith("\r") && !text.EndsWith("\n")) {
+                text += "\r\n";
+            }
+
             using (StreamWriter sw = new StreamWriter(file.ToString())) {
                 sw.Write(text);
                 sw.Close();

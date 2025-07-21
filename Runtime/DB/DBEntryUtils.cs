@@ -9,9 +9,9 @@ using Object = UnityEngine.Object;
 
 namespace c1tr00z.AssistLib.ResourcesManagement {
 
-    /**
-     * <summary>Extension method class for DBEntry type</summary>
-     */
+    /// <summary>
+    /// Extension method class for DBEntry type
+    /// </summary>
     public static class DBEntryUtils {
 
         #region Private Fields
@@ -22,9 +22,11 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
 
         #region Class Implementations
 
-        /**
-         * <summary>Returns relative path to DBEntry</summary>
-         */
+        /// <summary>
+        /// Returns relative path to DBEntry
+        /// </summary>
+        /// <param name="dbEntry"></param>
+        /// <returns></returns>
         public static string GetPath(this DBEntry dbEntry) {
             return DB.GetPath(dbEntry);
         }
@@ -63,10 +65,14 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             return handle.Result;
         }
 
-        /**
-         * <summary>Loads any UnityObjects for DBEntry. Object should be in same folder as DBEntry and have name X@Y
-         * where X is DBEntry name and Y is any desirable key (for example Player@Icon or Hammer@Model</summary>
-         */
+        /// <summary>
+        /// Loads any UnityObjects for DBEntry. Object should be in same folder as DBEntry and have name X@Y
+        /// is DBEntry name and Y is any desirable key (for example Player@Icon or Hammer@Model
+        /// </summary>
+        /// <param name="dbEntry"></param>
+        /// <param name="key"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public async static UniTask<T> LoadAsync<T>(this DBEntry dbEntry, string key) where T : Object {
             var reference = AddressableUtils.MakeFromAddress($"{dbEntry.name}@{key}");
             
@@ -130,15 +136,12 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             return dbEntry.LoadAsync<TextAsset>("Text");
         }
 
-        /**
-         * <summary>Loads SpriteRenderer associated with DBEntry and with name X@Y where X is DBEntry name and Y is key</summary>
-         * <param name="dbEntry">DBEntry</param>
-         * <param name="key">Key for SpriteRenderer name</param>
-         */
-        // public static AssetRequest<SpriteRenderer> LoadSpriteRendererAsync(this DBEntry dbEntry, string key) {
-        //     return dbEntry.LoadAsync<SpriteRenderer>(key);
-        // }
-
+        /// <summary>
+        /// <summary>Loads SpriteRenderer associated with DBEntry and with name X@Y where X is DBEntry name and Y is key</summary>
+        /// </summary>
+        /// <param name="dbEntry">DBEntry</param>
+        /// <param name="key">Key for SpriteRenderer name</param>
+        /// <returns></returns>
         public static async UniTask<SpriteRenderer> LoadSpriteRendererAsync(this DBEntry dbEntry, string key) {
             var spriteRenderer = await dbEntry.LoadAsync<SpriteRenderer>(key);
             return spriteRenderer;
@@ -156,22 +159,23 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             return sprite;
         }
 
-        /**
-         * <summary>Loads Sprite icon associated with DBEntry and with name X@Icon where X is DBEntry name</summary>
-         * <param name="item">DBEntry</param>
-         */
+        /// <summary>
+        /// <summary>Loads Sprite icon associated with DBEntry and with name X@Icon where X is DBEntry name</summary>
+        /// </summary>
+        /// <param name="item">DBEntry</param>
+        /// <returns></returns>
         public static async UniTask<Sprite> LoadIconAsync(this DBEntry item) {
             var icon = await item.LoadSpriteAsync("Icon");
             return icon;
         }
 
-        // public static void LoadIconAsync(this DBEntry item, Action<Sprite> callback) {
-        //     item.LoadAsync("Icon", callback);
-        // }
-
-        /**
-         * <summary>Returns cached (if possible) DBEntry by type and key</summary>
-         */
+        /// <summary>
+        /// Returns cached (if possible) DBEntry by type and key
+        /// </summary>
+        /// <param name="cachedDBEntry">Cached DBEntry object</param>
+        /// <param name="key">Key</param>
+        /// <typeparam name="T">Generic type</typeparam>
+        /// <returns></returns>
         public static T GetCached<T>(ref T cachedDBEntry, string key = null) where T : DBEntry {
             if (!cachedDBEntry.IsNull()) {
                 return cachedDBEntry;
@@ -186,9 +190,11 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             return cachedDBEntry;
         }
 
-        /**
-         * <summary>Returns cached DBEntry by type from singletons list</summary>
-         */
+        /// <summary>
+        /// Returns cached DBEntry by type from singletons list
+        /// </summary>
+        /// <typeparam name="T">Generic type</typeparam>
+        /// <returns></returns>
         public static T Get<T>() where T : DBEntry {
             var type = typeof(T);
             if (!_singletones.ContainsKey(type)) {

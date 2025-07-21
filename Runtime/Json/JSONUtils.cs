@@ -160,8 +160,66 @@ public static class JSONUtils {
         return returnValue;
     }
 
-    public static string ToJsonString(this IJsonSerializable serializable) {
-        return Serialize(ToJson(serializable));
+    public static string ToJsonString(this IJsonSerializable serializable, bool prettyPrint = false) {
+        var jsonString = Serialize(ToJson(serializable));
+
+        if (!prettyPrint) {
+            return jsonString;
+        }
+
+        return ToPrettyPrint(jsonString);
+    }
+
+    private static string ToPrettyPrint(string jsonString) {
+        int tabs = 0;
+        var resultString = "";
+
+        string getTabsString() {
+            var tabsString = "";
+
+            for (int i = 0; i < tabs; i++) {
+                tabsString += "\t";
+            }
+            
+            return tabsString;
+        }
+
+        bool isToken = false;
+        jsonString.ToList().ForEach(c => {
+            switch (c) {
+            case '{':
+                if (isToken) {
+                    resultString += c;
+                } else {
+                    tabs++;
+                    resultString += $" {{\r\n{getTabsString()}";
+                }
+                break;
+            case '}':
+                if (isToken) {
+                    resultString += c;
+                } else {
+                    tabs--;
+                    resultString += $"\r\n{getTabsString()}}}";
+                }
+                break;
+            case ',':
+                if (isToken) {
+                    resultString += c;
+                } else {
+                    resultString += $",\r\n{getTabsString()}";
+                }
+                break;
+            case '"':
+                resultString += c;
+                isToken = !isToken;
+                break;
+            default:
+                resultString += c;
+                break;
+            }
+        });
+        return resultString;
     }
 
     public static Dictionary<string, object> ToJson(this IJsonSerializable serializable) {
