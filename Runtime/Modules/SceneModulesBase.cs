@@ -65,7 +65,7 @@ namespace c1tr00z.AssistLib.AppModules {
                 var module = await LoadSceneModule(_loadModuleIndex);
                 _loadModuleIndex++;
 
-                if (module == null) {
+                if (module is null) {
                     inProgress = false;
                     continue;
                 }

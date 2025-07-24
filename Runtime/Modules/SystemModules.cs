@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace c1tr00z.AssistLib.AppModules {
 
         private List<Module> _modules = new List<Module>();
 
+        private List<ISystemModuleProcessor> _moduleProcessors = new();
+
         #endregion
 
         #region Modules
@@ -28,6 +31,11 @@ namespace c1tr00z.AssistLib.AppModules {
 
         public override async UniTask InitModules() {
             var dbEntries = DB.GetAll<SystemModuleDBEntry>();
+
+            if (_moduleProcessors.Count == 0) {
+                _moduleProcessors.AddRange(ReflectionUtils.GetTypesByInterface<ISystemModuleProcessor>()
+                    .Select(Activator.CreateInstance).OfType<ISystemModuleProcessor>());
+            }
             
             dbEntries.Sort(e => e.priority);
             
@@ -37,6 +45,10 @@ namespace c1tr00z.AssistLib.AppModules {
                 var module = await dbEntry.InstantiatePrefabAsync<Module>();
                 module.name = dbEntry.name;
                 module.transform.Reset(transform);
+                
+                foreach (var p in _moduleProcessors) {
+                    await p.PreInitProcess(module);
+                }
                 
                 await module.InitializeModule();
                 
