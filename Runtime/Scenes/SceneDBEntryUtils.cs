@@ -1,5 +1,6 @@
 using System;
 using c1tr00z.AssistLib.AppModules;
+using Cysharp.Threading.Tasks;
 
 namespace c1tr00z.AssistLib.SceneManagement {
     public static class SceneDBEntryUtils {
@@ -10,8 +11,12 @@ namespace c1tr00z.AssistLib.SceneManagement {
             Modules.Get<Scenes>().LoadScene(sceneDBEntry, force);
         }
         
-        public static void LoadAsync(this SceneItem sceneDBEntry, Action callback = null, bool force = false) {
-            Modules.Get<Scenes>().LoadSceneAsync(sceneDBEntry, callback, force);
+        public static UniTask LoadAsync(this SceneItem sceneDBEntry, bool force = false) {
+            return Modules.Get<Scenes>().LoadSceneAsync(sceneDBEntry, force);
+        }
+        
+        public static UniTask LoadAdditiveAsync(this SceneItem sceneDBEntry, bool force = false) {
+            return Modules.Get<Scenes>().LoadSceneAdditiveAsync(sceneDBEntry, force);
         }
 
         #endregion

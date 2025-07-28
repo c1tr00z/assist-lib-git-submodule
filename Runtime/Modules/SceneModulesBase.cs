@@ -58,6 +58,8 @@ namespace c1tr00z.AssistLib.AppModules {
         }
 
         private async UniTask InitializeModules() {
+            
+            Debug.Log("[SCENE MODULES] Initialize scene modules");
 
             var inProgress = true;
 
@@ -69,15 +71,21 @@ namespace c1tr00z.AssistLib.AppModules {
                     inProgress = false;
                     continue;
                 }
+                
+                Debug.Log($"[SCENE MODULES] Initialize: {module.name}...");
             
                 await module.InitializeModule();
                 
                 OnModuleInitialized(module);
                 
                 OnSceneModuleInitialized(module);
+                
+                Debug.Log($"[SCENE MODULES] {module.name} initialized");
             }
             
             OnInitialized();
+            
+            Debug.Log("[SCENE MODULES] Scene modules initialized");
         }
 
         protected abstract UniTask<Module> LoadSceneModule(int index);

@@ -1,8 +1,10 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using c1tr00z.AssistLib.AppModules;
 using c1tr00z.AssistLib.ResourcesManagement;
+using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
 
 namespace c1tr00z.AssistLib.SceneManagement {
@@ -22,11 +24,12 @@ namespace c1tr00z.AssistLib.SceneManagement {
 
         private AsyncOperation _sceneLoadOperation;
 
-        private Action _onLoadingCallback;
+        // private Action _onLoadingCallback;
+        private bool _loadingInProgress = false;
 
         private SceneItem _currentSceneItem;
 
-        private SceneItem _sceneToLoad;
+        private List<SceneItem> _additiveScenes = new();
 
         #endregion
 
@@ -64,9 +67,6 @@ namespace c1tr00z.AssistLib.SceneManagement {
 
             if (_sceneLoadOperation.progress >= 1) {
                 _sceneLoadOperation = null;
-                _onLoadingCallback?.Invoke();
-                _onLoadingCallback = null;
-                _currentSceneItem = _sceneToLoad;
             }
         }
 
@@ -85,19 +85,45 @@ namespace c1tr00z.AssistLib.SceneManagement {
             sceneLoaded?.Invoke(currentSceneItem);
         }
 
-        public void LoadSceneAsync(SceneItem newScene, Action callback = null, bool force = false) {
+        public async UniTask LoadSceneAsync(SceneItem newScene, bool force = false) {
+
+            while (_loadingInProgress) {
+                await UniTask.DelayFrame(1);
+            }
+            
             if (currentSceneItem == newScene && !force) {
-                callback?.Invoke();
                 return;
             }
-            _onLoadingCallback = () => {
-                currentSceneItem = newScene;
-                callback?.Invoke();
-                _onLoadingCallback = null;
-                sceneLoaded?.Invoke(currentSceneItem);
-            };
+
             sceneStartedToLoad?.Invoke(newScene);
             _sceneLoadOperation = SceneManager.LoadSceneAsync(newScene.name);
+            await _sceneLoadOperation;
+            
+            currentSceneItem = newScene;
+            sceneLoaded?.Invoke(currentSceneItem);
+            _loadingInProgress = false;
+        }
+
+        public async UniTask LoadSceneAdditiveAsync(SceneItem newScene, bool force = false) {
+            
+            while (_loadingInProgress) {
+                await UniTask.DelayFrame(1);
+            }
+
+            if (_additiveScenes.Contains(newScene) && !force) {
+                return;
+            }
+            
+            sceneStartedToLoad?.Invoke(newScene);
+            _sceneLoadOperation = SceneManager.LoadSceneAsync(newScene.name, LoadSceneMode.Additive);
+            await _sceneLoadOperation;
+
+            if (!_additiveScenes.Contains(newScene)) {
+                _additiveScenes.Add(newScene);
+            }
+            
+            sceneLoaded?.Invoke(currentSceneItem);
+            _loadingInProgress = false;
         }
 
         #endregion

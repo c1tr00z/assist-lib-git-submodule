@@ -1,6 +1,7 @@
 using System;
 using c1tr00z.AssistLib.AppModules;
 using c1tr00z.AssistLib.ResourcesManagement;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.SceneManagement {
@@ -30,7 +31,15 @@ namespace c1tr00z.AssistLib.SceneManagement {
         #region Class Implementation
 
         public void Load() {
-            Modules.Get<Scenes>().LoadSceneAsync(_sceneItemRef.GetDBEntry<SceneItem>(), null, _force);
+            _sceneItemRef.GetDBEntry<SceneItem>().Load(_force);
+        }
+        
+        public void LoadAsync() {
+            _sceneItemRef.GetDBEntry<SceneItem>().LoadAsync(_force).Forget();
+        }
+        
+        public void LoadAdditiveAsync() {
+            _sceneItemRef.GetDBEntry<SceneItem>().LoadAdditiveAsync(_force).Forget();
         }
 
         #endregion
