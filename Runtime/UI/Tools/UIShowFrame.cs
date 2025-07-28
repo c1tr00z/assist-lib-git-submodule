@@ -37,6 +37,7 @@ namespace c1tr00z.AssistLib.GameUI {
 
         public void Show() {
             if (!_frameDBEntryRef.IsValid()) {
+                Debug.LogError($"[UIShowFrame] Ref '{_frameDBEntryRef}' is invalid", this);
                 return;
             }
 

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using c1tr00z.AssistLib.DataModels;
+using c1tr00z.AssistLib.DataProviders;
 using c1tr00z.AssistLib.PropertyReferences;
 
 namespace c1tr00z.AssistLib.Localization {

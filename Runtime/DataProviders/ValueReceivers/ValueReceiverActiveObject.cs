@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using c1tr00z.AssistLib.PropertyReferences;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.DataModels {
+namespace c1tr00z.AssistLib.DataProviders {
 
     public class ValueReceiverActiveObject : ValueReceiverBase {
 
         #region Serialized Fields
 
-        [ReferenceTypeAttribute(typeof(bool))]
+        [ReferenceType(typeof(bool))]
         [SerializeField] private PropertyReference _isActiveSrc;
         [SerializeField] private GameObject _target;
         [SerializeField] private bool _inverse;

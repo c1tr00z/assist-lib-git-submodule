@@ -5,7 +5,7 @@ using c1tr00z.AssistLib.GameUI;
 using c1tr00z.AssistLib.PropertyReferences;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.DataModels {
+namespace c1tr00z.AssistLib.DataProviders {
     public class UIViewItemValueReceiver : ValueReceiverBase {
 
         #region Private Fields

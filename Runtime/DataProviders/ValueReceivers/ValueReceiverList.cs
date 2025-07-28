@@ -3,13 +3,13 @@ using c1tr00z.AssistLib.PropertyReferences;
 using c1tr00z.AssistLib.GameUI;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.DataModels {
+namespace c1tr00z.AssistLib.DataProviders {
 
     public class ValueReceiverList : ValueReceiverBase {
 
         #region Serialized Fields
 
-        [ReferenceTypeAttribute(typeof(List<>))]
+        [ReferenceType(typeof(List<>))]
         [SerializeField]
         private PropertyReference _listSource;
 

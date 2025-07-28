@@ -2,8 +2,8 @@
 using System.Linq;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.DataModels {
-    public class DataModelBase : MonoBehaviour, IDataModelBase {
+namespace c1tr00z.AssistLib.DataProviders {
+    public class DataProviderBase : MonoBehaviour, IDataProviderBase {
 
         #region Private Field
 

@@ -4,7 +4,7 @@ using c1tr00z.AssistLib.Utils;
 using TMPro;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.DataModels {
+namespace c1tr00z.AssistLib.DataProviders {
     public class ValueReceiverTextTMP : ValueReceiverBase {
         
         #region Serialized Fields

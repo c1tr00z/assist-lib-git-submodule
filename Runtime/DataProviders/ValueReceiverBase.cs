@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace c1tr00z.AssistLib.DataModels {
+namespace c1tr00z.AssistLib.DataProviders {
     public abstract class ValueReceiverBase : MonoBehaviour, IValueReceiver {
 
         #region Private Fields
 
-        private List<IDataModelBase> _models = new List<IDataModelBase>();
+        private List<IDataProviderBase> _models = new List<IDataProviderBase>();
 
         #endregion
 
@@ -41,13 +41,13 @@ namespace c1tr00z.AssistLib.DataModels {
 
         #region Class Implementation
 
-        public IEnumerable<IDataModelBase> GetModels() {
+        public IEnumerable<IDataProviderBase> GetModels() {
             if (_models == null || _models.Count == 0) {
-                _models = new List<IDataModelBase>();
+                _models = new List<IDataProviderBase>();
                 var references = GetReferences();
                 while (references.MoveNext()) {
                     var reference = references.Current;
-                    var model = reference.target as IDataModelBase;
+                    var model = reference.target as IDataProviderBase;
                     if (model == null) {
                         continue;
                     }

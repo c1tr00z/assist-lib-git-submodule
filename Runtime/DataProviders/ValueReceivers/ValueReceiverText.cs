@@ -4,7 +4,7 @@ using c1tr00z.AssistLib.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace c1tr00z.AssistLib.DataModels {
+namespace c1tr00z.AssistLib.DataProviders {
     [RequireComponent(typeof(Text))]
     public class ValueReceiverText : ValueReceiverBase {
 

@@ -3,7 +3,7 @@ using c1tr00z.AssistLib.PropertyReferences;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace c1tr00z.AssistLib.DataModels {
+namespace c1tr00z.AssistLib.DataProviders {
     public class ValueReceiverSlider : ValueReceiverBase {
 
         #region Public Fields

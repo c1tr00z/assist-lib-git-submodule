@@ -7,7 +7,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace c1tr00z.AssistLib.DataModels {
+namespace c1tr00z.AssistLib.DataProviders {
     public class ValueReceiverImageByDBEntry : ValueReceiverBase {
 
         #region Private Fields

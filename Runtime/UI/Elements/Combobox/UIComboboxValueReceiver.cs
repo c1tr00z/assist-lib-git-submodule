@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using c1tr00z.AssistLib.DataModels;
+using c1tr00z.AssistLib.DataProviders;
 using c1tr00z.AssistLib.PropertyReferences;
 using UnityEngine;
 

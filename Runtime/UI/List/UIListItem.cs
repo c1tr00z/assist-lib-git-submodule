@@ -2,12 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using c1tr00z.AssistLib.DataModels;
+using c1tr00z.AssistLib.DataProviders;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
 
 namespace c1tr00z.AssistLib.GameUI {
-    public class UIListItem : DataModelBase {
+    public class UIListItem : DataProviderBase {
 
         #region Private Fields
 

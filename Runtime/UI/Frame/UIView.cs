@@ -1,7 +1,7 @@
-﻿using c1tr00z.AssistLib.DataModels;
+﻿using c1tr00z.AssistLib.DataProviders;
 
 namespace c1tr00z.AssistLib.GameUI {
-    public class UIView : DataModelBase, IUIView {
+    public class UIView : DataProviderBase, IUIView {
 
         #region IUIView Implementation
 

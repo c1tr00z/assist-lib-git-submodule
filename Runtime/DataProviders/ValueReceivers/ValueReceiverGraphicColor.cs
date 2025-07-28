@@ -3,26 +3,25 @@ using c1tr00z.AssistLib.PropertyReferences;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace c1tr00z.AssistLib.DataModels {
-    public class ValueReceiverSpriteFill : ValueReceiverBase {
-
+namespace c1tr00z.AssistLib.DataProviders {
+    public class ValueReceiverGraphicColor : ValueReceiverBase {
         #region Serialized Fields
 
-        [ReferenceType(typeof(float))]
-        [SerializeField] private PropertyReference _fillSrc;
+        [ReferenceType(typeof(Color))]
+        [SerializeField] private PropertyReference _colorSrc;
 
-        [SerializeField] private Image _image;
+        [SerializeField] private Graphic _graphic;
 
         #endregion
 
         #region ValueReceiverBase Implementation
 
         public override IEnumerator<PropertyReference> GetReferences() {
-            yield return _fillSrc;
+            yield return _colorSrc;
         }
 
         public override void UpdateReceiver() {
-            _image.fillAmount = _fillSrc.Get<float>();
+            _graphic.color = _colorSrc.Get<Color>();
         }
 
         #endregion

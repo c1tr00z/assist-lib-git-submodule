@@ -1,5 +1,5 @@
-﻿namespace c1tr00z.AssistLib.DataModels {
-    public interface IDataModelBase {
+﻿namespace c1tr00z.AssistLib.DataProviders {
+    public interface IDataProviderBase {
         bool isDataModelEnabled { get; }
         void OnDataChanged();
         void AddReceiver(IValueReceiver receiver);
