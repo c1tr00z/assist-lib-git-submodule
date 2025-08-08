@@ -50,7 +50,14 @@ namespace AssistLib.TypeReferences.Editor {
             }
             var selectedIndex = propertyData.types.IndexOf(propertyData.currentType);
             selectedIndex = selectedIndex >= 0 ? selectedIndex < propertyData.types.Count ? selectedIndex : 0 : 0;
-            selectedIndex = EditorGUI.Popup(position, selectedIndex, propertyData.typesNames.ToArray());
+            var popupPosition = new Rect(position.x, position.y, position.width - 24, position.height);
+            selectedIndex = EditorGUI.Popup(popupPosition, selectedIndex, propertyData.typesNames.ToArray());
+            var buttonPosition = new Rect(popupPosition.x + position.width - 20, popupPosition.y, 20, 20);
+            if (GUI.Button(buttonPosition, "")) {
+                TypeReferenceSearchWindow.ShowSearchWindow(foundType => {
+                    propertyData.typeFullNameProperty.stringValue = foundType.FullName;
+                });
+            }
             selectedIndex = selectedIndex >= 0 ? selectedIndex < propertyData.types.Count ? selectedIndex : 0 : 0;
             var selectedType = propertyData.types[selectedIndex];
 

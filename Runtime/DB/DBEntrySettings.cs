@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using c1tr00z.AssistLib.Addressables;
+using c1tr00z.AssistLib.FolderReference;
 using c1tr00z.AssistLib.TypeReferences;
 using UnityEngine;
 
@@ -16,12 +17,22 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
 
             public AddressableGroupRef groupRef;
         }
+        
+        [Serializable]
+        public class AddressableFolderEntry {
+            [FolderReference(true)]
+            public string folderPath;
+
+            public AddressableGroupRef groupRef;
+        }
 
         #endregion
 
         #region Public Fields
 
-        public List<DBEntryEntry> settings = new List<DBEntryEntry>();
+        public List<DBEntryEntry> settings = new();
+
+        public List<AddressableFolderEntry> paths = new();
 
         #endregion
 

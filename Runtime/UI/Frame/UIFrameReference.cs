@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using AssistLib.Runtime.UI.Tools;
 using c1tr00z.AssistLib.PropertyReferences;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
@@ -76,6 +77,7 @@ namespace c1tr00z.AssistLib.GameUI {
                 return;
             }
             var args = _argsSrc == null ? new object[0] : _argsSrc.SelectNotNull(src => src.Get<object>()).ToArray();
+            UIUtils.PreShow(_currentFrame);
             _currentFrame.Show(parentFrame.layer, args);
         }
 

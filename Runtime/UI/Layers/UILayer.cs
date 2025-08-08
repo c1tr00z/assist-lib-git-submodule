@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AssistLib.Runtime.UI.Tools;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.Utils;
 using Cysharp.Threading.Tasks;
@@ -117,6 +118,7 @@ namespace c1tr00z.AssistLib.GameUI {
                 frame.transform.Reset(rectTransform);
                 frame.rectTransform.Stretch();
             }
+            UIUtils.PreShow(frame);
             frame.Show(args);
         }
 

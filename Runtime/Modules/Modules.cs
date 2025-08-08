@@ -74,6 +74,14 @@ namespace c1tr00z.AssistLib.AppModules {
             return _modulesContainers.SelectNotNull(m => m.GetModule<T>()).FirstOrDefault();
         }
 
+        public static T[] GetAll<T>() where T : IModule {
+            if (_modulesContainers.Count == 0) {
+                return Array.Empty<T>();
+            }
+
+            return _modulesContainers.SelectMany(c => c.GetModules<T>()).ToArray();
+        }
+
         private void OnDestroy() {
             if (_modulesContainers.Contains(this)) {
                 _modulesContainers.Remove(this);

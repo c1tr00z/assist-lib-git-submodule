@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using AssistLib.Editor.DB;
+using c1tr00z.AssistLib.Addressables;
 using c1tr00z.AssistLib.Common;
 using c1tr00z.AssistLib.TypeReferences;
 using c1tr00z.AssistLib.Utils;
@@ -65,9 +66,12 @@ namespace c1tr00z.AssistLib.ResourcesManagement.Editor {
 
             var dbEntrySettings = DBEntryEditorUtils.LoadFromAssetDatabase<DBEntrySettings>("DBEntrySettings");
             var dbEntriesSettings =
-                dbEntrySettings != null
+                dbEntrySettings is not null
                     ? dbEntrySettings.settings.ToDictionary(s => s.dbEntryType.GetRefType(), s => s.groupRef.groupName)
                     : new Dictionary<Type, string>();
+            var dbEntryFolderSettings = dbEntrySettings is not null
+                ? dbEntrySettings.paths.ToDictionary(entry => entry.folderPath, entry => entry.groupRef.groupName)
+                : new Dictionary<string, string>();
 
             var progress = 0f;
             var progressStep = 1f / items.Length;
@@ -90,13 +94,20 @@ namespace c1tr00z.AssistLib.ResourcesManagement.Editor {
 
 #if UNITY_2018_3_OR_NEWER
 
-                    var prefabGUID = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(itemPrefab));
+                    var assetPath = AssetDatabase.GetAssetPath(itemPrefab);
+                    var prefabGUID = AssetDatabase.AssetPathToGUID(assetPath);
+
+                    var assetPathSplit = assetPath.Split('/');
+                    var assetFolder = Path.Combine(assetPathSplit.SubArray(0, assetPathSplit.Length - 1).ToArray());
+                    var targetGroupByFolder = dbEntryFolderSettings.ContainsKey(assetFolder)
+                        ? addressableSettings.FindGroup(dbEntryFolderSettings[assetFolder])
+                        : addressableSettings.DefaultGroup;
 
                     var defaultGroup = !groupName.IsNullOrEmpty()
                         ? addressableSettings.FindGroup(groupName)
                         : addressableSettings.DefaultGroup;
 
-                    if (defaultGroup == null) {
+                    if (defaultGroup is null) {
                         defaultGroup = addressableSettings.CreateGroup(groupName, false, false, false,
                             new List<AddressableAssetGroupSchema>());
                     }
@@ -109,22 +120,11 @@ namespace c1tr00z.AssistLib.ResourcesManagement.Editor {
 
                         if (group != defaultGroup && defaultGroup != addressableSettings.DefaultGroup) {
                             addressableSettings.MoveEntry(entry, defaultGroup, false, false);
+                        } else if (group == addressableSettings.DefaultGroup &&
+                                   targetGroupByFolder != addressableSettings.DefaultGroup) {
+                            addressableSettings.MoveEntry(entry, targetGroupByFolder, false, false);
                         }
                     }
-
-                    // var group = !groupName.IsNullOrEmpty()
-                    //     ? addressableSettings.FindGroup(groupName)
-                    //     : addressableSettings.DefaultGroup;
-                    // if (group == null) {
-                    //     group = addressableSettings.CreateGroup(groupName, false, false, false,
-                    //         new List<AddressableAssetGroupSchema>());
-                    // }
-                    // var entry = addressableSettings.FindAssetEntry(prefabGUID);
-                    // if (entry == null) {
-                    //     entry = addressableSettings.CreateOrMoveEntry(prefabGUID, group);
-                    // } else if (entry.parentGroup != group) {
-                    //     addressableSettings.MoveEntry(entry, group, false, false);
-                    // }
 
                     if (entry.ReadOnly) {
                         entry.ReadOnly = false;
