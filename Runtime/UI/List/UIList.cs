@@ -50,7 +50,8 @@ namespace c1tr00z.AssistLib.GameUI {
 
         #region Serialized Fields
 
-        [SerializeField] private List<UIListItemDBEntry> _listItemDBEntries = new List<UIListItemDBEntry>();
+        [DBEntryType(typeof(UIListItemDBEntry))]
+        [SerializeField] private List<DBEntryReference> _listItemDBEntries = new();
         
         [SerializeField] private bool _useSelect;
 
@@ -104,7 +105,8 @@ namespace c1tr00z.AssistLib.GameUI {
                 var request = _requestQueue.Dequeue();
                 
                 if (_listItemPrefabs.Count == 0) {
-                    foreach (var listItemDBEntry in _listItemDBEntries) {
+                    foreach (var listItemDBEntryRef in _listItemDBEntries) {
+                        var listItemDBEntry = listItemDBEntryRef.GetDBEntry<UIListItemDBEntry>();
                         var listItemInstance = await listItemDBEntry.InstantiatePrefabAsync<UIListItem>();
                         
                         listItemInstance.Reset(pool);

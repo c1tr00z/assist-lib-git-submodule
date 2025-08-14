@@ -139,7 +139,7 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 
             classText += MakeLine($"public class il_2_cpp_Cache : {typeof(PropertyReferenceCacher).FullName} {{", 0);
 
-            classText += MakeLine("public override void Cache() {", 1);
+            classText += MakeLine("public override Cysharp.Threading.Tasks.UniTask Cache() {", 1);
             
             classText += MakeLine("", 2);
             
@@ -148,6 +148,8 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
             });
             
             classText += MakeLine("", 2);
+            
+            classText += MakeLine("return Cysharp.Threading.Tasks.UniTask.CompletedTask;", 2);
             
             classText += MakeLine("}", 1);
             

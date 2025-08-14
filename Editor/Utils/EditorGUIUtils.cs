@@ -17,6 +17,13 @@ namespace c1tr00z.AssistLib.Utils {
 
         #endregion
 
+        #region IconContents
+        
+        public static readonly GUIContent GUI_ICON_REFRESH = EditorGUIUtility.IconContent("TreeEditor.Refresh");
+        public static readonly GUIContent GUI_ICON_SEARCH = EditorGUIUtility.IconContent("d_Search Icon");
+
+        #endregion
+
         #region Class Implementation
 
         public static float GetDisplayNameFieldWidth(float fieldWidth) {
@@ -28,7 +35,7 @@ namespace c1tr00z.AssistLib.Utils {
         }
 
         public static bool RefreshButton() {
-            return GUILayout.Button(EditorGUIUtility.IconContent("TreeEditor.Refresh"), GUILayout.Width(30));
+            return GUILayout.Button(GUI_ICON_REFRESH, GUILayout.Width(30));
         }
         
         public static bool ConsoleButton() {
@@ -264,6 +271,5 @@ namespace c1tr00z.AssistLib.Utils {
         }
 
         #endregion
-
     }
 }

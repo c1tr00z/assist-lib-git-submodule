@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using c1tr00z.AssistLib.Utils;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ namespace AssistLib.TypeReferences.Editor {
         #region Private Fields
 
         private Action<Type> _onFound = null;
+        private Type _baseType;
         
         private List<Type> _allTypes = new List<Type>();
         private List<Type> _filteredTypes = new List<Type>();
@@ -31,7 +33,13 @@ namespace AssistLib.TypeReferences.Editor {
         
         #region EditorWindow Implementation
 
+        private void OnEnable() {
+            Init();
+        }
+
         private void OnGUI() {
+            var found = false;
+            var closeAtTheEnd = false;
             _filterLine = EditorGUILayout.TextField("Search", _filterLine);
             if (!_filterLine.Equals(_prevFilterLine)) {
                 Filter();
@@ -51,25 +59,44 @@ namespace AssistLib.TypeReferences.Editor {
             
             EditorGUILayout.BeginHorizontal(); 
             
-            if (GUILayout.Button("Create")) {
-                FoundType(_selectedType);
-                EditorGUILayout.EndHorizontal();
+            if (GUILayout.Button("Select")) {
+                closeAtTheEnd = true;
             }
+
+            GUI.enabled = true;
             
             if (GUILayout.Button("Cancel")) {
-                EditorGUILayout.EndHorizontal();
                 _onFound = null;
-                Close();
+                _baseType = null;
+                _selectedType = null;
+                closeAtTheEnd = true;
             }
             
             EditorGUILayout.EndHorizontal();
 
-            GUI.enabled = true;
+            if (!closeAtTheEnd) {
+                return;
+            }
+
+            if (_selectedType != null) {
+                FoundType(_selectedType);
+            } else {
+                Close();
+            }
         }
 
         #endregion
 
         #region Class Implementation
+
+        private void Init() {
+            LoadDefault();
+            Filter();
+        }
+
+        private void LoadDefault() {
+            _allTypes = ReflectionUtils.GetSubclassesOf(_baseType);
+        }
         
         private void Filter() {
             if (string.IsNullOrEmpty(_filterLine)) {
@@ -94,12 +121,19 @@ namespace AssistLib.TypeReferences.Editor {
         private void FoundType(Type type) {
             _onFound?.Invoke(type);
             _onFound = null;
+            _baseType = null;
             Close();
         }
 
-        public static void ShowSearchWindow(Action<Type> onFound) {
+        public static void ShowSearchWindow(Action<Type> onFound, Type baseType = null) {
+            if (baseType == null) {
+                baseType = typeof(object);
+            }
             var window = EditorWindow.GetWindow<TypeReferenceSearchWindow>();
+            window.minSize = new Vector2(500, 64);
+            window.maxSize = new Vector2(500, 64);
             window._onFound = onFound;
+            window._baseType = baseType;
             window.ShowModal();
         }
 

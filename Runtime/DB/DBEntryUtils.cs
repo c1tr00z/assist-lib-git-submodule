@@ -31,7 +31,7 @@ namespace c1tr00z.AssistLib.ResourcesManagement {
             return DB.GetPath(dbEntry);
         }
 
-        private static async UniTask<T> LoadAsync<T>(AddressableReference reference)
+        public static async UniTask<T> LoadAsync<T>(this AddressableReference reference)
             where T : Object {
 
             if (reference.TryGetLoadedAsset(out T exist)) {

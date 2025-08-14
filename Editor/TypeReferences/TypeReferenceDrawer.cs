@@ -37,6 +37,9 @@ namespace AssistLib.TypeReferences.Editor {
         #region PropertyDrawer Implementation
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+
+            var openDialog = false;
+            
             EditorGUI.BeginProperty(position, label, property);
             
             position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
@@ -53,12 +56,11 @@ namespace AssistLib.TypeReferences.Editor {
             var popupPosition = new Rect(position.x, position.y, position.width - 24, position.height);
             selectedIndex = EditorGUI.Popup(popupPosition, selectedIndex, propertyData.typesNames.ToArray());
             var buttonPosition = new Rect(popupPosition.x + position.width - 20, popupPosition.y, 20, 20);
-            if (GUI.Button(buttonPosition, "")) {
-                TypeReferenceSearchWindow.ShowSearchWindow(foundType => {
-                    propertyData.typeFullNameProperty.stringValue = foundType.FullName;
-                });
+            if (GUI.Button(buttonPosition, EditorGUIUtils.GUI_ICON_SEARCH)) {
+                openDialog = true;
             }
             selectedIndex = selectedIndex >= 0 ? selectedIndex < propertyData.types.Count ? selectedIndex : 0 : 0;
+            
             var selectedType = propertyData.types[selectedIndex];
 
             if (selectedType != propertyData.currentType) {
@@ -66,6 +68,15 @@ namespace AssistLib.TypeReferences.Editor {
             }
             
             EditorGUI.EndProperty();
+
+            if (openDialog) {
+                TypeReferenceSearchWindow.ShowSearchWindow(foundType => {
+                    var foundTypeName = foundType.FullName.Replace(".", "/");
+                    selectedIndex = propertyData.typesNames.IndexOf(foundTypeName);
+                    propertyData.typeFullNameProperty.stringValue = foundType.FullName;
+                    propertyData.currentType = foundType;
+                }, (attribute as BaseTypeAttribute)?.type);
+            }
         }
         
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
