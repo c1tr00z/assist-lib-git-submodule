@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using AssistLib.Runtime.UI.Tools;
 using c1tr00z.AssistLib.ResourcesManagement;
 using c1tr00z.AssistLib.TypeReferences;
 using c1tr00z.AssistLib.Utils;
@@ -76,6 +77,14 @@ namespace c1tr00z.AssistLib.GameUI {
         }
 
         public object selectedValue { get; private set; }
+
+        #endregion
+
+        #region Unity Events
+
+        private void OnEnable() {
+            _listItems.ForEach(UIUtils.PreUpdateListItem);
+        }
 
         #endregion
 
@@ -169,6 +178,7 @@ namespace c1tr00z.AssistLib.GameUI {
 
             var rectTransform = listItem.transform as RectTransform;
 
+            UIUtils.PreUpdateListItem(listItem);
             listItem.Init(this);
             _listItems.Add(listItem);
             return listItem;

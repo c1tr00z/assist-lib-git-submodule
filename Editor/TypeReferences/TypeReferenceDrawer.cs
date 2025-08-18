@@ -54,7 +54,13 @@ namespace AssistLib.TypeReferences.Editor {
             var selectedIndex = propertyData.types.IndexOf(propertyData.currentType);
             selectedIndex = selectedIndex >= 0 ? selectedIndex < propertyData.types.Count ? selectedIndex : 0 : 0;
             var popupPosition = new Rect(position.x, position.y, position.width - 24, position.height);
-            selectedIndex = EditorGUI.Popup(popupPosition, selectedIndex, propertyData.typesNames.ToArray());
+
+            if (propertyData.typesNames.Count < 1000) {
+                selectedIndex = EditorGUI.Popup(popupPosition, selectedIndex, propertyData.typesNames.ToArray());
+            } else {
+                EditorGUI.LabelField(popupPosition, currentTypeName);
+            }
+            
             var buttonPosition = new Rect(popupPosition.x + position.width - 20, popupPosition.y, 20, 20);
             if (GUI.Button(buttonPosition, EditorGUIUtils.GUI_ICON_SEARCH)) {
                 openDialog = true;

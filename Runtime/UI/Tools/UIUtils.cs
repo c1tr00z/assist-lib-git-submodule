@@ -7,6 +7,8 @@ namespace AssistLib.Runtime.UI.Tools {
         #region Private Fields
 
         private static IUIFrameShowProcessor[] _framePostProcessors = null;
+        
+        private static IUIListItemsShowPostprocessor[] _listItemsPostProcessors = null;
 
         #endregion
 
@@ -20,6 +22,17 @@ namespace AssistLib.Runtime.UI.Tools {
 
             foreach (var showProcessor in _framePostProcessors) {
                 showProcessor.PreShow(uiFrame);
+            }
+        }
+
+        public static void PreUpdateListItem(UIListItem uiListItem) {
+            if (_listItemsPostProcessors == null) {
+                _listItemsPostProcessors = ReflectionUtils.GetTypesByInterface<IUIListItemsShowPostprocessor>()
+                    .SelectNotNull(t => (IUIListItemsShowPostprocessor)Activator.CreateInstance(t)).ToArray();
+            }
+            
+            foreach (var preProcessor in _listItemsPostProcessors) {
+                preProcessor.PreUpdateItem(uiListItem);
             }
         }
 
