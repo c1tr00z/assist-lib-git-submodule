@@ -39,7 +39,7 @@ namespace c1tr00z.AssistLib.DataProviders {
 
         public override void UpdateReceiver() {
             var item = _itemSrc.Get<object>();
-            views.ForEach(v =>v.Show(item));
+            views.ForEach(v => v.Show(item));
         }
 
         public override IEnumerator<PropertyReference> GetReferences() {
