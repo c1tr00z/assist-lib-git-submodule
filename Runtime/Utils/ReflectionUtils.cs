@@ -112,7 +112,7 @@ namespace c1tr00z.AssistLib.Utils {
             }
 
 
-            return $"{type.FullName.Split('`').First()}<{genericArgsString}>";
+            return $"{type.FullName.Split('`').First()}<{genericArgsString}>".Replace("+", ".");
         }
 
         #endregion
